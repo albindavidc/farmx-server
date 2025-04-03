@@ -41,4 +41,6 @@ export const createAuthRoutes = (
     validateRequest,
     authController.verifyOtp.bind(authController)
   );
+
+  return router;
 };
