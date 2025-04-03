@@ -3,19 +3,19 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=developmnet ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/index.ts",
 
-    "clean": "find .-name '*.test.ts' -delete && rm -rf dist",
+    "clean": "find . -name '*.test.ts' -delete && rm -rf dist",
     "build": "npm run clean && tsc --noEmitOnError",
     "start": "npm run build && cross-env NODE_ENV=production node dist/index.js",
 
-    "lint": "eslint .--ext .ts--parser-options project=./tsconfig.json",
+    "lint": "eslint . --ext .ts --parser-options project=./tsconfig.json",
     "lint:fix": "eslint . --ext .ts --fix --parser-options project=./tsconfig.json",
     "typecheck": "tsc --noEmit",
      
     "test": "cross-env NODE_ENV=test jest --passWithNoTests",
     "test:coverage": "cross-env NODE_ENV=test jest --coverage",
-    "test:watch": "cross.env NODE_ENV=test jest --watchAll"
+    "test:watch": "cross-env NODE_ENV=test jest --watchAll"
   },
   "keywords": [],
   "author": "",
