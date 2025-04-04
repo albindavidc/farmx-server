@@ -5,6 +5,10 @@ import { AuthController } from "./presentation/controllers/auth.controller";
 import { createAuthRoutes } from "./presentation/routes/auth.routes";
 import { SimpleCommandBus } from "./infrastructure/command-bus/simple.command-bus";
 
+import dotenv from "dotenv";
+dotenv.config();
+
+
 async function bootstrap() {
   await connectToDatabase();
 
