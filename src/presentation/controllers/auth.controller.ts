@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RegisterCommand } from "../../application/use-cases/auth/commands/register.command";
+import { RegisterCommand } from "../../application/use-cases/auth/commands/Signup.command";
 import { VerifyOtpCommand } from "../../application/use-cases/auth/commands/verify-otp.command";
 import { CommandBus } from "../../application/interfaces/command-bus.interface";
 import { RegisterRequest } from "../../application/dto/auth/register.request";
