@@ -1,9 +1,9 @@
-import { User } from "../../../../domain/entities/user.entity";
-import { UserRepository } from "../../../../domain/repositories/user.repository";
+import { User } from "../../../../domain/entities/User.entity";
+import { UserRepository } from "../../../../domain/interfaces/repositories/User.repository";
 import { UserModel } from "../user.model";
-import { Email } from "../../../../domain/value-objects/email.vo";
-import { Password } from "../../../../domain/value-objects/password.vo";
-import { UserRole } from "../../../../domain/enums/user-role.enum";
+import { Email } from "../../../../domain/value-objects/Email.vo";
+import { Password } from "../../../../domain/value-objects/Password.vo";
+import { UserRole } from "../../../../domain/enums/UserRole.enum";
 
 export class MongoUserRepository implements UserRepository {
   async create(user: User): Promise<User> {

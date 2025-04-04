@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/user.entity";
+import { User } from "../../domain/entities/User.entity";
 import { RegisterResponse } from "../dto/auth/register.response";
 
 export class UserMapper {

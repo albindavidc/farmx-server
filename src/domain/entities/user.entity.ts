@@ -1,45 +1,53 @@
-import { Email } from "../value-objects/email.vo";
-import { Password } from "../value-objects/password.vo";
-import { UserRole } from "../enums/user-role.enum";
+import { CourseProgress } from "../../infrastructure/persistence/mongodb/user.model";
+import { FarmerStatus } from "../enums/FarmerStatus.enum";
+import { UserRole } from "../enums/UserRole.enum";
+import { Password } from "../value-objects/Password.vo";
 
 export class User {
-  constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public readonly email: Email,
-    public readonly phone: string,
-    public readonly password: Password,
-    public readonly roles: UserRole[],
-    public readonly isVerified: boolean,
-    public readonly createdAt: Date,
-    public readonly updatedAt: Date,
-    public readonly firebasedUid?: string
-  ) {}
+  private readonly _password: Promise<Password>;
 
-  static create(props: {
-    name: string;
-    email: Email;
-    phone: string;
-    password: Password;
-    role?: UserRole[];
-    firebaseUid?: string;
-  }): User {
-    const id = "user-" + Math.random().toString(36).substr(2, 9);
-    return new User(
-      id,
-      props.name,
-      props.email,
-      props.phone,
-      props.password,
-      props.role || [UserRole.USER],
-      false,
-      new Date(),
-      new Date(),
-      props.firebaseUid
-    );
+  constructor(
+    public name: string,
+    public email: string,
+    public password: string | Password,
+    public role: UserRole,
+    public _id?: string,
+    public isVerified: boolean = false,
+    public isAdmin: boolean = false,
+    public isBlocked: boolean = false,
+    public googleId?: string,
+
+    public isFarmer: boolean = false,
+    public experience?: number,
+    public qualification?: string,
+    public expertise?: string[],
+    public tutorStatus?: FarmerStatus,
+    public profile?: string,
+    public bio?: string,
+    public courseProgress?: CourseProgress[],
+    public reason?: string
+    
+  ) {
+    this._password =
+      typeof password === "string"
+        ? Password.hash(password)
+        : Promise.resolve(password);
   }
 
-  hasRole(role: UserRole): boolean {
-    return this.roles.includes(role);
+  async getHashedPassword(): Promise<string> {
+    const pwd = await this._password;
+    return pwd.getHashedValue();
+  }
+
+  public async hashPassword(): Promise<void> {
+    if (typeof this.password !== "string") {
+      throw new Error("Password already hashed");
+    }
+    this.password = await Password.hash(this.password);
+  }
+
+  public async verifyPassword(plainText: string): Promise<boolean> {
+    const password = await this._password;
+    return password.compare(plainText);
   }
 }

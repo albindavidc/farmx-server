@@ -1,5 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+export interface CourseProgress {
+  courseId: string;
+  progress: number;
+  completedChapters: string[];
+  totalChapters: number;
+}
+
 // Define the interface for the User Document
 export interface IUser extends Document {
   id: string;
@@ -17,11 +24,6 @@ export interface IUser extends Document {
 // Define Mongoose Schema
 const UserSchema: Schema = new Schema(
   {
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     name: {
       type: String,
       required: true,
@@ -57,7 +59,4 @@ const UserSchema: Schema = new Schema(
   }
 );
 
-export const UserModel = mongoose.model<IUser>(
-  "User",
-  UserSchema
-);
+export const UserModel = mongoose.model<IUser>("User", UserSchema);

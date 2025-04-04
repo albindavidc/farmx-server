@@ -1,5 +1,5 @@
-import { Email } from "../../../../domain/value-objects/email.vo";
-import { Password } from "../../../../domain/value-objects/password.vo";
+import { Email } from "../../../../domain/value-objects/Email.vo";
+import { Password } from "../../../../domain/value-objects/Password.vo";
 
 export class RegisterCommand  {
   constructor(

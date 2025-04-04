@@ -1,23 +1,31 @@
+import * as argon2 from "argon2";
+
 export class Password {
-  private readonly value: string;
+  private constructor(private readonly hashedPassword: string) {}
 
-  constructor(password: string) {
-    if (password.length < 8) {
-      throw new Error("Password has to be more than 8 characters");
-    }
-    this.value = password;
+  /**
+   * Creates a hashed password from plain text
+   */
+  public static async hash(plainText: string): Promise<Password> {
+    return new Password(await argon2.hash(plainText, {
+      type: argon2.argon2id,
+      memoryCost: 19456,
+      timeCost: 2,
+      parallelism: 1,
+    }));
   }
 
-  static create(password: string): Password {
-    return new Password(password);
+  /**
+   * Compares plain text with stored hash
+   */
+  public async compare(plainText: string): Promise<boolean> {
+    return argon2.verify(this.hashedPassword, plainText);
   }
 
-  toString(): string {
-    return this.value;
-  }
-
-  async getHashedVersion(): Promise<string> {
-    //Hashing will be implemented inside the infrastructure
-    return this.value;
+  /**
+   * Gets the hashed value (for persistence)
+   */
+  public getHashedValue(): string{
+    return this.hashedPassword
   }
 }

@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/user.entity";
+import { User } from "../../domain/entities/User.entity";
 
 export interface AuthTokenService {
   generateToken(payload: any): string;
