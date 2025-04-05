@@ -21,7 +21,7 @@ export class User {
     public experience?: number,
     public qualification?: string,
     public expertise?: string[],
-    public tutorStatus?: FarmerStatus,
+    public farmerStatus?: FarmerStatus,
     public profile?: string,
     public bio?: string,
     public courseProgress?: CourseProgress[],

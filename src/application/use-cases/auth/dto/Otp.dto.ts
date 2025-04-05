@@ -4,6 +4,8 @@ export interface OtpRequestDto {
 }
 
 export interface OtpResponseDto {
+  email: string;
   otp?: string;
   isVerified: boolean;
+  expiresAt?: Date;
 }

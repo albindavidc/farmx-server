@@ -4,6 +4,7 @@ import { CourseProgress } from "../../../../infrastructure/persistence/mongodb/u
 
 // user.dto.ts
 export interface UserDto {
+  _id?: string;
   name: string;
   email: string;
   role: UserRole;
@@ -16,10 +17,10 @@ export interface UserDto {
   experience?: number;
   qualification?: string;
   expertise?: string[];
-  tutorStatus?: FarmerStatus;
+  farmerStatus?: FarmerStatus;
   profile?: string;
   bio?: string;
-  courseProgress?: CourseProgress;
+  courseProgress?: CourseProgress[];
   reason?: string;
 }
 
