@@ -1,4 +1,5 @@
 import { User } from "../../../domain/entities/User.entity";
+import { UserDto } from "./User.dto";
 
 export interface AuthResponseDto {
   user: User;
@@ -7,7 +8,7 @@ export interface AuthResponseDto {
 }
 
 export interface GoogleAuthResponseDto {
-  user: User;
+  user: UserDto;
   isNewUser: boolean;
   accessToken?: string;
   refreshToken?: string;

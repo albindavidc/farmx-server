@@ -1,3 +1,4 @@
+import { UserDto } from "../../../application/use-cases/dto/User.dto";
 import { User } from "../../entities/User.entity";
 import { Email } from "../../value-objects/Email.vo";
 
@@ -8,6 +9,6 @@ export interface UserRepository {
   update(id: string, user: Partial<User>): Promise<User>;
   setRole(userId: string, role: string): Promise<User>;
   googleAuthLogin(
-    userData: string
+    userData: Partial<UserDto>
   ): Promise<{ user: User; isNewUser: boolean }>;
 }
