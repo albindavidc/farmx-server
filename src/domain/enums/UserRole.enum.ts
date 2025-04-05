@@ -4,8 +4,3 @@ export enum UserRole {
   FARMER = "farmer",
 }
 
-export const RoutePermissions = {
-  ADMIN: [UserRole.ADMIN],
-  FARMER: [UserRole.ADMIN, UserRole.FARMER],
-  USER: [UserRole.USER],
-};
