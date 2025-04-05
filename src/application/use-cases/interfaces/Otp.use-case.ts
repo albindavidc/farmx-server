@@ -1,4 +1,4 @@
-import { OtpRequestDto, OtpResponseDto } from "../auth/dto/Otp.dto";
+import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
 
 export interface OtpUseCase {
   generateOtp(dto: OtpRequestDto): Promise<OtpResponseDto>;

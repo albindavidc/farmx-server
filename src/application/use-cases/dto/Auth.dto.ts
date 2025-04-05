@@ -1,4 +1,4 @@
-import { User } from "../../../../domain/entities/User.entity";
+import { User } from "../../../domain/entities/User.entity";
 
 export interface AuthResponseDto {
   user: User;

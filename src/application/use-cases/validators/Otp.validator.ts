@@ -1,4 +1,4 @@
-import { OtpRequestDto } from "../use-cases/auth/dto/Otp.dto";
+import { OtpRequestDto } from "../dto/Otp.dto";
 
 export class OtpValidator {
   public static validate(dto: OtpRequestDto): void {

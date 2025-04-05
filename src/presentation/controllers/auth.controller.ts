@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { RegisterCommand } from "../../application/use-cases/auth/commands/Signup.command";
-import { VerifyOtpCommand } from "../../application/use-cases/auth/commands/verify-otp.command";
+import { RegisterCommand } from "../../application/use-cases/commands/Signup.command";
+import { VerifyOtpCommand } from "../../application/use-cases/commands/verify-otp.command";
 import { CommandBus } from "../../application/interfaces/command-bus.interface";
-import { RegisterRequest } from "../../application/dto/auth/register.request";
-import { UserMapper } from "../../application/mappers/user.mapper";
+import { RegisterRequest } from "../../application/use-cases/dto/auth/register.request";
+import { UserMapper } from "../../application/use-cases/mappers/user.mapper";
 
 export class AuthController {
   constructor(private readonly commandBus: CommandBus) {}

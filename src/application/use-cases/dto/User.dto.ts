@@ -1,6 +1,6 @@
-import { UserRole } from "../../../../domain/enums/UserRole.enum";
-import { FarmerStatus } from "../../../../domain/enums/FarmerStatus.enum";
-import { CourseProgress } from "../../../../infrastructure/persistence/mongodb/user.model";
+import { UserRole } from "../../../domain/enums/UserRole.enum";
+import { FarmerStatus } from "../../../domain/enums/FarmerStatus.enum";
+import { CourseProgress } from "../../../infrastructure/persistence/mongodb/user.model";
 
 // user.dto.ts
 export interface UserDto {

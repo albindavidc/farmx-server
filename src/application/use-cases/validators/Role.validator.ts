@@ -1,4 +1,4 @@
-import { RoleUpdateDto } from "../use-cases/auth/dto/Role.dto";
+import { RoleUpdateDto } from "../dto/Role.dto";
 
 export class RoleValidator {
   public static validate(dto: RoleUpdateDto): void {

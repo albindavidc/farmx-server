@@ -1,4 +1,4 @@
-import { Otp } from "../../../../domain/entities/Otp.entity";
+import { Otp } from "../../../domain/entities/Otp.entity";
 import { OtpResponseDto } from "../dto/Otp.dto";
 
 export class OtpMapper {

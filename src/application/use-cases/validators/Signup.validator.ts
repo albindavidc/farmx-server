@@ -1,4 +1,4 @@
-import { SignupRequestDto } from "../use-cases/auth/dto/User.dto";
+import { SignupRequestDto } from "../dto/User.dto";
 
 export class SignupValidator {
   public static validate(dto: SignupRequestDto): void {

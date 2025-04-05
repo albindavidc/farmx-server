@@ -1,5 +1,5 @@
-import { RoleUpdateDto } from "../auth/dto/Role.dto";
-import { SignupRequestDto, UserDto } from "../auth/dto/User.dto";
+import { RoleUpdateDto } from "../dto/Role.dto";
+import { SignupRequestDto, UserDto } from "../dto/User.dto";
 
 export interface UserUseCase {
   signup(dto: SignupRequestDto): Promise<UserDto>;

@@ -1,5 +1,5 @@
-import { User } from "../../../../domain/entities/User.entity";
-import { UserRole } from "../../../../domain/enums/UserRole.enum";
+import { User } from "../../../domain/entities/User.entity";
+import { UserRole } from "../../../domain/enums/UserRole.enum";
 import { UserDto } from "../dto/User.dto";
 
 export class UserMapper {
