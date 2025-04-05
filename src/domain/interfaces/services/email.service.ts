@@ -1,3 +1,3 @@
 export interface EmailService {
-  sentOtpEmail(email: string, otp: string): Promise<void>;
+  sendOtpEmail(email: string, otp: string): Promise<void>;
 }
