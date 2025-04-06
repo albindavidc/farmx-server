@@ -2,7 +2,7 @@ import { UserRepository } from "../../../domain/interfaces/repositories/User.rep
 import {
   generateAcessToken,
   generateRefreshToken,
-} from "../../../shared/utils/TokenUtility";
+} from "../../utils/TokenUtility";
 import { RoleResponseDto, RoleUpdateDto } from "../dto/Role.dto";
 import { UserNotFoundException } from "../exceptions/UserNotFound.exception";
 import { UserMapper } from "../mappers/User.mapper";

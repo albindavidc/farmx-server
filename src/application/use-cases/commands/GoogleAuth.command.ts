@@ -6,7 +6,7 @@ import { UserMapper } from "../mappers/User.mapper";
 import {
   generateAcessToken,
   generateRefreshToken,
-} from "../../../shared/utils/TokenUtility";
+} from "../../utils/TokenUtility";
 
 export class GoogleAuthCommand {
   constructor(private userRepository: UserRepository) {}

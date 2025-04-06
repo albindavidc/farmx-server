@@ -1,6 +1,6 @@
 import { OTPRepository } from "../../../domain/interfaces/repositories/Otp.repository";
 import { EmailService } from "../../../domain/interfaces/services/email.service";
-import { GenerateNewOtp } from "../../../shared/utils/GenerateOtp";
+import { GenerateNewOtp } from "../../utils/GenerateOtp";
 import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
 
 export class GenerateOtpCommand {
