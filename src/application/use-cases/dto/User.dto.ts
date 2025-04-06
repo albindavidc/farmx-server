@@ -1,12 +1,13 @@
 import { UserRole } from "../../../domain/enums/UserRole.enum";
 import { FarmerStatus } from "../../../domain/enums/FarmerStatus.enum";
-import { CourseProgress } from "../../../infrastructure/persistence/mongodb/user.model";
+import { CourseProgress } from "../../../infrastructure/database/schemas/UserSchema";
 
 // user.dto.ts
 export interface UserDto {
   _id?: string;
   name: string;
   email: string;
+  phone: string;
   role: UserRole;
   isVerified: boolean;
   isAdmin?: boolean;
@@ -14,9 +15,11 @@ export interface UserDto {
   googleId?: string;
 
   isFarmer?: boolean;
+  farmerRegId?: string;
   experience?: number;
   qualification?: string;
   expertise?: string[];
+  awards?: string[];
   farmerStatus?: FarmerStatus;
   profile?: string;
   bio?: string;

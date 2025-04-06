@@ -8,16 +8,19 @@ export class UserMapper {
       _id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       role: user.role,
       isVerified: user.isVerified,
       isAdmin: user.isAdmin,
       isBlocked: user.isBlocked,
-
       googleId: user.googleId,
+
       isFarmer: user.isFarmer,
+      farmerRegId: user.farmerRegId,
       experience: user.experience,
       qualification: user.qualification,
       expertise: user.expertise,
+      awards: user.awards,
       farmerStatus: user.farmerStatus,
       profile: user.profile,
       bio: user.bio,
@@ -30,6 +33,7 @@ export class UserMapper {
     return new User(
       dto.name ?? "",
       dto.email ?? "",
+      dto.phone ?? "",
       "",
       dto.role ?? UserRole.USER,
       dto._id,
@@ -38,9 +42,11 @@ export class UserMapper {
       dto.isBlocked ?? false,
       dto.googleId,
       dto.isFarmer ?? false,
+      dto.farmerRegId,
       dto.experience,
       dto.qualification,
       dto.expertise,
+      dto.awards,
       dto.farmerStatus,
       dto.profile,
       dto.bio,
@@ -49,13 +55,11 @@ export class UserMapper {
     );
   }
 
-  static updateEntityFromDto(
-    entity: User,
-    dto: Partial<UserDto>
-  ): User {
+  static updateEntityFromDto(entity: User, dto: Partial<UserDto>): User {
     return new User(
       dto.name ?? entity.name,
       dto.email ?? entity.email,
+      dto.phone ?? entity.phone,
       entity.password,
       dto.role ?? entity.role,
       entity._id,
@@ -65,9 +69,11 @@ export class UserMapper {
       dto.googleId ?? entity.googleId,
 
       dto.isFarmer ?? entity.isFarmer,
+      dto.farmerRegId ?? entity.farmerRegId,
       dto.experience ?? entity.experience,
       dto.qualification ?? entity.qualification,
       dto.expertise ?? entity.expertise,
+      dto.awards ?? entity.awards,
       dto.farmerStatus ?? entity.farmerStatus,
       dto.profile ?? entity.profile,
       dto.bio ?? entity.bio,
