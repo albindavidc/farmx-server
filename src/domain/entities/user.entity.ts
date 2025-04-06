@@ -1,4 +1,4 @@
-import { CourseProgress } from "../../infrastructure/persistence/mongodb/user.model";
+import { CourseProgress } from "../../infrastructure/database/schemas/UserSchema";
 import { FarmerStatus } from "../enums/FarmerStatus.enum";
 import { UserRole } from "../enums/UserRole.enum";
 import { Password } from "../value-objects/Password.vo";
