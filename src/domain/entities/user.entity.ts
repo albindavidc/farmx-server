@@ -9,6 +9,7 @@ export class User {
   constructor(
     public name: string,
     public email: string,
+    public phone: string,
     public password: string | Password,
     public role: UserRole,
     public _id?: string,
@@ -18,15 +19,16 @@ export class User {
     public googleId?: string,
 
     public isFarmer: boolean = false,
+    public farmerRegId?: string,
     public experience?: number,
     public qualification?: string,
     public expertise?: string[],
+    public awards?: string[],
     public farmerStatus?: FarmerStatus,
     public profile?: string,
     public bio?: string,
     public courseProgress?: CourseProgress[],
     public reason?: string
-    
   ) {
     this._password =
       typeof password === "string"
