@@ -9,9 +9,9 @@ export class User {
   constructor(
     public name: string,
     public email: string,
-    public phone: string,
     public password: string | Password,
     public role: UserRole,
+    public phone?: string,
     public _id?: string,
     public isVerified: boolean = false,
     public isAdmin: boolean = false,

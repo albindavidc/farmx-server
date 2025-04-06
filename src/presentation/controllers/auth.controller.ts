@@ -1,58 +1,54 @@
+import { UserUseCase } from "../../application/use-cases/interfaces/user.use-case";
+import sendResponseJson from "../../application/utils/Message";
+import { User } from "../../domain/entities/User.entity";
+import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
-import { RegisterCommand } from "../../application/use-cases/commands/Signup.command";
-import { VerifyOtpCommand } from "../../application/use-cases/commands/verify-otp.command";
-import { CommandBus } from "../../application/interfaces/command-bus.interface";
-import { RegisterRequest } from "../../application/use-cases/dto/auth/register.request";
-import { UserMapper } from "../../application/use-cases/mappers/user.mapper";
 
-export class AuthController {
-  constructor(private readonly commandBus: CommandBus) {}
+export default class AuthController {
+  constructor(public createUserUseCase: UserUseCase) {}
 
-  async register(
-    req: Request,
-    res: Response
-  ): Promise<void> {
+  public async signup(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email, phone, password } = req.body;
-      const registerRequest = new RegisterRequest(
-        name,
-        email,
-        phone,
-        password
+      const { name, email, password, role } = req.body;
+
+      if (!name || !email || !password || !role) {
+        sendResponseJson(
+          res,
+          StatusCodes.BAD_REQUEST,
+          "All fields are required",
+          false
+        );
+        return;
+      }
+
+      const user = new User(name, email, password, role);
+      await user.hashPassword();
+
+      const response = await this.createUserUseCase.execute(user);
+      const successMessage =
+        role === "user"
+          ? "User created successfully. Please verify your account"
+          : role === "farmer"
+          ? "Farmer created successfully. Please verify your account."
+          : "Guest created successfully";
+
+      sendResponseJson(
+        res,
+        StatusCodes.CREATED,
+        successMessage,
+        true,
+        response
       );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error creating user";
 
-      const command = new RegisterCommand(
-        registerRequest.name,
-        registerRequest.email,
-        registerRequest.phone,
-        registerRequest.password
+      sendResponseJson(
+        res,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        errorMessage,
+        false
       );
-
-      const user = await this.commandBus.execute(command);
-      const response = UserMapper.toRegisterResponse(user);
-
-      res.status(201).json(response);
-    } catch (error) {
-      res
-        .status(400)
-        .json({ error: (error as Error).message });
-    }
-  }
-
-  async verifyOtp(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    try {
-      const { userId, code } = req.body;
-      const command = new VerifyOtpCommand(userId, code);
-      const result = await this.commandBus.execute(command);
-
-      res.status(200).json({ isValid: result });
-    } catch (error) {
-      res
-        .status(400)
-        .json({ error: (error as Error).message });
     }
   }
 }

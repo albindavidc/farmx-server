@@ -7,8 +7,8 @@ export interface UserDto {
   _id?: string;
   name: string;
   email: string;
-  phone: string;
   role: UserRole;
+  phone?: string;
   isVerified: boolean;
   isAdmin?: boolean;
   isBlocked?: boolean;

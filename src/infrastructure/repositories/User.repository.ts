@@ -11,9 +11,9 @@ export class UserRepositoryImpl implements UserRepository {
     return new User(
       userDoc.name,
       userDoc.email,
-      userDoc.phone,
       userDoc.password,
       (userDoc.role as UserRole) ?? UserRole.USER,
+      userDoc.phone,
       userDoc._id.toString(),
       userDoc.isVerified,
       userDoc.isAdmin,
