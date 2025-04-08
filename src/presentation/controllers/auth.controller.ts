@@ -25,6 +25,36 @@ export default class AuthController {
       await user.hashPassword();
 
       const response = await this.createUserUseCase.execute(user);
+
+      // // Optionally issue tokens upon signup (if part of your workflow)
+      // const { accessToken, refreshToken } = await this.loginUserUseCase.execute(email, password); // Assume LoginUser returns tokens
+      // res.cookie("refreshToken", refreshToken, {
+      //   httpOnly: true,
+      //   path: "/refresh",
+      //   sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      //   secure: process.env.NODE_ENV === "production",
+      //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
+      // });
+      // res.setHeader("Authorization", `Bearer ${accessToken}`);
+
+      // const messageRole = (role: string): string => {
+      //   if (role === "student") {
+      //     return "Student created successfully. Please verify your account.";
+      //   } else if (role === "tutor") {
+      //     return "Tutor created successfully. Please verify your account.";
+      //   } else {
+      //     return "User created successfully.";
+      //   }
+      // };
+
+      // sendResponseJson(
+      //   res,
+      //   HttpStatus.CREATED,
+      //   messageRole(role),
+      //   true,
+      //   { user: response, jwt_token: accessToken }
+      // );
+
       const successMessage =
         role === "user"
           ? "User created successfully. Please verify your account"
