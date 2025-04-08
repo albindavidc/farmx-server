@@ -4,7 +4,7 @@ import { User } from "../../domain/entities/User.entity";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../container/types";
+import { TYPES } from "../container/Types";
 
 @injectable()
 export default class AuthController {

@@ -1,29 +1,31 @@
 import express from "express";
-import { connectToDatabase } from "./infrastructure/persistence/mongodb/connection";
+import "reflect-metadata";
+import cors from "cors";
 
-import { AuthController } from "./presentation/controllers/auth.controller";
-import { createAuthRoutes } from "./presentation/routes/auth.routes";
-import { SimpleCommandBus } from "./infrastructure/command-bus/simple.command-bus";
+import connectToDatabase from "./infrastructure/database/MongooseConnection";
+import { createAuthRoutes } from "./presentation/routes/Auth.route";
 
 import dotenv from "dotenv";
 dotenv.config();
 
+async function bootstrap(): Promise<void> {
+  try {
+    await connectToDatabase();
 
-async function bootstrap() {
-  await connectToDatabase();
+    //Initialize Express app
+    const app = express();
 
-  const commandBus = new SimpleCommandBus();
-  const authController = new AuthController(commandBus);
+    //Middleware
+    app.use(express.json());
+    app.use(cors());
 
-  const app = express();
-  app.use(express.json());
+    app.use("/api/auth", createAuthRoutes());
 
-  app.use("/api/auth", createAuthRoutes(authController));
-
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () =>
-    console.log(`Server running on port ${PORT}`)
-  );
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (error) {
+    console.error("Failed to bootstrap application: ", error);
+  }
 }
 
 bootstrap().catch(console.error);

@@ -9,7 +9,7 @@ import {
   OtpResponseDto,
 } from "../../application/use-cases/dto/Otp.dto";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../container/types";
+import { TYPES } from "../container/Types";
 
 @injectable()
 export class OtpController {

@@ -1,10 +1,10 @@
 import { Container } from "inversify";
 import { GenerateOtpCommand } from "../../application/use-cases/commands/GenerateOtp.command";
-import { TYPES } from "./types";
+import { TYPES } from "./Types";
 import { VerifyOtpCommand } from "../../application/use-cases/commands/VerifyOtp.command";
 import { CreateUserCommand } from "../../application/use-cases/commands/Signup.command";
-import OtpController from "../controllers/otp.controller";
-import AuthController from "../controllers/auth.controller";
+import OtpController from "../controllers/Otp.controller";
+import AuthController from "../controllers/Auth.controller";
 
 const container = new Container();
 
