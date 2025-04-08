@@ -13,11 +13,11 @@ interface MailOptions {
 }
 
 export class OtpService {
-  private transporter: Transporter;
-  private logger: winston.Logger;
+  private static transporter: Transporter;
+  private static logger: winston.Logger;
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
+    OtpService.transporter = nodemailer.createTransport({
       host: configBrevo.BREVO.SMTP_SERVER,
       port: configBrevo.BREVO.PORT,
       auth: {
@@ -26,14 +26,14 @@ export class OtpService {
       },
     });
 
-    this.logger = winston.createLogger({
+    OtpService.logger = winston.createLogger({
       level: "error",
       format: winston.format.json(),
       transports: [new winston.transports.File({ filename: "error.log" })],
     });
   }
 
-  async sendOtpEmail(email: string, otp: string): Promise<void> {
+  static async sendOtpEmail(email: string, otp: string): Promise<void> {
     const templatePath = path.join(__dirname, "../templates/OtpEmail.ejs");
     const html = await ejs.renderFile(templatePath, {
       otp,
@@ -49,13 +49,13 @@ export class OtpService {
     };
 
     try {
-      await this.transporter.sendMail(mailOptions);
+      await OtpService.transporter.sendMail(mailOptions);
       console.log(`OTP email sent to ${email}`);
     } catch (error) {
-      this.logger.error(`Failed to send OTP to ${email}: `, error);
+      OtpService.logger.error(`Failed to send OTP to ${email}: `, error);
       throw new Error("Failed to send OTP email");
     }
   }
 }
 
-export default new OtpService();
+export default OtpService;
