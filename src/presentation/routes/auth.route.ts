@@ -4,7 +4,6 @@ import OtpController from "../controllers/Otp.controller";
 import { container } from "../container/Inversify.config";
 import refresh from "../middlewares/RefreshAuth.middleware";
 
-export function createAuthRoutes(): express.Router {
   const router = express.Router();
   //Resolve controllers from the container
   const otpController: OtpController =
@@ -28,5 +27,4 @@ export function createAuthRoutes(): express.Router {
   );
   router.post("/refresh", refresh);
 
-  return router;
-}
+  export default router;
