@@ -16,7 +16,7 @@ export class OtpService {
   private static transporter: Transporter;
   private static logger: winston.Logger;
 
-  constructor() {
+  static {
     OtpService.transporter = nodemailer.createTransport({
       host: configBrevo.BREVO.SMTP_SERVER,
       port: configBrevo.BREVO.PORT,

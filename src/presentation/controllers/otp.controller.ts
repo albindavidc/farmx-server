@@ -53,6 +53,73 @@ export class OtpController {
       );
     }
   }
+
+  public async resendOtpHandler(req: Request, res: Response): Promise<void> {
+    const { email } = req.body as OtpRequestDto;
+    if (!email) {
+      sendResponseJson(
+        res,
+        StatusCodes.BAD_REQUEST,
+        "Email is required",
+        false
+      );
+      return;
+    }
+
+    try {
+      const otpResponse: OtpResponseDto = await this.generateOtp.execute({
+        email,
+      });
+      if (!otpResponse.otp) {
+        throw new Error("Otp was not generated");
+      }
+      await OtpService.sendOtpEmail(email, otpResponse.otp);
+      sendResponseJson(res, StatusCodes.OK, "OTP resend successfull", true);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error resending Otp";
+      sendResponseJson(
+        res,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        errorMessage,
+        false
+      );
+    }
+  }
+
+  public async verifyOtpHandler(req: Request, res: Response): Promise<void> {
+    const { email, otp } = req.body as OtpRequestDto;
+    if (!email || !otp) {
+      sendResponseJson(
+        res,
+        StatusCodes.BAD_REQUEST,
+        "Email and OTP are required",
+        false
+      );
+    }
+
+    try {
+      const otpRequest: OtpRequestDto = { email, otp };
+      const isValid = await this.verifyOtp.execute(otpRequest);
+      if (isValid) {
+        sendResponseJson(
+          res,
+          StatusCodes.OK,
+          "OTP verified successfully.",
+          true
+        );
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error verifying OTP";
+      sendResponseJson(
+        res,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        errorMessage,
+        false
+      );
+    }
+  }
 }
 
 export default OtpController;
