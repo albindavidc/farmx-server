@@ -8,11 +8,14 @@ import {
   OtpRequestDto,
   OtpResponseDto,
 } from "../../application/use-cases/dto/Otp.dto";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../container/types";
 
+@injectable()
 export class OtpController {
   constructor(
-    public generateOtp: GenerateOtpCommand,
-    public verifyOtp: VerifyOtpCommand
+    @inject(TYPES.GenerateOtp) private generateOtp: GenerateOtpCommand,
+    @inject(TYPES.VerifyOtp) private verifyOtp: VerifyOtpCommand
   ) {}
 
   public async generateOtpHandler(req: Request, res: Response): Promise<void> {

@@ -3,9 +3,14 @@ import sendResponseJson from "../../application/utils/Message";
 import { User } from "../../domain/entities/User.entity";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../container/types";
 
+@injectable()
 export default class AuthController {
-  constructor(public createUserUseCase: UserUseCase) {}
+  constructor(
+    @inject(TYPES.CreateUser) private createUserUseCase: UserUseCase
+  ) {}
 
   public async signup(req: Request, res: Response): Promise<void> {
     try {

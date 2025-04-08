@@ -41,4 +41,5 @@ const refresh = async (req: Request, res: Response): Promise<void> => {
     sendResponseJson(res, StatusCodes.FORBIDDEN, errorMessage, false);
   }
 };
+
 export default refresh;
