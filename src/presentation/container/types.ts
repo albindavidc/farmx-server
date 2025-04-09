@@ -1,8 +1,12 @@
 export const TYPES = {
-  GenerateOtp: Symbol.for("GenerateOtp"),
-  VerifyOtp: Symbol.for("VerifyOtp"),
-  CreateUser: Symbol.for("CreateUser"),
+  GenerateOtpCommand: Symbol.for("GenerateOtpCommand"),
+  VerifyOtpCommand: Symbol.for("VerifyOtpCommand"),
+  CreateUserCommand: Symbol.for("CreateUserCommand"),
 
-  Otpcontroller: Symbol.for("OtpController"),
+  OtpController: Symbol.for("OtpController"),
   AuthController: Symbol.for("AuthController"),
+
+  OtpRepository: Symbol.for("OtpRepository"),
+  EmailService: Symbol.for("EmailService"),
+  UserRepository: Symbol.for("UserRepository"),
 };

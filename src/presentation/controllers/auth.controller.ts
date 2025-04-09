@@ -9,7 +9,7 @@ import { TYPES } from "../container/Types";
 @injectable()
 export default class AuthController {
   constructor(
-    @inject(TYPES.CreateUser) private createUserUseCase: UserUseCase
+    @inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase
   ) {}
 
   public async signup(req: Request, res: Response): Promise<void> {

@@ -3,6 +3,8 @@ import { configBrevo } from "../../infrastructure/config/ConfigSetup";
 import winston from "winston";
 import path from "path";
 import ejs from "ejs";
+import { injectable } from "inversify";
+import { EmailService } from "../../domain/interfaces/services/email.service";
 
 interface MailOptions {
   from: string;
@@ -12,12 +14,13 @@ interface MailOptions {
   html?: string;
 }
 
-export class OtpService {
-  private static transporter: Transporter;
-  private static logger: winston.Logger;
+@injectable()
+export class EmailServiceImpl implements EmailService {
+  private transporter: Transporter;
+  private logger: winston.Logger;
 
-  static {
-    OtpService.transporter = nodemailer.createTransport({
+  constructor() {
+    this.transporter = nodemailer.createTransport({
       host: configBrevo.BREVO.SMTP_SERVER,
       port: configBrevo.BREVO.PORT,
       auth: {
@@ -26,14 +29,14 @@ export class OtpService {
       },
     });
 
-    OtpService.logger = winston.createLogger({
+    this.logger = winston.createLogger({
       level: "error",
       format: winston.format.json(),
       transports: [new winston.transports.File({ filename: "error.log" })],
     });
   }
 
-  static async sendOtpEmail(email: string, otp: string): Promise<void> {
+  async sendOtpEmail(email: string, otp: string): Promise<void> {
     const templatePath = path.join(__dirname, "../templates/OtpEmail.ejs");
     const html = await ejs.renderFile(templatePath, {
       otp,
@@ -49,13 +52,13 @@ export class OtpService {
     };
 
     try {
-      await OtpService.transporter.sendMail(mailOptions);
+      await this.transporter.sendMail(mailOptions);
       console.log(`OTP email sent to ${email}`);
     } catch (error) {
-      OtpService.logger.error(`Failed to send OTP to ${email}: `, error);
+      this.logger.error(`Failed to send OTP to ${email}: `, error);
       throw new Error("Failed to send OTP email");
     }
   }
 }
 
-export default OtpService;
+export default EmailServiceImpl;

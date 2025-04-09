@@ -1,14 +1,16 @@
+import { inject } from "inversify";
 import { OTPRepository } from "../../../domain/interfaces/repositories/Otp.repository";
 import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
 import { Email } from "../../../domain/value-objects/Email.vo";
 import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
 import { InvalidOtpException } from "../exceptions/InvalidOtp.exception";
 import { UserNotFoundException } from "../exceptions/UserNotFound.exception";
+import { TYPES } from "../../../presentation/container/Types";
 
 export class VerifyOtpCommand {
   constructor(
-    private otpRepository: OTPRepository,
-    private userRepository: UserRepository
+    @inject(TYPES.OtpRepository) private otpRepository: OTPRepository,
+    @inject(TYPES.UserRepository) private userRepository: UserRepository
   ) {}
 
   public async execute(dto: OtpRequestDto): Promise<OtpResponseDto> {

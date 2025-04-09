@@ -1,12 +1,14 @@
+import { inject } from "inversify";
 import { OTPRepository } from "../../../domain/interfaces/repositories/Otp.repository";
 import { EmailService } from "../../../domain/interfaces/services/email.service";
 import { GenerateNewOtp } from "../../utils/GenerateOtp";
 import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
+import { TYPES } from "../../../presentation/container/Types";
 
 export class GenerateOtpCommand {
   constructor(
-    private otpRepository: OTPRepository,
-    private emailService: EmailService
+    @inject(TYPES.OtpRepository) private otpRepository: OTPRepository,
+    @inject(TYPES.EmailService) private emailService: EmailService
   ) {}
 
   public async execute(dto: OtpRequestDto): Promise<OtpResponseDto> {

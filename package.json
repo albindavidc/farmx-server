@@ -4,9 +4,6 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/index.ts",
-    "clean": "find . -name '*.test.ts' -delete && rm -rf dist",
-    "build": "npm run clean && tsc --noEmitOnError",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/index.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "typecheck": "tsc --noEmit",

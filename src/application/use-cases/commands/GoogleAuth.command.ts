@@ -7,9 +7,13 @@ import {
   generateAcessToken,
   generateRefreshToken,
 } from "../../utils/TokenUtility";
+import { inject } from "inversify";
+import { TYPES } from "../../../presentation/container/Types";
 
 export class GoogleAuthCommand {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    @inject(TYPES.UserRepository) private userRepository: UserRepository
+  ) {}
 
   public async execute(idToken: string): Promise<GoogleAuthResponseDto> {
     const decodedToken = await admin.auth().verifyIdToken(idToken);

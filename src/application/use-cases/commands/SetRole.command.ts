@@ -1,3 +1,4 @@
+import { inject } from "inversify";
 import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
 import {
   generateAcessToken,
@@ -6,9 +7,10 @@ import {
 import { RoleResponseDto, RoleUpdateDto } from "../dto/Role.dto";
 import { UserNotFoundException } from "../exceptions/UserNotFound.exception";
 import { UserMapper } from "../mappers/User.mapper";
+import { TYPES } from "../../../presentation/container/Types";
 
 export class SetRoleCommand {
-  constructor(public userRepository: UserRepository) {}
+  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
 
   public async execute(dto: RoleUpdateDto): Promise<RoleResponseDto> {
     const user = await this.userRepository.setRole(dto.userId, dto.role);
