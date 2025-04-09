@@ -93,7 +93,7 @@ async function bootstrap(): Promise<void> {
   );
 
   //Routes
-  app.use("/api/auth", authRoute);
+  app.use("/auth", authRoute);
 
   //Start server
   startServer(app, server, PORT);
