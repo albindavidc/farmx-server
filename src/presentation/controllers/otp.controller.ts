@@ -3,10 +3,7 @@ import { GenerateOtpCommand } from "../../application/use-cases/commands/Generat
 import { VerifyOtpCommand } from "../../application/use-cases/commands/VerifyOtp.command";
 import sendResponseJson from "../../application/utils/Message";
 import { Request, Response } from "express";
-import {
-  OtpRequestDto,
-  OtpResponseDto,
-} from "../../application/use-cases/dto/Otp.dto";
+import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../container/Types";
 import { EmailService } from "../../domain/interfaces/services/email.service";
@@ -22,12 +19,7 @@ export class OtpController {
   public async generateOtpHandler(req: Request, res: Response): Promise<void> {
     const { email } = req.body as OtpRequestDto;
     if (!email) {
-      sendResponseJson(
-        res,
-        StatusCodes.BAD_REQUEST,
-        "Email address is required",
-        false
-      );
+      sendResponseJson(res, StatusCodes.BAD_REQUEST, "Email address is required", false);
       return;
     }
 
@@ -39,34 +31,18 @@ export class OtpController {
         throw new Error("OTP was not generated");
       }
       await this.emailService.sendOtpEmail(email, otpResponse.otp);
-      sendResponseJson(
-        res,
-        StatusCodes.OK,
-        "OTP generated successfully.",
-        true
-      );
+      sendResponseJson(res, StatusCodes.OK, "OTP generated successfully.", true);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Error generating OTP";
+      const errorMessage = error instanceof Error ? error.message : "Error generating OTP";
 
-      sendResponseJson(
-        res,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-        errorMessage,
-        false
-      );
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
 
   public async resendOtpHandler(req: Request, res: Response): Promise<void> {
     const { email } = req.body as OtpRequestDto;
     if (!email) {
-      sendResponseJson(
-        res,
-        StatusCodes.BAD_REQUEST,
-        "Email is required",
-        false
-      );
+      sendResponseJson(res, StatusCodes.BAD_REQUEST, "Email is required", false);
       return;
     }
 
@@ -80,48 +56,56 @@ export class OtpController {
       await this.emailService.sendOtpEmail(email, otpResponse.otp);
       sendResponseJson(res, StatusCodes.OK, "OTP resend successfull", true);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Error resending Otp";
-      sendResponseJson(
-        res,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-        errorMessage,
-        false
-      );
+      const errorMessage = error instanceof Error ? error.message : "Error resending Otp";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
 
   public async verifyOtpHandler(req: Request, res: Response): Promise<void> {
     const { email, otp } = req.body as OtpRequestDto;
     if (!email || !otp) {
-      sendResponseJson(
-        res,
-        StatusCodes.BAD_REQUEST,
-        "Email and OTP are required",
-        false
-      );
+      sendResponseJson(res, StatusCodes.BAD_REQUEST, "Email and OTP are required", false);
     }
 
     try {
       const otpRequest: OtpRequestDto = { email, otp };
       const isValid = await this.verifyOtp.execute(otpRequest);
-      if (isValid) {
-        sendResponseJson(
-          res,
-          StatusCodes.OK,
-          "OTP verified successfully.",
-          true
-        );
-      }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Error verifying OTP";
+
+      // Optionally issue tokens upon signup (if part of your workflow)
+      const { accessToken, refreshToken } = await this.loginUserUseCase.execute(email, password); // Assume LoginUser returns tokens
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        path: "/refresh",
+        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
+      });
+      res.setHeader("Authorization", `Bearer ${accessToken}`);
+
+      const messageRole = (role: string): string => {
+        if (role === "student") {
+          return "Student created successfully. Please verify your account.";
+        } else if (role === "tutor") {
+          return "Tutor created successfully. Please verify your account.";
+        } else {
+          return "User created successfully.";
+        }
+      };
+
       sendResponseJson(
         res,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-        errorMessage,
-        false
+        HttpStatus.CREATED,
+        messageRole(role),
+        true,
+        { user: response, jwt_token: accessToken }
       );
+
+      if (isValid) {
+        sendResponseJson(res, StatusCodes.OK, "OTP verified successfully.", true);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error verifying OTP";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
 }
