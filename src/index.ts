@@ -1,5 +1,5 @@
 import express from "express";
-import "reflect-metadata";
+import 'reflect-metadata';
 import cors from "cors";
 import { createServer, Server as HttpServer } from "http";
 import connectToDatabase from "./infrastructure/database/MongooseConnection";
@@ -65,7 +65,7 @@ async function bootstrap(): Promise<void> {
   //Initialize Express & HTTP app
   const app = express();
   const server = createServer(app);
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.APP_PORT || 5000;
 
   //Logging setup
   const logDirectory = path.join(__dirname, `logs`);

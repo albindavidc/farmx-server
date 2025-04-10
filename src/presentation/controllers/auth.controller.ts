@@ -8,27 +8,22 @@ import { TYPES } from "../container/Types";
 
 @injectable()
 export default class AuthController {
-  constructor(
-    @inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase
-  ) {}
+  constructor(@inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase) {}
 
   public async signup(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email, password, role } = req.body;
+      const { name, email, phone, role, password } = req.body;
 
-      if (!name || !email || !password || !role) {
-        sendResponseJson(
-          res,
-          StatusCodes.BAD_REQUEST,
-          "All fields are required",
-          false
-        );
+      if (!name || !email || !password || !phone) {
+        sendResponseJson(res, StatusCodes.BAD_REQUEST, "All fields are required", false);
         return;
       }
 
-      const user = new User(name, email, password, role);
-      await user.hashPassword();
 
+
+      const user = new User(name, email, password, role, phone);
+
+      console.log(user,'this is from the backend - to validate')
       const response = await this.createUserUseCase.execute(user);
 
       // // Optionally issue tokens upon signup (if part of your workflow)
@@ -67,23 +62,11 @@ export default class AuthController {
           ? "Farmer created successfully. Please verify your account."
           : "Guest created successfully";
 
-      sendResponseJson(
-        res,
-        StatusCodes.CREATED,
-        successMessage,
-        true,
-        response
-      );
+      sendResponseJson(res, StatusCodes.CREATED, successMessage, true, response);
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Error creating user";
+      const errorMessage = error instanceof Error ? error.message : "Error creating user";
 
-      sendResponseJson(
-        res,
-        StatusCodes.INTERNAL_SERVER_ERROR,
-        errorMessage,
-        false
-      );
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
 }

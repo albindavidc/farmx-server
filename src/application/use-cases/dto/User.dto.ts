@@ -8,7 +8,7 @@ export interface UserDto {
   name: string;
   email: string;
   role: UserRole;
-  phone?: string;
+  phone: string;
   isVerified: boolean;
   isAdmin?: boolean;
   isBlocked?: boolean;
@@ -32,4 +32,5 @@ export interface SignupRequestDto {
   email: string;
   password: string;
   role?: string;
+  phone: string;
 }

@@ -21,8 +21,8 @@ export class CreateUserCommand {
     const role = dto.role
       ? UserRole[dto.role as keyof typeof UserRole] || UserRole.USER
       : UserRole.USER;
-      
-    const newUser = new User(dto.name, dto.email, dto.password, role);
+
+    const newUser = new User(dto.name, dto.email, dto.password, role, dto.phone);
     const createdUser = await this.userRepository.create(newUser);
     return UserMapper.toDto(createdUser);
   }

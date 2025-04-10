@@ -11,7 +11,7 @@ export class User {
     public email: string,
     public password: string | Password,
     public role: UserRole,
-    public phone?: string,
+    public phone: string,
     public _id?: string,
     public isVerified: boolean = false,
     public isAdmin: boolean = false,
@@ -41,12 +41,12 @@ export class User {
     return pwd.getHashedValue();
   }
 
-  public async hashPassword(): Promise<void> {
-    if (typeof this.password !== "string") {
-      throw new Error("Password already hashed");
-    }
-    this.password = await Password.hash(this.password);
-  }
+  // public async hashPassword(): Promise<void> {
+  //   if (typeof this.password !== "string") {
+  //     throw new Error("Password already hashed");
+  //   }
+  //   this.password = await Password.hash(this.password);
+  // }
 
   public async verifyPassword(plainText: string): Promise<boolean> {
     const password = await this._password;

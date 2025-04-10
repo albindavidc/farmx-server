@@ -18,9 +18,9 @@ export interface UserCertificate {
 export interface UserDocument extends Document {
   name: string;
   email: string;
-  phone: string;
   password: string;
   role?: "user" | "farmer" | "admin";
+  phone: string;
   _id: string;
   isVerified: boolean;
   isAdmin: boolean;
