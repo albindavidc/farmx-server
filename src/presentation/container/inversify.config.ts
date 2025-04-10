@@ -9,6 +9,7 @@ import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.reposit
 import EmailServiceImpl from "../../application/services/OtpService";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repository";
 import { EmailService } from "../../domain/interfaces/services/email.service";
+import { AuthService } from "../../application/services/Auth.service";
 
 const container = new Container();
 
@@ -27,5 +28,7 @@ container.bind<OtpController>(TYPES.OtpController).to(OtpController).inSingleton
 container.bind<EmailService>(TYPES.EmailService).to(EmailServiceImpl).inSingletonScope();
 container.bind<OtpRepositoryImpl>(TYPES.OtpRepository).to(OtpRepositoryImpl).inSingletonScope();
 container.bind<UserRepositoryImpl>(TYPES.UserRepository).to(UserRepositoryImpl).inSingletonScope();
+
+container.bind<AuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
 
 export { container };

@@ -1,24 +1,27 @@
+import { inject, injectable } from "inversify";
 import { User } from "../../domain/entities/User.entity";
 import { UserRepository } from "../../domain/interfaces/repositories/User.repository";
+import { Email } from "../../domain/value-objects/Email.vo";
 import {
   generateAcessToken,
   generateRefreshToken,
   TokenPayload,
   verifyRefreshToken,
 } from "../utils/TokenUtility";
+import { TYPES } from "../../presentation/container/Types";
 
+@injectable()
 export class AuthService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
 
   async verifyOtp(
-    tempUserId: string,
-    otp: string
+    email: Email
   ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
-    const user = await this.userRepository.findById(tempUserId);
-    if (!user || user.isVerified || !otp) throw new Error("Invalid or already verified user");
+    const user = await this.userRepository.findByEmail(email);
+    if (!user || !user._id) throw new Error("Invalid or already verified user");
 
     user.isVerified = true;
-    const updatedUser = await this.userRepository.update(tempUserId, user);
+    const updatedUser = await this.userRepository.update(user._id, user);
 
     const payload: TokenPayload = {
       id: updatedUser?._id,

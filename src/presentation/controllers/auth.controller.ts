@@ -5,10 +5,14 @@ import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../container/Types";
+import { AuthService } from "../../application/services/Auth.service";
 
 @injectable()
 export default class AuthController {
-  constructor(@inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase) {}
+  constructor(
+    @inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase,
+    @inject(TYPES.AuthService) private authService: AuthService
+  ) {}
 
   public async signup(req: Request, res: Response): Promise<void> {
     try {
@@ -35,6 +39,23 @@ export default class AuthController {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Error creating user";
 
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  async refreshToken(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.body;
+      const { accessToken, refreshToken: newRefreshToken } = await this.authService.refreshToken(
+        refreshToken
+      );
+      sendResponseJson(res, StatusCodes.OK, "Successfully created", true, {
+        accessToken,
+        refreshToken: newRefreshToken,
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error while creating a new refresh token";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }

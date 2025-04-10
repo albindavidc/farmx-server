@@ -7,7 +7,7 @@ import {
   verifyRefreshToken,
 } from "../../application/utils/TokenUtility";
 
-const refresh = async (req: Request, res: Response): Promise<void> => {
+const refreshToken = async (req: Request, res: Response): Promise<void> => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -42,4 +42,4 @@ const refresh = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export default refresh;
+export default refreshToken;

@@ -7,13 +7,16 @@ import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/O
 import { inject, injectable } from "inversify";
 import { TYPES } from "../container/Types";
 import { EmailService } from "../../domain/interfaces/services/email.service";
+import { AuthService } from "../../application/services/Auth.service";
+import { Email } from "../../domain/value-objects/Email.vo";
 
 @injectable()
 export class OtpController {
   constructor(
     @inject(TYPES.GenerateOtpCommand) private generateOtp: GenerateOtpCommand,
     @inject(TYPES.VerifyOtpCommand) private verifyOtp: VerifyOtpCommand,
-    @inject(TYPES.EmailService) private emailService: EmailService
+    @inject(TYPES.EmailService) private emailService: EmailService,
+    @inject(TYPES.AuthService) private authService: AuthService
   ) {}
 
   public async generateOtpHandler(req: Request, res: Response): Promise<void> {
@@ -71,8 +74,9 @@ export class OtpController {
       const otpRequest: OtpRequestDto = { email, otp };
       const isValid = await this.verifyOtp.execute(otpRequest);
 
-      // Optionally issue tokens upon signup (if part of your workflow)
-      const { accessToken, refreshToken } = await this.loginUserUseCase.execute(email, password); // Assume LoginUser returns tokens
+      // Issue tokens upon signup
+      const newEmail = Email.create(email);
+      const { user, accessToken, refreshToken } = await this.authService.verifyOtp(newEmail);
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         path: "/refresh",
@@ -82,26 +86,13 @@ export class OtpController {
       });
       res.setHeader("Authorization", `Bearer ${accessToken}`);
 
-      const messageRole = (role: string): string => {
-        if (role === "student") {
-          return "Student created successfully. Please verify your account.";
-        } else if (role === "tutor") {
-          return "Tutor created successfully. Please verify your account.";
-        } else {
-          return "User created successfully.";
-        }
-      };
-
-      sendResponseJson(
-        res,
-        HttpStatus.CREATED,
-        messageRole(role),
-        true,
-        { user: response, jwt_token: accessToken }
-      );
-
       if (isValid) {
-        sendResponseJson(res, StatusCodes.OK, "OTP verified successfully.", true);
+        res.status(200).json({user, accessToken, refreshToken})
+        // sendResponseJson(res, StatusCodes.OK, "OTP verified successfully.", true, {
+        //   user,
+        //   accessToken,
+        //   refreshToken,
+        // });
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error verifying OTP";
