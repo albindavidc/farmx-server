@@ -6,10 +6,11 @@ import { CreateUserCommand } from "../../application/use-cases/commands/Signup.c
 import OtpController from "../controllers/Otp.controller";
 import AuthController from "../controllers/Auth.controller";
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
-import EmailServiceImpl from "../../application/services/OtpService";
+import EmailServiceImpl from "../../application/services/Otp.service";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repository";
-import { EmailService } from "../../domain/interfaces/services/email.service";
+import { EmailService } from "../../domain/interfaces/services/Email.service";
 import { AuthService } from "../../application/services/Auth.service";
+import { LoginService } from "../../application/services/Login.service";
 
 const container = new Container();
 
@@ -30,5 +31,6 @@ container.bind<OtpRepositoryImpl>(TYPES.OtpRepository).to(OtpRepositoryImpl).inS
 container.bind<UserRepositoryImpl>(TYPES.UserRepository).to(UserRepositoryImpl).inSingletonScope();
 
 container.bind<AuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
+container.bind<LoginService>(TYPES.LoginService).to(LoginService).inSingletonScope();
 
 export { container };

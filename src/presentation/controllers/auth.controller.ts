@@ -6,12 +6,15 @@ import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../container/Types";
 import { AuthService } from "../../application/services/Auth.service";
+import { LoginService } from "../../application/services/Login.service";
+import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/login.dto";
 
 @injectable()
 export default class AuthController {
   constructor(
     @inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase,
-    @inject(TYPES.AuthService) private authService: AuthService
+    @inject(TYPES.AuthService) private authService: AuthService,
+    @inject(TYPES.LoginService) private loginService: LoginService
   ) {}
 
   public async signup(req: Request, res: Response): Promise<void> {
@@ -38,6 +41,19 @@ export default class AuthController {
       sendResponseJson(res, StatusCodes.CREATED, successMessage, true, response);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Error creating user";
+
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  public async login(req: Request, res: Response): Promise<void> {
+    try {
+      const request: LoginRequest = req.body;
+      const response: LoginResponse = await this.loginService.login(request);
+
+      res.status(200).json(response);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error logging In";
 
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }

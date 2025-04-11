@@ -15,6 +15,7 @@ router.post("/signup", authController.signup.bind(authController));
 router.post("/send-otp", otpController.generateOtpHandler.bind(otpController));
 router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));
 router.post("/verify-otp", otpController.verifyOtpHandler.bind(otpController));
+router.post("/login", authController.login.bind(authController));
 router.post("/refresh", refreshToken);
 
 export default router;

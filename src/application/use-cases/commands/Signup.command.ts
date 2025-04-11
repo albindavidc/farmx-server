@@ -12,7 +12,9 @@ export class CreateUserCommand {
   constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
 
   public async execute(dto: SignupRequestDto): Promise<UserDto> {
+    
     const email = Email.create(dto.email);
+    
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new UserExistsException(dto.email);

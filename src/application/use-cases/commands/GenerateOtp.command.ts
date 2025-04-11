@@ -1,6 +1,6 @@
 import { inject } from "inversify";
 import { OTPRepository } from "../../../domain/interfaces/repositories/Otp.repository";
-import { EmailService } from "../../../domain/interfaces/services/email.service";
+import { EmailService } from "../../../domain/interfaces/services/Email.service";
 import { GenerateNewOtp } from "../../utils/GenerateOtp";
 import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
 import { TYPES } from "../../../presentation/container/Types";

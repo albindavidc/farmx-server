@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../container/Types";
-import { EmailService } from "../../domain/interfaces/services/email.service";
+import { EmailService } from "../../domain/interfaces/services/Email.service";
 import { AuthService } from "../../application/services/Auth.service";
 import { Email } from "../../domain/value-objects/Email.vo";
 
@@ -77,6 +77,7 @@ export class OtpController {
       // Issue tokens upon signup
       const newEmail = Email.create(email);
       const { user, accessToken, refreshToken } = await this.authService.verifyOtp(newEmail);
+      
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         path: "/refresh",
@@ -87,12 +88,7 @@ export class OtpController {
       res.setHeader("Authorization", `Bearer ${accessToken}`);
 
       if (isValid) {
-        res.status(200).json({user, accessToken, refreshToken})
-        // sendResponseJson(res, StatusCodes.OK, "OTP verified successfully.", true, {
-        //   user,
-        //   accessToken,
-        //   refreshToken,
-        // });
+        res.status(200).json({ user, accessToken, refreshToken });
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error verifying OTP";

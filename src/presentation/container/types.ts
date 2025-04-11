@@ -10,5 +10,6 @@ export const TYPES = {
   EmailService: Symbol.for("EmailService"),
   UserRepository: Symbol.for("UserRepository"),
 
-  AuthService: Symbol.for("AuthService")
+  AuthService: Symbol.for("AuthService"),
+  LoginService: Symbol.for("LoginService"),
 };
