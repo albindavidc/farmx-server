@@ -27,6 +27,7 @@ export const verifyToken = (allowedRoles?: string[]): RequestHandler => {
         false
       );
       return;
+      
     }
 
     const token = authHeader.split(" ")[1];

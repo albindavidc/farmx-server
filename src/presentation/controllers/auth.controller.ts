@@ -82,6 +82,13 @@ export default class AuthController {
 
       const newAccessToken = await AuthService.refreshToken(refreshToken);
 
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
+
       sendResponseJson(res, StatusCodes.OK, "Successfully created", true, {
         accessToken: newAccessToken,
       });
@@ -90,5 +97,11 @@ export default class AuthController {
         error instanceof Error ? error.message : "Error while creating a new refresh token";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
+  }
+
+  async logout(req: Request, res: Response) {
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    sendResponseJson(res, StatusCodes.OK, "Logout Successful", true);
   }
 }
