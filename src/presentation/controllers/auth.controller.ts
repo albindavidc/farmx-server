@@ -55,7 +55,7 @@ export default class AuthController {
         httpOnly: true,
         secure: process.env.NOCE_ENV === "production",
         sameSite: "strict",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 60 * 60 * 1000,
       });
 
       res.cookie("refreshToken", response.refreshToken, {
@@ -86,7 +86,7 @@ export default class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 60 * 60 * 1000,
       });
 
       sendResponseJson(res, StatusCodes.OK, "Successfully created", true, {
