@@ -39,14 +39,13 @@ export class AuthService {
     return { user: updatedUser, accessToken, refreshToken };
   }
 
-  async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+  static async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
     const payload = verifyRefreshToken(refreshToken);
 
     if (!payload) throw new Error("Invalid refresh token");
 
     const newAccessToken = generateAcessToken(payload);
-    const newRefreshToken = generateRefreshToken(payload);
 
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    return { accessToken: newAccessToken };
   }
 }

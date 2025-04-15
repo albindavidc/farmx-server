@@ -51,6 +51,20 @@ export default class AuthController {
       const request: LoginRequest = req.body;
       const response: LoginResponse = await this.loginService.login(request);
 
+      res.cookie("accessToken", response.accessToken, {
+        httpOnly: true,
+        secure: process.env.NOCE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
+
+      res.cookie("refreshToken", response.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      });
+
       res.status(200).json(response);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error logging In";
@@ -61,13 +75,15 @@ export default class AuthController {
 
   async refreshToken(req: Request, res: Response) {
     try {
-      const { refreshToken } = req.body;
-      const { accessToken, refreshToken: newRefreshToken } = await this.authService.refreshToken(
-        refreshToken
-      );
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        return sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Refresh token is required", false);
+      }
+
+      const newAccessToken = await AuthService.refreshToken(refreshToken);
+
       sendResponseJson(res, StatusCodes.OK, "Successfully created", true, {
-        accessToken,
-        refreshToken: newRefreshToken,
+        accessToken: newAccessToken,
       });
     } catch (error) {
       const errorMessage =
