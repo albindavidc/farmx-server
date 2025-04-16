@@ -5,11 +5,12 @@ import { container } from "../container/Inversify.config";
 import { TYPES } from "../container/Types";
 
 const router = express.Router();
-//Resolve controllers from the container
+
+/* Resolve controllers from the container */
 const otpController: OtpController = container.get<OtpController>(TYPES.OtpController);
 const authController: AuthController = container.get<AuthController>(TYPES.AuthController);
 
-//Routes
+/* Routes */
 router.post("/signup", authController.signup.bind(authController));
 router.post("/send-otp", otpController.generateOtpHandler.bind(otpController));
 router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));

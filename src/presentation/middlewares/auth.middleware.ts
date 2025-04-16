@@ -6,13 +6,18 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "../../application/utils/TokenUtility";
-import UserSchema from "../../infrastructure/database/schemas/UserSchema";
+import UserSchema, { UserDocument } from "../../infrastructure/database/schemas/UserSchema";
 
-export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+interface AuthRequest extends Request {
+  user?: UserDocument;
+}
+
+export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {
-    return sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Access token required", false);
+    sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Access token required", false);
+    return;
   }
 
   try {
@@ -20,7 +25,8 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const user = await UserSchema.findById(decoded?.id);
 
     if (!user) {
-      return sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+      sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+      return;
     }
     req.user = user;
     next();
@@ -30,12 +36,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      return sendResponseJson(
+      sendResponseJson(
         res,
         StatusCodes.UNAUTHORIZED,
         `Refresh token required && ${errorMessage}`,
         false
       );
+      return;
     }
     try {
       const decodedRefresh = verifyRefreshToken(refreshToken);
@@ -57,24 +64,28 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
       const user = await UserSchema.findById(decodedRefresh.id);
       if (!user) {
-        return sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+        return;
       }
 
       req.user = user;
       next();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Invalid refresh Token";
-      return sendResponseJson(res, StatusCodes.FORBIDDEN, errorMessage, false);
+      sendResponseJson(res, StatusCodes.FORBIDDEN, errorMessage, false);
+      return;
     }
   }
 };
 export const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || !req.user.role) {
-      return sendResponseJson(res, StatusCodes.FORBIDDEN, "User not found", false);
+      sendResponseJson(res, StatusCodes.FORBIDDEN, "User not found", false);
+      return;
     }
     if (!roles.includes(req.user.role)) {
-      return sendResponseJson(res, StatusCodes.FORBIDDEN, "Forbidden to enter here", false);
+      sendResponseJson(res, StatusCodes.FORBIDDEN, "Forbidden to enter here", false);
+      return;
     }
     next();
   };

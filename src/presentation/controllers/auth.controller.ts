@@ -99,6 +99,22 @@ export default class AuthController {
     }
   }
 
+  public async getCurrentUser(req: Request, res: Response) {
+    if (!req.user) {
+      sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Not authenticated", false);
+      return;
+    }
+
+    const user = {
+      id: req.user._id.toString(),
+      email: req.user.email,
+      role: req.user.role,
+      name: req.user.name,
+      phone: req.user.phone,
+    };
+    sendResponseJson(res, StatusCodes.OK, "User Featched", true, user);
+  }
+
   async logout(req: Request, res: Response) {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
