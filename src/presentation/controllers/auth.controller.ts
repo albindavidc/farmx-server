@@ -77,7 +77,8 @@ export default class AuthController {
     try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
-        return sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Refresh token is required", false);
+        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Refresh token is required", false);
+        return;
       }
 
       const newAccessToken = await AuthService.refreshToken(refreshToken);
@@ -108,9 +109,11 @@ export default class AuthController {
     const user = {
       id: req.user._id.toString(),
       email: req.user.email,
-      role: req.user.role,
       name: req.user.name,
+      password: "",
       phone: req.user.phone,
+      role: req.user.role,
+      isVerified: req.user.isVerified,
     };
     sendResponseJson(res, StatusCodes.OK, "User Featched", true, user);
   }
