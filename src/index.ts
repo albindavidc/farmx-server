@@ -1,5 +1,5 @@
 import express from "express";
-import 'reflect-metadata';
+import "reflect-metadata";
 import cors from "cors";
 import { createServer, Server as HttpServer } from "http";
 import connectToDatabase from "./infrastructure/database/MongooseConnection";
@@ -13,6 +13,8 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { Request, Response } from "express";
 
+import userRouter from "./presentation/routes/User.route";
+
 dotenv.config();
 
 const allowOrigins = [
@@ -21,11 +23,9 @@ const allowOrigins = [
   configFrontend.frontendUrlProdNew,
 ];
 
+/* Cors Setup */
 const corsOptions = {
-  origin: (
-    origin: string | undefined,
-    callback: (err: Error | null, allowed: boolean) => void
-  ) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allowed: boolean) => void) => {
     if (!origin || allowOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -34,22 +34,13 @@ const corsOptions = {
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "X-Requested-With",
-    "Accept",
-    "Origin",
-  ],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
 
-const startServer = async (
-  app: express.Express,
-  server: HttpServer,
-  port: string | number
-) => {
+/* Start the server */
+const startServer = async (app: express.Express, server: HttpServer, port: string | number) => {
   try {
     await connectToDatabase();
     server.listen(port, () => {
@@ -62,12 +53,12 @@ const startServer = async (
 };
 
 async function bootstrap(): Promise<void> {
-  //Initialize Express & HTTP app
+  /* Initialize Express & HTTP app */
   const app = express();
   const server = createServer(app);
   const PORT = process.env.APP_PORT || 5000;
 
-  //Logging setup
+  /* Logging setup */
   const logDirectory = path.join(__dirname, `logs`);
   if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
@@ -78,7 +69,7 @@ async function bootstrap(): Promise<void> {
     maxFiles: 7,
   });
 
-  //Middleware
+  /* Middleware */
   app.use(cors(corsOptions));
   app.use(express.json({ limit: "20mb" }));
 
@@ -92,10 +83,11 @@ async function bootstrap(): Promise<void> {
     })
   );
 
-  //Routes
+  /* Routes */
   app.use("/auth", authRoute);
+  app.use("/user/settings", userRouter);
 
-  //Start server
+  /* Start server */
   startServer(app, server, PORT);
 }
 

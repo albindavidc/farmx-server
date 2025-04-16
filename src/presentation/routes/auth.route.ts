@@ -2,7 +2,6 @@ import express from "express";
 import AuthController from "../controllers/Auth.controller";
 import OtpController from "../controllers/Otp.controller";
 import { container } from "../container/Inversify.config";
-import refreshToken from "../middlewares/RefreshAuth.middleware";
 import { TYPES } from "../container/Types";
 
 const router = express.Router();
@@ -16,6 +15,5 @@ router.post("/send-otp", otpController.generateOtpHandler.bind(otpController));
 router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));
 router.post("/verify-otp", otpController.verifyOtpHandler.bind(otpController));
 router.post("/login", authController.login.bind(authController));
-router.post("/refresh", refreshToken);
 
 export default router;
