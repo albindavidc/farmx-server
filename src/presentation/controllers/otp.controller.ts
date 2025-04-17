@@ -80,11 +80,20 @@ export class OtpController {
       
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        path: "/refresh",
+        path: "/auth/refresh-access-token",
         sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
         secure: process.env.NODE_ENV === "production",
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
       });
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: process.env.NOCE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000,
+      });
+
+
       res.setHeader("Authorization", `Bearer ${accessToken}`);
 
       if (isValid) {

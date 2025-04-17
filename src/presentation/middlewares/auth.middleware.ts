@@ -13,7 +13,10 @@ interface AuthRequest extends Request {
 }
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  const accessToken = req.cookies.accessToken;
+  let accessToken = req.headers.authorization?.split(" ")[1];
+  if (!accessToken && req.cookies?.accessToken) {
+    accessToken = req.cookies.accessToken;
+  }
 
   if (!accessToken) {
     sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Access token required", false);

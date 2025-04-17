@@ -85,7 +85,7 @@ async function bootstrap(): Promise<void> {
 
   /* Routes */
   app.use("/auth", authRoute);
-  app.use("/user/settings", userRouter);
+  app.use("/user", userRouter);
 
   /* Start server */
   startServer(app, server, PORT);

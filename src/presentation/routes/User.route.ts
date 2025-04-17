@@ -9,7 +9,7 @@ const router = express.Router();
 const authController: AuthController = container.get<AuthController>(TYPES.AuthController);
 
 router.get(
-  "/user",
+  "/",
   authenticate,
   authorize(["user", "farmer", "admin"]),
   authController.getCurrentUser.bind(authController)

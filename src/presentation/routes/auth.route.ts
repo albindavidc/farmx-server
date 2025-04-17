@@ -23,7 +23,7 @@ router.post("/send-otp", otpController.generateOtpHandler.bind(otpController));
 router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));
 router.post("/verify-otp", otpController.verifyOtpHandler.bind(otpController));
 router.post("/login", authController.login.bind(authController));
-router.post("/refresh", refreshLimiter, authController.refreshToken.bind(authController));
+router.post("/refresh-access-token", refreshLimiter, authController.refreshToken.bind(authController));
 router.post("/logout", authController.logout.bind(authController));
 
 export default router;
