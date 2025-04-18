@@ -1,8 +1,8 @@
 import { Container } from "inversify";
-import { GenerateOtpCommand } from "../../application/use-cases/commands/GenerateOtp.command";
+import { GenerateOtpCommand } from "../../application/use-cases/commands-handler/GenerateOtp.command";
 import { TYPES } from "./Types";
-import { VerifyOtpCommand } from "../../application/use-cases/commands/VerifyOtp.command";
-import { CreateUserCommand } from "../../application/use-cases/commands/Signup.command";
+import { VerifyOtpCommand } from "../../application/use-cases/commands-handler/VerifyOtp.command";
+import { CreateUserCommand } from "../../application/use-cases/commands-handler/Signup.command";
 import OtpController from "../controllers/Otp.controller";
 import AuthController from "../controllers/Auth.controller";
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
@@ -11,6 +11,8 @@ import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repos
 import { EmailService } from "../../domain/interfaces/services/Email.service";
 import { AuthService } from "../../application/services/Auth.service";
 import { LoginService } from "../../application/services/Login.service";
+import { SettingsHandler } from "../../application/use-cases/commands-handler/Settings.handler";
+import { UserController } from "../controllers/User.controller";
 
 const container = new Container();
 
@@ -33,4 +35,7 @@ container.bind<UserRepositoryImpl>(TYPES.UserRepository).to(UserRepositoryImpl).
 container.bind<AuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
 container.bind<LoginService>(TYPES.LoginService).to(LoginService).inSingletonScope();
 
+/* User */
+container.bind<SettingsHandler>(TYPES.SettingsHandler).to(SettingsHandler).inSingletonScope();
+container.bind<UserController>(TYPES.UserController).to(UserController).inSingletonScope();
 export { container };

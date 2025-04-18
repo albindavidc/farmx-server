@@ -34,7 +34,7 @@ export interface UserDocument extends Document {
   expertise?: string[];
   awards?: string[];
   farmerStatus?: "pending" | "approved" | "rejected";
-  profile?: string;
+  profilePhoto?: string;
   bio?: string;
   courseProgress?: CourseProgress[];
   reason?: string;
@@ -64,7 +64,7 @@ const UserSchema: Schema = new Schema(
       default: "pending",
       enum: ["pending", "approved", "rejected"],
     },
-    profile: { type: String },
+    profilePhoto: { type: String },
     bio: { type: String },
     courseProgress: {
       type: [

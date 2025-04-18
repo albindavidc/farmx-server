@@ -4,6 +4,7 @@ import OtpController from "../controllers/Otp.controller";
 import { container } from "../container/Inversify.config";
 import { TYPES } from "../container/Types";
 import rateLimit from "express-rate-limit";
+import { authenticate, authorize } from "../middlewares/Auth.middleware";
 
 const router = express.Router();
 
@@ -23,7 +24,17 @@ router.post("/send-otp", otpController.generateOtpHandler.bind(otpController));
 router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));
 router.post("/verify-otp", otpController.verifyOtpHandler.bind(otpController));
 router.post("/login", authController.login.bind(authController));
-router.post("/refresh-access-token", refreshLimiter, authController.refreshToken.bind(authController));
+router.post(
+  "/refresh-access-token",
+  refreshLimiter,
+  authController.refreshToken.bind(authController)
+);
 router.post("/logout", authController.logout.bind(authController));
 
+router.get(
+  "/user",
+  authenticate,
+  authorize(["user", "farmer", "admin"]),
+  authController.getCurrentUser.bind(authController)
+);
 export default router;

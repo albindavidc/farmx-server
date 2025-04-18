@@ -3,7 +3,6 @@ import "reflect-metadata";
 import cors from "cors";
 import { createServer, Server as HttpServer } from "http";
 import connectToDatabase from "./infrastructure/database/MongooseConnection";
-import authRoute from "./presentation/routes/Auth.route";
 import dotenv from "dotenv";
 import { configFrontend } from "./infrastructure/config/ConfigSetup";
 import path from "path";
@@ -13,7 +12,9 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { Request, Response } from "express";
 
-import userRouter from "./presentation/routes/User.route";
+import authRoute from "./presentation/routes/Auth.route";
+import sharedRoute from "./presentation/routes/Shared.route";
+import userRoute from "./presentation/routes/User.route";
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.log(`CORS rejected origin: ${origin}`);
-      callback(new Error("Not allowed by the CORS"), true);
+      callback(new Error("Not allowed by the CORS"), false);
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -71,11 +72,9 @@ async function bootstrap(): Promise<void> {
 
   /* Middleware */
   app.use(cors(corsOptions));
-  app.use(express.json({ limit: "20mb" }));
-
-  app.use(express.urlencoded({ extended: true, limit: "20mb" }));
   app.use(cookieParser());
-
+  app.use(express.json({ limit: "20mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "20mb" }));
   app.use(
     logger("combined", {
       stream: errorLogStream,
@@ -85,7 +84,8 @@ async function bootstrap(): Promise<void> {
 
   /* Routes */
   app.use("/auth", authRoute);
-  app.use("/user", userRouter);
+  app.use("/", sharedRoute);
+  app.use("/user", userRoute);
 
   /* Start server */
   startServer(app, server, PORT);

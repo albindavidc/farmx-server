@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { GenerateOtpCommand } from "../../application/use-cases/commands/GenerateOtp.command";
-import { VerifyOtpCommand } from "../../application/use-cases/commands/VerifyOtp.command";
+import { GenerateOtpCommand } from "../../application/use-cases/commands-handler/GenerateOtp.command";
+import { VerifyOtpCommand } from "../../application/use-cases/commands-handler/VerifyOtp.command";
 import sendResponseJson from "../../application/utils/Message";
 import { Request, Response } from "express";
 import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
@@ -77,13 +77,13 @@ export class OtpController {
       // Issue tokens upon signup
       const newEmail = Email.create(email);
       const { user, accessToken, refreshToken } = await this.authService.verifyOtp(newEmail);
-      
+
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        path: "/auth/refresh-access-token",
-        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: process.env.NODE_ENV === "production",
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        path: "/",
       });
 
       res.cookie("accessToken", accessToken, {
@@ -91,8 +91,8 @@ export class OtpController {
         secure: process.env.NOCE_ENV === "production",
         sameSite: "strict",
         maxAge: 60 * 60 * 1000,
+        path: "/",
       });
-
 
       res.setHeader("Authorization", `Bearer ${accessToken}`);
 

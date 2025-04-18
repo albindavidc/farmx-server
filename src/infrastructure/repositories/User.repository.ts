@@ -27,7 +27,7 @@ export class UserRepositoryImpl implements UserRepository {
       userDoc.expertise,
       userDoc.awards,
       userDoc.farmerStatus as FarmerStatus,
-      userDoc.profile,
+      userDoc.profilePhoto,
       userDoc.bio,
       userDoc.courseProgress ?? [],
       userDoc.reason
@@ -69,7 +69,7 @@ export class UserRepositoryImpl implements UserRepository {
   async googleAuthLogin(
     userData: Partial<UserDto>
   ): Promise<{ user: User; isNewUser: boolean }> {
-    const { email, name, googleId, profile: picture } = userData;
+    const { email, name, googleId, profilePhoto: picture } = userData;
     let userDoc = await UserSchema.findOne({ email }).exec();
     let isNewUser = false;
 

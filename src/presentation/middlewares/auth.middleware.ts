@@ -13,14 +13,13 @@ interface AuthRequest extends Request {
 }
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  let accessToken = req.headers.authorization?.split(" ")[1];
-  if (!accessToken && req.cookies?.accessToken) {
-    accessToken = req.cookies.accessToken;
-  }
+  console.log('Cookies recieved', req.cookies)
+  const accessToken = req.cookies.accessToken;
 
+  // console.log(`This is access token in the back-end: ${accessToken}`);
   if (!accessToken) {
     sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Access token required", false);
-    return;
+    return
   }
 
   try {
@@ -49,7 +48,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     }
     try {
       const decodedRefresh = verifyRefreshToken(refreshToken);
-      if (!decodedRefresh || !decodedRefresh.id || !decodedRefresh.role) {
+      if (!decodedRefresh) {
         throw new Error("Invalid or expired refresh token");
       }
       const newAccessToken = generateAcessToken({
@@ -58,6 +57,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
         role: decodedRefresh.role,
       });
 
+      console.log(`New access token is generated in the back-end: auth ${newAccessToken} && ${decodedRefresh}`)
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -81,7 +81,10 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 export const authorize = (roles: string[]) => {
+
+  
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log('printing roles',  req.user, req.user?.role)
     if (!req.user || !req.user.role) {
       sendResponseJson(res, StatusCodes.FORBIDDEN, "User not found", false);
       return;

@@ -1,4 +1,4 @@
-import { UserUseCase } from "../../application/use-cases/interfaces/user.use-case";
+import { UserUseCase } from "../../application/use-cases/interfaces/User.use-case";
 import sendResponseJson from "../../application/utils/Message";
 import { User } from "../../domain/entities/User.entity";
 import { StatusCodes } from "http-status-codes";
@@ -53,16 +53,18 @@ export default class AuthController {
 
       res.cookie("accessToken", response.accessToken, {
         httpOnly: true,
-        secure: process.env.NOCE_ENV === "production",
-        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
         maxAge: 60 * 60 * 1000,
+        path: "/",
       });
 
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: "/",
       });
 
       res.status(200).json(response);
@@ -86,8 +88,9 @@ export default class AuthController {
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 60 * 60 * 1000,
+        path: "/",
       });
 
       sendResponseJson(res, StatusCodes.OK, "Successfully created", true, {

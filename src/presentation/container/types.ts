@@ -12,4 +12,8 @@ export const TYPES = {
 
   AuthService: Symbol.for("AuthService"),
   LoginService: Symbol.for("LoginService"),
+
+  /* User */
+  SettingsHandler: Symbol.for("SettingsHandler"),
+  UserController: Symbol.for("UserController")
 };

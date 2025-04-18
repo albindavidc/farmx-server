@@ -21,7 +21,7 @@ export interface UserDto {
   expertise?: string[];
   awards?: string[];
   farmerStatus?: FarmerStatus;
-  profile?: string;
+  profilePhoto?: string;
   bio?: string;
   courseProgress?: CourseProgress[];
   reason?: string;

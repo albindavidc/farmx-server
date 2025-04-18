@@ -22,7 +22,7 @@ export class UserMapper {
       expertise: user.expertise,
       awards: user.awards,
       farmerStatus: user.farmerStatus,
-      profile: user.profile,
+      profilePhoto: user.profilePhoto,
       bio: user.bio,
       courseProgress: user.courseProgress,
       reason: user.reason,
@@ -48,7 +48,7 @@ export class UserMapper {
       dto.expertise,
       dto.awards,
       dto.farmerStatus,
-      dto.profile,
+      dto.profilePhoto,
       dto.bio,
       dto.courseProgress,
       dto.reason
@@ -75,7 +75,7 @@ export class UserMapper {
       dto.expertise ?? entity.expertise,
       dto.awards ?? entity.awards,
       dto.farmerStatus ?? entity.farmerStatus,
-      dto.profile ?? entity.profile,
+      dto.profilePhoto ?? entity.profilePhoto,
       dto.bio ?? entity.bio,
       dto.courseProgress ?? entity.courseProgress,
       dto.reason ?? entity.reason

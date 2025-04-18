@@ -25,7 +25,7 @@ export class User {
     public expertise?: string[],
     public awards?: string[],
     public farmerStatus?: FarmerStatus,
-    public profile?: string,
+    public profilePhoto?: string,
     public bio?: string,
     public courseProgress?: CourseProgress[],
     public reason?: string
@@ -40,13 +40,6 @@ export class User {
     const pwd = await this._password;
     return pwd.getHashedValue();
   }
-
-  // public async hashPassword(): Promise<void> {
-  //   if (typeof this.password !== "string") {
-  //     throw new Error("Password already hashed");
-  //   }
-  //   this.password = await Password.hash(this.password);
-  // }
 
   public async verifyPassword(plainText: string): Promise<boolean> {
     const password = await this._password;
