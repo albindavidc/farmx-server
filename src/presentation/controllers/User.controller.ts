@@ -5,6 +5,8 @@ import sendResponseJson from "../../application/utils/Message";
 import { StatusCodes } from "http-status-codes";
 import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/UploadProfilePhoto.command";
 import { Request, Response } from "express";
+import path from "path";
+import fs from "fs";
 
 @injectable()
 export class UserController {
@@ -59,7 +61,21 @@ export class UserController {
         return;
       }
 
-      res.sendFile(filePath, { root: __dirname + "/../" }, (err) => {
+      const absolutePath = path.join(process.cwd(), filePath);
+      console.log(absolutePath, "this is absolute path");
+
+      if (!fs.existsSync(absolutePath)) {
+        sendResponseJson(
+          res,
+          StatusCodes.NOT_FOUND,
+          "Profile is available in the directory",
+          false
+        );
+        return;
+      }
+
+      console.log(userId, filePath, "these are from the back-end");
+      res.sendFile(absolutePath, (err) => {
         if (err) {
           sendResponseJson(
             res,
@@ -77,6 +93,26 @@ export class UserController {
         "Failed to retrieve the profile photo",
         false
       );
+    }
+  }
+
+  async updateProfile(req: Request, res: Response): Promise<void> {
+    const { name, email, phone } = req.body;
+    try {
+      const updatedUser = await this.settingsHandler.executeUpdateProfile(req.user?.id, {
+        name,
+        email,
+        phone,
+      });
+
+      if (!updatedUser) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+      res.json(updatedUser);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
 }

@@ -8,7 +8,6 @@ export interface UserRepository {
   findById(id: string): Promise<User | null>;
   update(id: string, user: Partial<User>): Promise<User | null>;
 
-  
   googleAuthLogin(userData: Partial<UserDto>): Promise<{ user: User; isNewUser: boolean }>;
   setRole(userId: string, role: string): Promise<User | null>;
 

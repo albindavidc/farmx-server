@@ -86,4 +86,5 @@ export class UserRepositoryImpl implements UserRepository {
     const user = await UserSchema.findById(userId);
     return user?.profilePhoto || null;
   }
+
 }

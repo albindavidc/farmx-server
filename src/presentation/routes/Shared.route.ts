@@ -16,11 +16,17 @@ router.post(
   uploadProfilePhoto,
   userController.uploadProfilePhoto.bind(userController)
 );
-router.post(
+router.get(
   "/settings/get-profile-photo",
   authenticate,
   authorize(["user", "farmer", "admin"]),
   userController.getProfilePhoto.bind(userController)
+);
+router.patch(
+  "/settings/update-profile",
+  authenticate,
+  authorize(["user", "farmer", "admin"]),
+  userController.updateProfile.bind(userController)
 );
 
 export default router;
