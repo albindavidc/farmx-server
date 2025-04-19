@@ -6,11 +6,11 @@ export interface UserRepository {
   create(user: User): Promise<User>;
   findByEmail(email: Email): Promise<User | null>;
   findById(id: string): Promise<User | null>;
-
   update(id: string, user: Partial<User>): Promise<User | null>;
+
+  
+  googleAuthLogin(userData: Partial<UserDto>): Promise<{ user: User; isNewUser: boolean }>;
   setRole(userId: string, role: string): Promise<User | null>;
 
-  googleAuthLogin(
-    userData: Partial<UserDto>
-  ): Promise<{ user: User; isNewUser: boolean }>;
+  getProfilePhotoPath(userId: string | number): Promise<string | null>;
 }

@@ -29,7 +29,7 @@ export class UserController {
         new UploadProfilePhotoCommand(userId, filePath)
       );
 
-      console.log(`You have successfully uploaded the file tothe back-end`)
+      console.log(`You have successfully uploaded the file tothe back-end`);
       sendResponseJson(res, StatusCodes.OK, "Profile photo updated successfully", true, {
         filePath,
       });
@@ -41,6 +41,41 @@ export class UserController {
         "Failed to update profile photo",
         false,
         { error: error instanceof Error ? error.message : "Unknown error" }
+      );
+    }
+  }
+
+  async getProfilePhoto(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Not Authorized", false);
+        return;
+      }
+
+      const filePath = await this.settingsHandler.executeGetProfilePhotoHandler(userId);
+      if (!filePath || !filePath.startsWith("uploads/profile/")) {
+        sendResponseJson(res, StatusCodes.NOT_FOUND, "Profile photo not found", false);
+        return;
+      }
+
+      res.sendFile(filePath, { root: __dirname + "/../" }, (err) => {
+        if (err) {
+          sendResponseJson(
+            res,
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            "Error in retrieving the profile photo",
+            false
+          );
+        }
+      });
+    } catch (error) {
+      console.log("Get profile photo error" + error);
+      sendResponseJson(
+        res,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        "Failed to retrieve the profile photo",
+        false
       );
     }
   }

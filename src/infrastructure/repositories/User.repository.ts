@@ -58,17 +58,11 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async setRole(userId: string, role: string): Promise<User | null> {
-    const userdoc = await UserSchema.findByIdAndUpdate(
-      userId,
-      { role },
-      { new: true }
-    );
+    const userdoc = await UserSchema.findByIdAndUpdate(userId, { role }, { new: true });
     return userdoc ? this.mapToEntity(userdoc) : null;
   }
 
-  async googleAuthLogin(
-    userData: Partial<UserDto>
-  ): Promise<{ user: User; isNewUser: boolean }> {
+  async googleAuthLogin(userData: Partial<UserDto>): Promise<{ user: User; isNewUser: boolean }> {
     const { email, name, googleId, profilePhoto: picture } = userData;
     let userDoc = await UserSchema.findOne({ email }).exec();
     let isNewUser = false;
@@ -86,5 +80,10 @@ export class UserRepositoryImpl implements UserRepository {
     }
 
     return { user: this.mapToEntity(userDoc), isNewUser };
+  }
+
+  async getProfilePhotoPath(userId: string | number): Promise<string | null> {
+    const user = await UserSchema.findById(userId);
+    return user?.profilePhoto || null;
   }
 }

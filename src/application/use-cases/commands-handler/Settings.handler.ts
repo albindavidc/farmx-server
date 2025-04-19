@@ -15,4 +15,8 @@ export class SettingsHandler {
     user.profilePhoto = command.photoPath;
     await this.userRepo.update(command.userId, user);
   }
+
+  async executeGetProfilePhotoHandler(userId: string | number): Promise<string | null> {
+    return this.userRepo.getProfilePhotoPath(userId);
+  }
 }
