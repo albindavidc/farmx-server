@@ -1,7 +1,7 @@
 export const TYPES = {
-  GenerateOtpCommand: Symbol.for("GenerateOtpCommand"),
-  VerifyOtpCommand: Symbol.for("VerifyOtpCommand"),
-  CreateUserCommand: Symbol.for("CreateUserCommand"),
+  GenerateOtpUseCase: Symbol.for("GenerateOtpUseCase"),
+  VerifyOtpUseCase: Symbol.for("VerifyOtpUseCase"),
+  CreateUserUseCase: Symbol.for("CreateUserUseCase"),
 
   OtpController: Symbol.for("OtpController"),
   AuthController: Symbol.for("AuthController"),
@@ -14,6 +14,10 @@ export const TYPES = {
   LoginService: Symbol.for("LoginService"),
 
   /* User */
-  SettingsHandler: Symbol.for("SettingsHandler"),
-  UserController: Symbol.for("UserController")
+  SettingsUseCase: Symbol.for("SettingsUseCase"),
+  UserController: Symbol.for("UserController"),
+  ChangePasswordUseCase: Symbol.for("ChangePasswordUseCase"),
+  ChangePasswordHandler: Symbol.for("ChangePasswordHandler"),
+  GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
+  GetUserProfileHandler: Symbol.for("GetUserProfileHandler"),
 };

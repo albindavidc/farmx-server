@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { SettingsHandler } from "../../application/use-cases/commands-handler/Settings.handler";
+import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
 import { TYPES } from "../container/Types";
 import sendResponseJson from "../../application/utils/Message";
 import { StatusCodes } from "http-status-codes";
@@ -7,10 +7,17 @@ import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/
 import { Request, Response } from "express";
 import path from "path";
 import fs from "fs";
+import { UserRepository } from "../../domain/interfaces/repositories/User.repository";
+import { ChangePasswordCommand } from "../../application/use-cases/commands/ChangePassword.command";
+import { ChangePasswordHandler } from "../../application/use-cases/handlers/ChangePassword.handler";
 
 @injectable()
 export class UserController {
-  constructor(@inject(TYPES.SettingsHandler) private readonly settingsHandler: SettingsHandler) {}
+  constructor(
+    @inject(TYPES.SettingsUseCase) private readonly settingsUseCase: SettingsUseCase,
+    @inject(TYPES.UserRepository) private readonly userRepo: UserRepository,
+    @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler
+  ) {}
 
   async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
     try {
@@ -27,7 +34,7 @@ export class UserController {
 
       const filePath = `uploads/profile/${req.file.filename}`;
 
-      await this.settingsHandler.executeProfilePhotoUpdate(
+      await this.settingsUseCase.executeProfilePhotoUpdate(
         new UploadProfilePhotoCommand(userId, filePath)
       );
 
@@ -55,7 +62,7 @@ export class UserController {
         return;
       }
 
-      const filePath = await this.settingsHandler.executeGetProfilePhotoHandler(userId);
+      const filePath = await this.settingsUseCase.executeGetProfilePhotoHandler(userId);
       if (!filePath || !filePath.startsWith("uploads/profile/")) {
         sendResponseJson(res, StatusCodes.NOT_FOUND, "Profile photo not found", false);
         return;
@@ -99,7 +106,7 @@ export class UserController {
   async updateProfile(req: Request, res: Response): Promise<void> {
     const { name, email, phone } = req.body;
     try {
-      const updatedUser = await this.settingsHandler.executeUpdateProfile(req.user?.id, {
+      const updatedUser = await this.settingsUseCase.executeUpdateProfile(req.user?.id, {
         name,
         email,
         phone,
@@ -113,6 +120,41 @@ export class UserController {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Server Error";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  async validateOldPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { oldPassword } = req.body;
+      const userId = req.user?.id;
+      if (!userId || !oldPassword) {
+        sendResponseJson(
+          res,
+          StatusCodes.BAD_REQUEST,
+          "User Id and Old password are required",
+          false
+        );
+        return;
+      }
+
+      const isValid = await this.userRepo.validatePassword(userId, oldPassword);
+      sendResponseJson(res, StatusCodes.OK, "Validation result", true, { isValid });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal server error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  async changePassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { newPassword, confirmPassword } = req.body;
+      const userId = req.user?.id;
+      const command = new ChangePasswordCommand(userId, newPassword, confirmPassword);
+      await this.changePasswordHandler.execute(command);
+      sendResponseJson(res, StatusCodes.OK, "Password changed successfully", true);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+      sendResponseJson(res, StatusCodes.BAD_REQUEST, errorMessage, false);
     }
   }
 }

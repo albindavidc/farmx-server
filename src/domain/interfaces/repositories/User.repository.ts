@@ -12,4 +12,7 @@ export interface UserRepository {
   setRole(userId: string, role: string): Promise<User | null>;
 
   getProfilePhotoPath(userId: string | number): Promise<string | null>;
+
+  validatePassword(id: string, oldPassword: string): Promise<boolean>;
+  updatePassword(id: string, newPasswordHash: string): Promise<User | null>;
 }

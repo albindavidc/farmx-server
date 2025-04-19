@@ -12,7 +12,7 @@ import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/log
 @injectable()
 export default class AuthController {
   constructor(
-    @inject(TYPES.CreateUserCommand) private createUserUseCase: UserUseCase,
+    @inject(TYPES.CreateUserUseCase) private createUserUseCase: UserUseCase,
     @inject(TYPES.AuthService) private authService: AuthService,
     @inject(TYPES.LoginService) private loginService: LoginService
   ) {}

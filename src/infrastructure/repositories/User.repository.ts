@@ -87,4 +87,24 @@ export class UserRepositoryImpl implements UserRepository {
     return user?.profilePhoto || null;
   }
 
+  async updatePassword(id: string, newPasswordHash: string): Promise<User | null> {
+    const user = await this.findById(id);
+
+    if (!user) throw new Error("User not found");
+    user.password = newPasswordHash;
+
+    const hashedPassword = await user.getHashedPassword();
+    const updatedDoc = await UserSchema.findByIdAndUpdate(
+      id,
+      { password: hashedPassword },
+      { new: true, lean: true }
+    ).exec();
+    return updatedDoc ? this.mapToEntity(updatedDoc) : null;
+  }
+
+  async validatePassword(id: string, oldPassword: string): Promise<boolean> {
+    const user = await this.findById(id);
+    if (!user) return false;
+    return user.verifyPassword(oldPassword);
+  }
 }

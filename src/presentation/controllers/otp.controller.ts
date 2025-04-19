@@ -1,6 +1,4 @@
 import { StatusCodes } from "http-status-codes";
-import { GenerateOtpCommand } from "../../application/use-cases/commands-handler/GenerateOtp.command";
-import { VerifyOtpCommand } from "../../application/use-cases/commands-handler/VerifyOtp.command";
 import sendResponseJson from "../../application/utils/Message";
 import { Request, Response } from "express";
 import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
@@ -9,12 +7,14 @@ import { TYPES } from "../container/Types";
 import { EmailService } from "../../domain/interfaces/services/Email.service";
 import { AuthService } from "../../application/services/Auth.service";
 import { Email } from "../../domain/value-objects/Email.vo";
+import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
+import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
 
 @injectable()
 export class OtpController {
   constructor(
-    @inject(TYPES.GenerateOtpCommand) private generateOtp: GenerateOtpCommand,
-    @inject(TYPES.VerifyOtpCommand) private verifyOtp: VerifyOtpCommand,
+    @inject(TYPES.GenerateOtpUseCase) private generateOtp: GenerateOtpUseCase,
+    @inject(TYPES.VerifyOtpUseCase) private verifyOtp: VerifyOtpUseCase,
     @inject(TYPES.EmailService) private emailService: EmailService,
     @inject(TYPES.AuthService) private authService: AuthService
   ) {}

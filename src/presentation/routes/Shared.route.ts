@@ -28,5 +28,17 @@ router.patch(
   authorize(["user", "farmer", "admin"]),
   userController.updateProfile.bind(userController)
 );
+router.post(
+  "/settings/change-password",
+  authenticate,
+  authorize(["user", "farmer", "admin"]),
+  userController.changePassword.bind(userController)
+);
 
+router.post(
+  "/settings/validate-old-password",
+  authenticate,
+  authorize(["user", "farmer", "admin"]),
+  userController.validateOldPassword.bind(userController)
+);
 export default router;

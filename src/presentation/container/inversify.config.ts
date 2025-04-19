@@ -1,8 +1,5 @@
 import { Container } from "inversify";
-import { GenerateOtpCommand } from "../../application/use-cases/commands-handler/GenerateOtp.command";
 import { TYPES } from "./Types";
-import { VerifyOtpCommand } from "../../application/use-cases/commands-handler/VerifyOtp.command";
-import { CreateUserCommand } from "../../application/use-cases/commands-handler/Signup.command";
 import OtpController from "../controllers/Otp.controller";
 import AuthController from "../controllers/Auth.controller";
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
@@ -11,18 +8,23 @@ import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repos
 import { EmailService } from "../../domain/interfaces/services/Email.service";
 import { AuthService } from "../../application/services/Auth.service";
 import { LoginService } from "../../application/services/Login.service";
-import { SettingsHandler } from "../../application/use-cases/commands-handler/Settings.handler";
 import { UserController } from "../controllers/User.controller";
+import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
+import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
+import { CreateUserUseCase } from "../../application/use-cases/use-cases/Signup.use-case";
+import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
+import { ChangePasswordHandler } from "../../application/use-cases/handlers/ChangePassword.handler";
+import { ChangePasswordUseCase } from "../../application/use-cases/use-cases/ChangePassword.use-case";
 
 const container = new Container();
 
 //Register use cases
 container
-  .bind<GenerateOtpCommand>(TYPES.GenerateOtpCommand)
-  .to(GenerateOtpCommand)
+  .bind<GenerateOtpUseCase>(TYPES.GenerateOtpUseCase)
+  .to(GenerateOtpUseCase)
   .inSingletonScope();
-container.bind<VerifyOtpCommand>(TYPES.VerifyOtpCommand).to(VerifyOtpCommand).inSingletonScope();
-container.bind<CreateUserCommand>(TYPES.CreateUserCommand).to(CreateUserCommand).inSingletonScope();
+container.bind<VerifyOtpUseCase>(TYPES.VerifyOtpUseCase).to(VerifyOtpUseCase).inSingletonScope();
+container.bind<CreateUserUseCase>(TYPES.CreateUserUseCase).to(CreateUserUseCase).inSingletonScope();
 
 //Register controllers with factory-like binding
 container.bind<AuthController>(TYPES.AuthController).to(AuthController).inSingletonScope();
@@ -36,6 +38,15 @@ container.bind<AuthService>(TYPES.AuthService).to(AuthService).inSingletonScope(
 container.bind<LoginService>(TYPES.LoginService).to(LoginService).inSingletonScope();
 
 /* User */
-container.bind<SettingsHandler>(TYPES.SettingsHandler).to(SettingsHandler).inSingletonScope();
+container.bind<SettingsUseCase>(TYPES.SettingsUseCase).to(SettingsUseCase).inSingletonScope();
 container.bind<UserController>(TYPES.UserController).to(UserController).inSingletonScope();
+container
+  .bind<ChangePasswordHandler>(TYPES.ChangePasswordHandler)
+  .to(ChangePasswordHandler)
+  .inSingletonScope();
+container
+  .bind<ChangePasswordUseCase>(TYPES.ChangePasswordUseCase)
+  .to(ChangePasswordUseCase)
+  .inSingletonScope();
+
 export { container };
