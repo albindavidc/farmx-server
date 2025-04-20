@@ -13,30 +13,27 @@ interface AuthRequest extends Request {
 }
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  console.log('Cookies recieved', req.cookies)
-  const accessToken = req.cookies.accessToken;
-
-  // console.log(`This is access token in the back-end: ${accessToken}`);
-  if (!accessToken) {
-    sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Access token required", false);
-    return
-  }
+  console.log("Cookies recieved", req.cookies);
 
   try {
-    const decoded = verifyAccessToken(accessToken);
-    const user = await UserSchema.findById(decoded?.id);
+    const accessToken = req.cookies.accessToken;
+    if (accessToken) {
+      const decoded = verifyAccessToken(accessToken);
+      const user = await UserSchema.findById(decoded?.id);
 
-    if (!user) {
-      sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
-      return;
+      if (!user) {
+        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+        return;
+      }
+      req.user = user;
+      next();
     }
-    req.user = user;
-    next();
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Not able to get the access token";
 
     const refreshToken = req.cookies.refreshToken;
+    console.log("we have old refresh token", refreshToken);
     if (!refreshToken) {
       sendResponseJson(
         res,
@@ -57,12 +54,15 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
         role: decodedRefresh.role,
       });
 
-      console.log(`New access token is generated in the back-end: auth ${newAccessToken} && ${decodedRefresh}`)
+      console.log(
+        `New access token is generated in the back-end: auth ${newAccessToken} && ${decodedRefresh}`
+      );
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 60 * 60 * 1000,
+        path: "/",
       });
 
       const user = await UserSchema.findById(decodedRefresh.id);
@@ -80,11 +80,10 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     }
   }
 };
-export const authorize = (roles: string[]) => {
 
-  
+export const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log('printing roles',  req.user, req.user?.role)
+    console.log("printing roles", req.user, req.user?.role);
     if (!req.user || !req.user.role) {
       sendResponseJson(res, StatusCodes.FORBIDDEN, "User not found", false);
       return;

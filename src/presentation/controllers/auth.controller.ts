@@ -28,8 +28,14 @@ export default class AuthController {
 
       const user = new User(name, email, password, role, phone);
 
+      if (user.role === "farmer") {
+        user.isFarmer = true;
+      }
+
       console.log(user, "this is from the backend - to validate");
+
       const response = await this.createUserUseCase.execute(user);
+      console.log(response, "this is from the backend - to validate");
 
       const successMessage =
         role === "user"
@@ -54,7 +60,7 @@ export default class AuthController {
       res.cookie("accessToken", response.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 60 * 60 * 1000,
         path: "/",
       });
@@ -62,7 +68,7 @@ export default class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 30 * 24 * 60 * 60 * 1000,
         path: "/",
       });

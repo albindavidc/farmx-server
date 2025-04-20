@@ -29,6 +29,10 @@ export class VerifyOtpUseCase {
     const newEmail = email.toString();
 
     user.isVerified = true;
+    if (user.role === "farmer") {
+      user.isFarmer = true;
+    }
+
     await this.userRepository.update(user._id, user);
     return { email: newEmail, isVerified: true };
   }

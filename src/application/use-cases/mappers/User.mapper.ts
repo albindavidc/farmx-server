@@ -1,5 +1,4 @@
 import { User } from "../../../domain/entities/User.entity";
-import { UserRole } from "../../../domain/enums/UserRole.enum";
 import { UserDto } from "../dto/User.dto";
 
 export class UserMapper {
@@ -34,7 +33,7 @@ export class UserMapper {
       dto.name ?? "",
       dto.email ?? "",
       "",
-      dto.role ?? UserRole.USER,
+      dto.role ?? "",
       dto.phone ?? "",
       dto._id,
       dto.isVerified ?? false,

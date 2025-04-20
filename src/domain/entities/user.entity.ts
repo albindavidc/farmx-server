@@ -1,6 +1,5 @@
 import { CourseProgress } from "../../infrastructure/database/schemas/UserSchema";
 import { FarmerStatus } from "../enums/FarmerStatus.enum";
-import { UserRole } from "../enums/UserRole.enum";
 import { Password } from "../value-objects/Password.vo";
 
 export class User {
@@ -10,7 +9,7 @@ export class User {
     public name: string,
     public email: string,
     public password: string | Password,
-    public role: UserRole,
+    public role: string,
     public phone: string,
     public _id?: string,
     public isVerified: boolean = false,

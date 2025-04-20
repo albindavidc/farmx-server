@@ -89,7 +89,7 @@ export class OtpController {
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NOCE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 60 * 60 * 1000,
         path: "/",
       });

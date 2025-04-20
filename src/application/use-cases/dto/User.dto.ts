@@ -1,4 +1,3 @@
-import { UserRole } from "../../../domain/enums/UserRole.enum";
 import { FarmerStatus } from "../../../domain/enums/FarmerStatus.enum";
 import { CourseProgress } from "../../../infrastructure/database/schemas/UserSchema";
 
@@ -7,7 +6,7 @@ export interface UserDto {
   _id?: string;
   name: string;
   email: string;
-  role: UserRole;
+  role: string;
   phone: string;
   isVerified: boolean;
   isAdmin?: boolean;
@@ -31,6 +30,6 @@ export interface SignupRequestDto {
   name: string;
   email: string;
   password: string;
-  role?: string;
+  role: string;
   phone: string;
 }

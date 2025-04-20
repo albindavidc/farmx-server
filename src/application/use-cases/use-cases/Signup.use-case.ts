@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
 import { User } from "../../../domain/entities/User.entity";
-import { UserRole } from "../../../domain/enums/UserRole.enum";
 import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
 import { Email } from "../../../domain/value-objects/Email.vo";
 import { SignupRequestDto, UserDto } from "../dto/User.dto";
@@ -21,11 +20,9 @@ export class CreateUserUseCase {
       throw new UserExistsException(dto.email);
     }
 
-    const role = dto.role
-      ? UserRole[dto.role as keyof typeof UserRole] || UserRole.USER
-      : UserRole.USER;
 
-    const newUser = new User(dto.name, dto.email, dto.password, role, dto.phone);
+    const newUser = new User(dto.name, dto.email, dto.password, dto.role, dto.phone);
+
     const createdUser = await this.userRepository.create(newUser);
     return UserMapper.toDto(createdUser);
   }

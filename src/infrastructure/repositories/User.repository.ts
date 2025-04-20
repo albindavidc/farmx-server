@@ -1,7 +1,6 @@
 import { UserDto } from "../../application/use-cases/dto/User.dto";
 import { User } from "../../domain/entities/User.entity";
 import { FarmerStatus } from "../../domain/enums/FarmerStatus.enum";
-import { UserRole } from "../../domain/enums/UserRole.enum";
 import { UserRepository } from "../../domain/interfaces/repositories/User.repository";
 import { Email } from "../../domain/value-objects/Email.vo";
 import UserSchema, { UserDocument } from "../database/schemas/UserSchema";
@@ -12,7 +11,7 @@ export class UserRepositoryImpl implements UserRepository {
       userDoc.name,
       userDoc.email,
       userDoc.password,
-      (userDoc.role as UserRole) ?? UserRole.USER,
+      userDoc.role,
       userDoc.phone,
       userDoc._id.toString(),
       userDoc.isVerified,

@@ -19,7 +19,7 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
-  role?: "user" | "farmer" | "admin";
+  role: string;
   phone: string;
   _id: string;
   isVerified: boolean;
