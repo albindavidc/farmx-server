@@ -104,6 +104,24 @@ export class OtpController {
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
+
+  public async profileVerifyOtpHandler(req: Request, res: Response): Promise<void> {
+    const { email, otp } = req.body as OtpRequestDto;
+    if (!email || !otp) {
+      sendResponseJson(res, StatusCodes.BAD_REQUEST, "Email or Otp is invalid", false);
+    }
+    try {
+      const otpRequest: OtpRequestDto = { email, otp };
+      const isValid = this.verifyOtp.execute(otpRequest);
+      if (!isValid) {
+        sendResponseJson(res, StatusCodes.BAD_REQUEST, "Entered a wrong otp", false);
+      }
+      sendResponseJson(res, StatusCodes.OK, "Email verification successful", true);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error verifying OTP";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
 }
 
 export default OtpController;

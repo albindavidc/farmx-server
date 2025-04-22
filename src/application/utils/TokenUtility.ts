@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export interface TokenPayload {
   id?: string;
   email?: string;
-  role: "user" | "farmer" | "admin";
+  role: string;
 }
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "your-access-secret";
