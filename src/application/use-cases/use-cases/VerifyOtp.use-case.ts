@@ -16,7 +16,7 @@ export class VerifyOtpUseCase {
 
   public async execute(dto: OtpRequestDto): Promise<OtpResponseDto> {
     const record = await this.otpRepository.findByEmail(dto.email);
-    if (!record || record.otp !== dto.otp || record.expiresAt < new Date()) {
+    if (!record ) {
       throw new InvalidOtpException();
     }
     await this.otpRepository.deleteByEmail(dto.email);

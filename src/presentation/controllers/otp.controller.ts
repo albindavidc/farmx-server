@@ -112,10 +112,12 @@ export class OtpController {
     }
     try {
       const otpRequest: OtpRequestDto = { email, otp };
-      const isValid = this.verifyOtp.execute(otpRequest);
+      const isValid = await this.verifyOtp.execute(otpRequest);
+
       if (!isValid) {
         sendResponseJson(res, StatusCodes.BAD_REQUEST, "Entered a wrong otp", false);
       }
+
       sendResponseJson(res, StatusCodes.OK, "Email verification successful", true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error verifying OTP";
