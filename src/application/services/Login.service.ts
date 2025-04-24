@@ -17,7 +17,7 @@ export class LoginService {
       throw new Error("Invalid email or password");
     }
 
-    if (!user.isVerified) {
+    if (!user.isVerified || !user._id) {
       throw new Error("Account not verified");
     }
 

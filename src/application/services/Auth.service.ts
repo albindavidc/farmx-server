@@ -23,6 +23,9 @@ export class AuthService {
     user.isVerified = true;
     const updatedUser = await this.userRepository.update(user._id, user);
 
+    if (!updatedUser || !updatedUser._id) {
+      throw new Error("User not found");
+    }
     const payload: TokenPayload = {
       id: updatedUser?._id,
       email: updatedUser?.email,
@@ -39,13 +42,18 @@ export class AuthService {
     return { user: updatedUser, accessToken, refreshToken };
   }
 
-  static async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
+  static async refreshToken(refreshToken: string): Promise<string> {
     const payload = verifyRefreshToken(refreshToken);
 
     if (!payload) throw new Error("Invalid refresh token");
 
-    const newAccessToken = generateAcessToken(payload);
+    const newPayload: TokenPayload = {
+      id: payload.id,
+      email: payload.email,
+      role: payload.role,
+    };
+    const newAccessToken = generateAcessToken(newPayload);
 
-    return { accessToken: newAccessToken };
+    return newAccessToken;
   }
 }

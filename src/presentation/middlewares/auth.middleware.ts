@@ -15,69 +15,68 @@ interface AuthRequest extends Request {
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
   console.log("Cookies recieved", req.cookies);
 
+  let accessToken = req.cookies.accessToken;
+  if (!accessToken) {
+    const authHeader = req.headers.authorization;
+    accessToken = authHeader && authHeader.startsWith("Bearer") ? authHeader.split(" ")[1] : null;
+  }
+
+
+  if (accessToken) {
+    const decoded = verifyAccessToken(accessToken);
+    const user = await UserSchema.findById(decoded?.id);
+
+    if (!user) {
+      sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+      return;
+    }
+
+    req.user = user;
+    return next();
+  }
+
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Authentication required - refresh token is unavailable", false);
+    return;
+  }
+
   try {
-    const accessToken = req.cookies.accessToken;
-    if (accessToken) {
-      const decoded = verifyAccessToken(accessToken);
-      const user = await UserSchema.findById(decoded?.id);
-
-      if (!user) {
-        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
-        return;
-      }
-      req.user = user;
-      next();
+    const decodedRefresh = verifyRefreshToken(refreshToken);
+    if (!decodedRefresh) {
+      throw new Error("Invalid or expired refresh token");
     }
+
+    const newAccessToken = generateAcessToken({
+      id: decodedRefresh.id,
+      email: decodedRefresh.email,
+      role: decodedRefresh.role,
+    });
+
+    console.log("New access Token generated", newAccessToken);
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 60 * 60 * 1000,
+      path: "/",
+    });
+
+    res.setHeader("X-Access-Token", newAccessToken);
+
+    const user = await UserSchema.findById(decodedRefresh.id);
+    if (!user) {
+      sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
+      return;
+    }
+
+    req.user = user;
+    next();
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Not able to get the access token";
-
-    const refreshToken = req.cookies.refreshToken;
-    console.log("we have old refresh token", refreshToken);
-    if (!refreshToken) {
-      sendResponseJson(
-        res,
-        StatusCodes.UNAUTHORIZED,
-        `Refresh token required && ${errorMessage}`,
-        false
-      );
-      return;
-    }
-    try {
-      const decodedRefresh = verifyRefreshToken(refreshToken);
-      if (!decodedRefresh) {
-        throw new Error("Invalid or expired refresh token");
-      }
-      const newAccessToken = generateAcessToken({
-        id: decodedRefresh.id,
-        email: decodedRefresh.email,
-        role: decodedRefresh.role,
-      });
-
-      console.log(
-        `New access token is generated in the back-end: auth ${newAccessToken} && ${decodedRefresh}`
-      );
-      res.cookie("accessToken", newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
-        maxAge: 60 * 60 * 1000,
-        path: "/",
-      });
-
-      const user = await UserSchema.findById(decodedRefresh.id);
-      if (!user) {
-        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);
-        return;
-      }
-
-      req.user = user;
-      next();
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Invalid refresh Token";
-      sendResponseJson(res, StatusCodes.FORBIDDEN, errorMessage, false);
-      return;
-    }
+    const errorMessage = error instanceof Error ? error.message : "Invalid refresh token";
+    sendResponseJson(res, StatusCodes.FORBIDDEN, errorMessage, false);
+    return;
   }
 };
 
