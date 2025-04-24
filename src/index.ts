@@ -15,6 +15,7 @@ import { Request, Response } from "express";
 import authRoute from "./presentation/routes/Auth.route";
 import sharedRoute from "./presentation/routes/Shared.route";
 import userRoute from "./presentation/routes/User.route";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -73,8 +74,9 @@ async function bootstrap(): Promise<void> {
   /* Middleware */
   app.use(cors(corsOptions));
   app.use(cookieParser());
-  app.use(express.json({ limit: "20mb" }));
-  app.use(express.urlencoded({ extended: true, limit: "20mb" }));
+  app.use(express.json());
+  app.use(morgan("dev"));
+  app.use(express.urlencoded({ extended: true }));
   app.use(
     logger("combined", {
       stream: errorLogStream,

@@ -57,14 +57,6 @@ export default class AuthController {
       const request: LoginRequest = req.body;
       const response: LoginResponse = await this.loginService.login(request);
 
-      res.cookie("accessToken", response.accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 60 * 60 * 1000,
-        path: "/",
-      });
-
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -73,7 +65,15 @@ export default class AuthController {
         path: "/",
       });
 
-      res.status(200).json(response);
+      res.cookie("accessToken", response.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 60 * 60 * 1000,
+        path: "/",
+      });
+
+      sendResponseJson(res, StatusCodes.OK, "You have successfully logged in", true, response.user);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error logging In";
 
@@ -81,7 +81,7 @@ export default class AuthController {
     }
   }
 
-  async refreshToken(req: Request, res: Response) {
+  async refreshToken(req: Request, res: Response): Promise<void> {
     try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
@@ -94,10 +94,14 @@ export default class AuthController {
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 60 * 60 * 1000,
         path: "/",
       });
+
+      res.setHeader("X-Access-Token", newAccessToken);
+
+      console.log("new accesstoken has been created and send to the front-end", newAccessToken);
 
       sendResponseJson(res, StatusCodes.OK, "Successfully created", true, {
         accessToken: newAccessToken,
@@ -109,7 +113,7 @@ export default class AuthController {
     }
   }
 
-  public async getCurrentUser(req: Request, res: Response) {
+  public async getCurrentUser(req: Request, res: Response): Promise<void> {
     if (!req.user) {
       sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Not authenticated", false);
       return;
@@ -125,11 +129,16 @@ export default class AuthController {
       isVerified: req.user.isVerified,
     };
     sendResponseJson(res, StatusCodes.OK, "User Featched", true, user);
+    return;
   }
 
-  async logout(req: Request, res: Response) {
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
-    sendResponseJson(res, StatusCodes.OK, "Logout Successful", true);
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      res.clearCookie("refreshToken");
+      sendResponseJson(res, StatusCodes.OK, "Logout Successful", true);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
   }
 }
