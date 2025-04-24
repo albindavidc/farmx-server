@@ -6,6 +6,7 @@ export interface LoginRequest {
   verificationType: "email";
 }
 
+
 export interface LoginResponse {
   user: User;
   accessToken: string;
