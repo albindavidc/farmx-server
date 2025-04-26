@@ -5,3 +5,4 @@ export class ChangePasswordCommand {
     public readonly confirmPassword: string
   ) {}
 }
+
