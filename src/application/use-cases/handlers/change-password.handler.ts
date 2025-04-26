@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../presentation/container/Types";
+import { TYPES } from "../../../presentation/container/types";
 import { ChangePasswordUseCase } from "../use-cases/ChangePassword.use-case";
-import { ChangePasswordCommand } from "../commands/ChangePassword.command";
+import { ChangePasswordCommand } from "../commands/change-password.command";
 
 @injectable()
 export class ChangePasswordHandler {

@@ -1,6 +1,6 @@
-import { Otp } from "../../domain/entities/Otp.entity";
-import { OTPRepository } from "../../domain/interfaces/repositories/Otp.repository";
-import { OtpModel } from "../database/schemas/OtpSchema";
+import { Otp } from "../../domain/entities/otp.entity";
+import { OTPRepository } from "../../domain/interfaces/repositories/otp.repository";
+import { OtpModel } from "../database/schemas/otp.schema";
 
 export class OtpRepositoryImpl implements OTPRepository {
   async create(otp: {

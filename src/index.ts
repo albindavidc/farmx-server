@@ -2,7 +2,7 @@ import express from "express";
 import "reflect-metadata";
 import cors from "cors";
 import { createServer, Server as HttpServer } from "http";
-import connectToDatabase from "./infrastructure/database/MongooseConnection";
+import connectToDatabase from "./infrastructure/database/mongoose-connection";
 import dotenv from "dotenv";
 import { configFrontend } from "./infrastructure/config/ConfigSetup";
 import path from "path";
@@ -12,9 +12,9 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { Request, Response } from "express";
 
-import authRoute from "./presentation/routes/Auth.route";
-import sharedRoute from "./presentation/routes/Shared.route";
-import userRoute from "./presentation/routes/User.route";
+import authRoute from "./presentation/routes/auth.route";
+import sharedRoute from "./presentation/routes/shared.route";
+import userRoute from "./presentation/routes/user.route";
 import morgan from "morgan";
 
 dotenv.config();

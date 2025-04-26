@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
+import { UserRepository } from "../../../domain/interfaces/repositories/user.repository";
 import {
   generateAcessToken,
   generateRefreshToken,
@@ -7,7 +7,7 @@ import {
 import { RoleResponseDto, RoleUpdateDto } from "../dto/Role.dto";
 import { UserNotFoundException } from "../exceptions/UserNotFound.exception";
 import { UserMapper } from "../mappers/User.mapper";
-import { TYPES } from "../../../presentation/container/Types";
+import { TYPES } from "../../../presentation/container/types";
 
 @injectable()
 export class SetRoleUseCase {

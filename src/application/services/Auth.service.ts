@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { User } from "../../domain/entities/User.entity";
-import { UserRepository } from "../../domain/interfaces/repositories/User.repository";
+import { User } from "../../domain/entities/user.entity";
+import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
 import { Email } from "../../domain/value-objects/Email.vo";
 import {
   generateAcessToken,
@@ -8,7 +8,7 @@ import {
   TokenPayload,
   verifyRefreshToken,
 } from "../utils/TokenUtility";
-import { TYPES } from "../../presentation/container/Types";
+import { TYPES } from "../../presentation/container/types";
 
 @injectable()
 export class AuthService {

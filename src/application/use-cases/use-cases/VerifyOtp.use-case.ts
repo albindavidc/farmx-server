@@ -1,11 +1,11 @@
 import { inject, injectable } from "inversify";
-import { OTPRepository } from "../../../domain/interfaces/repositories/Otp.repository";
-import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
+import { OTPRepository } from "../../../domain/interfaces/repositories/otp.repository";
+import { UserRepository } from "../../../domain/interfaces/repositories/user.repository";
 import { Email } from "../../../domain/value-objects/Email.vo";
 import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
 import { InvalidOtpException } from "../exceptions/InvalidOtp.exception";
 import { UserNotFoundException } from "../exceptions/UserNotFound.exception";
-import { TYPES } from "../../../presentation/container/Types";
+import { TYPES } from "../../../presentation/container/types";
 
 @injectable()
 export class VerifyOtpUseCase {

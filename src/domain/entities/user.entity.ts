@@ -1,5 +1,5 @@
-import { CourseProgress } from "../../infrastructure/database/schemas/UserSchema";
-import { FarmerStatus } from "../enums/FarmerStatus.enum";
+import { CourseProgress } from "../../infrastructure/database/schemas/user.schema";
+import { FarmerStatus } from "../enums/farmer-status.enum";
 import { Password } from "../value-objects/Password.vo";
 
 export class User {

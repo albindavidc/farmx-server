@@ -2,7 +2,7 @@ import nodemailer, { Transporter } from "nodemailer";
 import { configBrevo } from "../../infrastructure/config/ConfigSetup";
 import winston from "winston";
 import { injectable } from "inversify";
-import { EmailService } from "../../domain/interfaces/services/Email.service";
+import { EmailService } from "../../domain/interfaces/services/email.service";
 
 interface MailOptions {
   from: string;

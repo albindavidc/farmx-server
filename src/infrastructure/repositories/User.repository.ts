@@ -1,9 +1,9 @@
 import { UserDto } from "../../application/use-cases/dto/User.dto";
-import { User } from "../../domain/entities/User.entity";
-import { FarmerStatus } from "../../domain/enums/FarmerStatus.enum";
-import { UserRepository } from "../../domain/interfaces/repositories/User.repository";
+import { User } from "../../domain/entities/user.entity";
+import { FarmerStatus } from "../../domain/enums/farmer-status.enum";
+import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
 import { Email } from "../../domain/value-objects/Email.vo";
-import UserSchema, { UserDocument } from "../database/schemas/UserSchema";
+import UserSchema, { UserDocument } from "../database/schemas/user.schema";
 
 export class UserRepositoryImpl implements UserRepository {
   private mapToEntity(userDoc: UserDocument): User {

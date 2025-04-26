@@ -1,10 +1,10 @@
 import express from "express";
-import { container } from "../container/Inversify.config";
-import { UserController } from "../controllers/User.controller";
-import { TYPES } from "../container/Types";
-import { uploadProfilePhoto } from "../middlewares/Multer";
-import { authenticate, authorize } from "../middlewares/Auth.middleware";
-import OtpController from "../controllers/Otp.controller";
+import { container } from "../container/inversify.config";
+import { UserController } from "../controllers/user.controller";
+import { TYPES } from "../container/types";
+import { uploadProfilePhoto } from "../middlewares/multer";
+import { authenticate, authorize } from "../middlewares/auth.middleware";
+import OtpController from "../controllers/otp.controller";
 
 const router = express.Router();
 

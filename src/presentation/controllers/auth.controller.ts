@@ -1,10 +1,10 @@
-import { UserUseCase } from "../../application/use-cases/interfaces/User.use-case";
+import { UserUseCase } from "../../application/use-cases/interfaces/user.use-case";
 import sendResponseJson from "../../application/utils/Message";
-import { User } from "../../domain/entities/User.entity";
+import { User } from "../../domain/entities/user.entity";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../container/Types";
+import { TYPES } from "../container/types";
 import { AuthService } from "../../application/services/Auth.service";
 import { LoginService } from "../../application/services/Login.service";
 import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/login.dto";

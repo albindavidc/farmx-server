@@ -1,4 +1,4 @@
-import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
+import { UserRepository } from "../../../domain/interfaces/repositories/user.repository";
 import { UserNotFoundException } from "../exceptions/UserNotFound.exception";
 import { UserDto } from "../dto/User.dto";
 import { UserMapper } from "../mappers/User.mapper";

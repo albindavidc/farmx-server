@@ -1,5 +1,5 @@
-import { FarmerStatus } from "../../../domain/enums/FarmerStatus.enum";
-import { CourseProgress } from "../../../infrastructure/database/schemas/UserSchema";
+import { FarmerStatus } from "../../../domain/enums/farmer-status.enum";
+import { CourseProgress } from "../../../infrastructure/database/schemas/user.schema";
 
 // user.dto.ts
 export interface UserDto {

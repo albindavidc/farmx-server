@@ -1,9 +1,9 @@
 import express from "express";
-import AuthController from "../controllers/Auth.controller";
-import OtpController from "../controllers/Otp.controller";
-import { container } from "../container/Inversify.config";
-import { TYPES } from "../container/Types";
-import { authenticate, authorize } from "../middlewares/Auth.middleware";
+import AuthController from "../controllers/auth.controller";
+import OtpController from "../controllers/otp.controller";
+import { container } from "../container/inversify.config";
+import { TYPES } from "../container/types";
+import { authenticate, authorize } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 

@@ -20,4 +20,7 @@ export const TYPES = {
   ChangePasswordHandler: Symbol.for("ChangePasswordHandler"),
   GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
   GetUserProfileHandler: Symbol.for("GetUserProfileHandler"),
+
+  /* Community */
+  CommunityRepository: Symbol.for("CommunityRepository"),
 };

@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../presentation/container/Types";
-import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
+import { TYPES } from "../../../presentation/container/types";
+import { UserRepository } from "../../../domain/interfaces/repositories/user.repository";
 
 @injectable()
 export class ChangePasswordUseCase {

@@ -1,15 +1,15 @@
 import { inject, injectable } from "inversify";
 import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
-import { TYPES } from "../container/Types";
+import { TYPES } from "../container/types";
 import sendResponseJson from "../../application/utils/Message";
 import { StatusCodes } from "http-status-codes";
-import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/UploadProfilePhoto.command";
+import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/upload-profile-photo.command";
 import { Request, Response } from "express";
 import path from "path";
 import fs from "fs";
-import { UserRepository } from "../../domain/interfaces/repositories/User.repository";
-import { ChangePasswordCommand } from "../../application/use-cases/commands/ChangePassword.command";
-import { ChangePasswordHandler } from "../../application/use-cases/handlers/ChangePassword.handler";
+import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
+import { ChangePasswordCommand } from "../../application/use-cases/commands/change-password.command";
+import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 
 @injectable()
 export class UserController {

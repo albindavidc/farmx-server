@@ -6,7 +6,7 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "../../application/utils/TokenUtility";
-import UserSchema, { UserDocument } from "../../infrastructure/database/schemas/UserSchema";
+import UserSchema, { UserDocument } from "../../infrastructure/database/schemas/user.schema";
 
 interface AuthRequest extends Request {
   user?: UserDocument;

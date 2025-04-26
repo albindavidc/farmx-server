@@ -1,5 +1,5 @@
-import { User } from "../../../domain/entities/User.entity";
-import { UploadProfilePhotoCommand } from "../commands/UploadProfilePhoto.command";
+import { User } from "../../../domain/entities/user.entity";
+import { UploadProfilePhotoCommand } from "../commands/upload-profile-photo.command";
 import { RoleUpdateDto } from "../dto/Role.dto";
 import { SignupRequestDto, UserDto } from "../dto/User.dto";
 

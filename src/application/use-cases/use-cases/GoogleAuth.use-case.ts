@@ -1,4 +1,4 @@
-import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
+import { UserRepository } from "../../../domain/interfaces/repositories/user.repository";
 import { GoogleAuthResponseDto } from "../dto/Auth.dto";
 import * as admin from "firebase-admin";
 import { AuthException } from "../exceptions/Auth.exception";
@@ -8,7 +8,7 @@ import {
   generateRefreshToken,
 } from "../../utils/TokenUtility";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../presentation/container/Types";
+import { TYPES } from "../../../presentation/container/types";
 
 @injectable()
 export class GoogleAuthUseCase {

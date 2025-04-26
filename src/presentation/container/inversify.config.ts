@@ -1,20 +1,21 @@
 import { Container } from "inversify";
-import { TYPES } from "./Types";
-import OtpController from "../controllers/Otp.controller";
-import AuthController from "../controllers/Auth.controller";
-import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
+import { TYPES } from "./types";
+import OtpController from "../controllers/otp.controller";
+import AuthController from "../controllers/auth.controller";
+import { OtpRepositoryImpl } from "../../infrastructure/repositories/otp.repository";
 import EmailServiceImpl from "../../application/services/Otp.service";
-import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repository";
-import { EmailService } from "../../domain/interfaces/services/Email.service";
+import { UserRepositoryImpl } from "../../infrastructure/repositories/user.repository";
+import { EmailService } from "../../domain/interfaces/services/email.service";
 import { AuthService } from "../../application/services/Auth.service";
 import { LoginService } from "../../application/services/Login.service";
-import { UserController } from "../controllers/User.controller";
+import { UserController } from "../controllers/user.controller";
 import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
 import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
 import { CreateUserUseCase } from "../../application/use-cases/use-cases/Signup.use-case";
 import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
-import { ChangePasswordHandler } from "../../application/use-cases/handlers/ChangePassword.handler";
+import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 import { ChangePasswordUseCase } from "../../application/use-cases/use-cases/ChangePassword.use-case";
+import { CommunityRepository } from "../../domain/interfaces/repositories/community.repository";
 
 const container = new Container();
 
@@ -49,4 +50,6 @@ container
   .to(ChangePasswordUseCase)
   .inSingletonScope();
 
+/* Community */
+container.bind<CommunityRepository>(TYPES.CommunityRepository).to()
 export { container };

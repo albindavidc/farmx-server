@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import { UserRepository } from "../../../domain/interfaces/repositories/User.repository";
-import { TYPES } from "../../../presentation/container/Types";
-import { UploadProfilePhotoCommand } from "../commands/UploadProfilePhoto.command";
+import { UserRepository } from "../../../domain/interfaces/repositories/user.repository";
+import { TYPES } from "../../../presentation/container/types";
+import { UploadProfilePhotoCommand } from "../commands/upload-profile-photo.command";
 import { UserDto } from "../dto/User.dto";
 
 @injectable()
