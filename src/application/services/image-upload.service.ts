@@ -2,32 +2,30 @@ import { injectable } from "inversify";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { v4 as uuid4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
+import { Request } from "express";
 
 @injectable()
 export class ImageUploadService {
-  private storage: multer.StorageEngine;
-  private upload: multer.Multer;
-
-  constructor() {
-    const uploadDir = path.join(process.cwd(), "uploads");
-
+  private createStorage(uploadDir: string) {
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    this.storage = multer.diskStorage({
+    return multer.diskStorage({
       destination: (req, file, cb) => {
         cb(null, uploadDir);
       },
       filename: (req, file, cb) => {
-        const uniqueFileName = `${uuid4()}${path.extname(file.originalname)}`;
+        const uniqueFileName = `${uuidv4()}${path.extname(file.originalname)}`;
         cb(null, uniqueFileName);
       },
     });
+  }
 
-    this.upload = multer({
-      storage: this.storage,
+  private createMulter(uploadDir: string) {
+    return multer({
+      storage: this.createStorage(uploadDir),
       fileFilter: (req, file, cb) => {
         const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
         if (allowedMimeTypes.includes(file.mimetype)) {
@@ -36,17 +34,70 @@ export class ImageUploadService {
           cb(new Error("Only image files are allowed!"));
         }
       },
-      limits: {
-        fileSize: 5 * 1024 * 1024,
-      },
+      limits: { fileSize: 10 * 1024 * 1024 },
     });
   }
 
-  getUploadMiddleware() {
-    return this.upload.single("image");
+  // private storage: multer.StorageEngine;
+  // private upload: multer.Multer;
+
+  // constructor() {
+  //   const uploadDir = path.join(process.cwd(), "uploads");
+
+  //   if (!fs.existsSync(uploadDir)) {
+  //     fs.mkdirSync(uploadDir, { recursive: true });
+  //   }
+
+  //   this.storage = multer.diskStorage({
+  //     destination: (req, file, cb) => {
+  //       cb(null, uploadDir);
+  //     },
+  //     filename: (req, file, cb) => {
+  //       const uniqueFileName = `${uuid4()}${path.extname(file.originalname)}`;
+  //       cb(null, uniqueFileName);
+  //     },
+  //   });
+
+  //   this.upload = multer({
+  //     storage: this.storage,
+  //     fileFilter: (req, file, cb) => {
+  //       const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+  //       if (allowedMimeTypes.includes(file.mimetype)) {
+  //         cb(null, true);
+  //       } else {
+  //         cb(new Error("Only image files are allowed!"));
+  //       }
+  //     },
+  //     limits: {
+  //       fileSize: 10 * 1024 * 1024, //10mb
+  //     },
+  //   });
+  // }
+
+  // getUploadMiddleware() {
+  //   return this.upload.single("file");
+  // }
+
+  getCategoryImageMiddleware(fieldName: string = "file") {
+    const uploadDir = path.join(process.cwd(), "uploads/category-images");
+    return this.createMulter(uploadDir).single(fieldName);
   }
 
-  getImageUrl(filename: string): string {
-    return `/uploads/${filename}`;
+  async uploadCategoryImages(req: Request): Promise<string> {
+    if (!req.file) {
+      throw new Error("No image file provided");
+    }
+
+    const baseUrl = process.env.PRODUCTION_URL
+      ? process.env.PRODUCTION_URL
+      : process.env.DEVELOPMENT_URL;
+
+    const relativePath = `/uploads/category-images/${req.file.filename}`;
+
+    return `${baseUrl}${relativePath}`;
   }
+
+  // getImageUrl(filename: string): string {
+  //   return `/uploads/${filename}`;
+  // }
 }

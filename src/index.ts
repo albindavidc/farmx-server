@@ -12,10 +12,11 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import { Request, Response } from "express";
 
+import morgan from "morgan";
 import authRoute from "./presentation/routes/auth.route";
 import sharedRoute from "./presentation/routes/shared.route";
 import userRoute from "./presentation/routes/user.route";
-import morgan from "morgan";
+import communityRoute from "./presentation/routes/community.routes";
 
 dotenv.config();
 
@@ -88,6 +89,7 @@ async function bootstrap(): Promise<void> {
   app.use("/auth", authRoute);
   app.use("/", sharedRoute);
   app.use("/user", userRoute);
+  app.use("/community", communityRoute);
 
   /* Start server */
   startServer(app, server, PORT);

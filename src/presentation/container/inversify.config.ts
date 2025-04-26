@@ -18,6 +18,9 @@ import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repos
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
 import { CommunityRepositoryImpl } from "../../infrastructure/repositories/community.repository";
 import { ImageUploadService } from "../../application/services/image-upload.service";
+import { CreateCommunityHandler } from "../../application/use-cases/handlers/create-community.handler";
+import { CommunityController } from "../controllers/community.controller";
+import { UploadMiddleware } from "../middlewares/upload-middleware";
 
 const container = new Container();
 
@@ -54,5 +57,9 @@ container
 
 /* Community */
 container.bind<CommunityRepository>(TYPES.CommunityRepository).to(CommunityRepositoryImpl);
-container.bind<ImageUploadService>(TYPES.ImageuploadService).to(ImageUploadService)
+container.bind<ImageUploadService>(TYPES.ImageuploadService).to(ImageUploadService);
+container.bind<CreateCommunityHandler>(TYPES.CreateCommunityHandler).to(CreateCommunityHandler);
+container.bind<CommunityController>(TYPES.CommunityController).to(CommunityController);
+container.bind<UploadMiddleware>(TYPES.UploadMiddleware).to(UploadMiddleware).inSingletonScope();
+
 export { container };

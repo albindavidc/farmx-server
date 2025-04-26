@@ -6,9 +6,9 @@ declare global {
       user?: UserDocument;
 
       file?: Express.Multer.File;
-      
+      files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] };
     }
   }
 }
 
-export {}; // Ensure this is a module
+export {};
