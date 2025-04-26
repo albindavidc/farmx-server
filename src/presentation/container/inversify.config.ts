@@ -2,9 +2,7 @@ import { Container } from "inversify";
 import { TYPES } from "./types";
 import OtpController from "../controllers/otp.controller";
 import AuthController from "../controllers/auth.controller";
-import { OtpRepositoryImpl } from "../../infrastructure/repositories/otp.repository";
 import EmailServiceImpl from "../../application/services/Otp.service";
-import { UserRepositoryImpl } from "../../infrastructure/repositories/user.repository";
 import { EmailService } from "../../domain/interfaces/services/email.service";
 import { AuthService } from "../../application/services/Auth.service";
 import { LoginService } from "../../application/services/Login.service";
@@ -16,6 +14,10 @@ import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/Genera
 import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 import { ChangePasswordUseCase } from "../../application/use-cases/use-cases/ChangePassword.use-case";
 import { CommunityRepository } from "../../domain/interfaces/repositories/community.repository";
+import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repository";
+import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
+import { CommunityRepositoryImpl } from "../../infrastructure/repositories/community.repository";
+import { ImageUploadService } from "../../application/services/image-upload.service";
 
 const container = new Container();
 
@@ -51,5 +53,6 @@ container
   .inSingletonScope();
 
 /* Community */
-container.bind<CommunityRepository>(TYPES.CommunityRepository).to()
+container.bind<CommunityRepository>(TYPES.CommunityRepository).to(CommunityRepositoryImpl);
+container.bind<ImageUploadService>(TYPES.ImageuploadService).to(ImageUploadService)
 export { container };

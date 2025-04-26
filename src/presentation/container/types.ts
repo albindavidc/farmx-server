@@ -23,4 +23,6 @@ export const TYPES = {
 
   /* Community */
   CommunityRepository: Symbol.for("CommunityRepository"),
+  ImageuploadService: Symbol.for("ImageUploadService")
+
 };
