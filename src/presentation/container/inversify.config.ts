@@ -14,13 +14,17 @@ import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/Genera
 import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 import { ChangePasswordUseCase } from "../../application/use-cases/use-cases/ChangePassword.use-case";
 import { CommunityRepository } from "../../domain/interfaces/repositories/community.repository";
-import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repository";
-import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
 import { CommunityRepositoryImpl } from "../../infrastructure/repositories/community.repository";
 import { ImageUploadService } from "../../application/services/image-upload.service";
 import { CreateCommunityHandler } from "../../application/use-cases/handlers/community/create-community.handler";
 import { CommunityController } from "../controllers/community.controller";
 import { UploadMiddleware } from "../middlewares/upload-middleware";
+import { UserRepositoryImpl } from "../../infrastructure/repositories/user.repository";
+import { OtpRepositoryImpl } from "../../infrastructure/repositories/otp.repository";
+import { LoadCommunitiesHandler } from "../../application/use-cases/handlers/community/load-communities.handler";
+import { LoadCommunityHandler } from "../../application/use-cases/handlers/community/load-community.handler";
+import { JoinCommunityHandler } from "../../application/use-cases/handlers/community/join-community.handler";
+import { LeaveCommunityHandler } from "../../application/use-cases/handlers/community/leave-community.handler";
 
 const container = new Container();
 
@@ -61,5 +65,10 @@ container.bind<ImageUploadService>(TYPES.ImageuploadService).to(ImageUploadServi
 container.bind<CreateCommunityHandler>(TYPES.CreateCommunityHandler).to(CreateCommunityHandler);
 container.bind<CommunityController>(TYPES.CommunityController).to(CommunityController);
 container.bind<UploadMiddleware>(TYPES.UploadMiddleware).to(UploadMiddleware).inSingletonScope();
+
+container.bind<LoadCommunitiesHandler>(TYPES.LoadCommunitiesHandler).to(LoadCommunitiesHandler);
+container.bind<LoadCommunityHandler>(TYPES.LoadCommunityHandler).to(LoadCommunityHandler);
+container.bind<JoinCommunityHandler>(TYPES.JoinCommunityHandler).to(JoinCommunityHandler);
+container.bind<LeaveCommunityHandler>(TYPES.LeaveCommunityHandler).to(LeaveCommunityHandler);
 
 export { container };

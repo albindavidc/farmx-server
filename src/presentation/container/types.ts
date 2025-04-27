@@ -26,5 +26,10 @@ export const TYPES = {
   ImageuploadService: Symbol.for("ImageUploadService"),
   CreateCommunityHandler: Symbol.for("CreateCommunityHandler"),
   CommunityController: Symbol.for("CommunityController"),
-  UploadMiddleware: Symbol.for("UploadMiddleware")
+  UploadMiddleware: Symbol.for("UploadMiddleware"),
+
+  LoadCommunityHandler: Symbol.for("LoadCommunityHandler"),
+  LoadCommunitiesHandler: Symbol.for("LoadCommunitesHandler"),
+  JoinCommunityHandler: Symbol.for("JoinCommunityHandler"),
+  LeaveCommunityHandler: Symbol.for("LeaveCommunityHandler"),
 };
