@@ -18,7 +18,7 @@ import { UserRepositoryImpl } from "../../infrastructure/repositories/User.repos
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/Otp.repository";
 import { CommunityRepositoryImpl } from "../../infrastructure/repositories/community.repository";
 import { ImageUploadService } from "../../application/services/image-upload.service";
-import { CreateCommunityHandler } from "../../application/use-cases/handlers/create-community.handler";
+import { CreateCommunityHandler } from "../../application/use-cases/handlers/community/create-community.handler";
 import { CommunityController } from "../controllers/community.controller";
 import { UploadMiddleware } from "../middlewares/upload-middleware";
 
