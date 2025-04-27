@@ -1,10 +1,18 @@
-import { CommunityMembersDocument } from "../../../infrastructure/database/schemas/community-members.schema";
+import mongoose from "mongoose";
 import { Community } from "../../entities/community.entity";
 
-interface AddMembershipResult {
-  membership: CommunityMembersDocument;
+export interface CommunityMember {
+  userId: mongoose.Types.ObjectId;
+  joinedAt: Date;
+  role: string;
+  status: string;
+}
+
+export interface AddMembershipResult {
+  membership: CommunityMember;
   community: Community | null;
 }
+
 
 export interface CommunityRepository {
   create(community: Community): Promise<Community>;

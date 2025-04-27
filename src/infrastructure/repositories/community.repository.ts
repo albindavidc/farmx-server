@@ -1,17 +1,12 @@
 import { injectable } from "inversify";
-import { CommunityRepository } from "../../domain/interfaces/repositories/community.repository";
+import {
+  AddMembershipResult,
+  CommunityRepository,
+} from "../../domain/interfaces/repositories/community.repository";
 import { CommunityDocument, CommunityModel } from "../database/schemas/community.schema";
 import mongoose from "mongoose";
-import {
-  CommunityMemberModel,
-  CommunityMembersDocument,
-} from "../database/schemas/community-members.schema";
+import { CommunityMemberModel } from "../database/schemas/community-members.schema";
 import { Community } from "../../domain/entities/community.entity";
-
-interface AddMembershipResult {
-  membership: CommunityMembersDocument;
-  community: Community | null;
-}
 
 @injectable()
 export class CommunityRepositoryImpl implements CommunityRepository {
@@ -67,45 +62,96 @@ export class CommunityRepositoryImpl implements CommunityRepository {
     return !!deltedCommunity;
   }
 
-  async addMember(communityId: string, userId: string): Promise<AddMembershipResult> {
+  async addMember(communityId: string, userId: string): Promise<AddMembershipResult | null> {
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try {
-      const newMember = await CommunityMemberModel.create(
-        [
+      // Find or create the CommunityMemberModel document for the community
+      let communityMemberDoc = await CommunityMemberModel.findOne({ communityId }, null, {
+        session,
+      });
+
+      if (!communityMemberDoc) {
+        const [newDoc] = await CommunityMemberModel.create(
+          [
+            {
+              communityId,
+              members: [
+                {
+                  userId,
+                  joinedAt: new Date(),
+                  role: "member",
+                  status: "active",
+                },
+              ],
+            },
+          ],
+          { session }
+        );
+        communityMemberDoc = newDoc;
+      } else {
+        communityMemberDoc = await CommunityMemberModel.findOneAndUpdate(
+          { communityId, "members.userId": { $ne: userId } },
           {
-            communityId,
-            userId,
-            joinedAt: new Date(),
-            role: "member",
-            status: "active",
+            $push: {
+              members: {
+                userId,
+                joinedAt: new Date(),
+                role: "member",
+                status: "active",
+              },
+            },
           },
-        ],
-        { session }
-      );
+          { new: true, session }
+        );
+
+        if (!communityMemberDoc) {
+          throw new Error("User is already a member of this community");
+        }
+        if (!communityMemberDoc.members.some((member) => member.userId.toString() === userId)) {
+          throw new Error("User is already a member of this community");
+        }
+      }
 
       const updatedCommunity = await CommunityModel.findByIdAndUpdate(
         communityId,
         { $inc: { memberCount: 1 } },
         { new: true, session }
       );
+      if (!updatedCommunity) {
+        throw new Error("Community not found");
+      }
 
       await session.commitTransaction();
       session.endSession();
 
+      const newMember = communityMemberDoc.members.find(
+        (member) => member.userId.toString() === userId
+      );
+
+      if (!newMember) {
+        throw new Error("Failed to find the newl added member");
+      }
       return {
-        membership: newMember[0],
+        membership: {
+          userId: newMember.userId,
+          joinedAt: newMember.joinedAt,
+          role: newMember.role,
+          status: newMember.status,
+        },
         community: updatedCommunity ? this.mapToEntity(updatedCommunity) : null,
       };
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
 
-      if ((error as { code?: number }).code == 11000) {
+      if ((error as { code?: number }).code === 11000) {
         throw new Error("User is already a member of this community");
       }
       throw error;
+    } finally {
+      session.endSession();
     }
   }
 
@@ -114,30 +160,33 @@ export class CommunityRepositoryImpl implements CommunityRepository {
     session.startTransaction();
 
     try {
-      const deleteResult = await CommunityMemberModel.deleteOne(
+      const updatedCommunityMember = await CommunityMemberModel.findOneAndUpdate(
+        { communityId },
         {
-          communityId,
-          userId,
+          $pull: { members: { userId } },
         },
-        { session }
+        { new: true, session }
       );
 
-      if (deleteResult.deletedCount > 0) {
-        const updatedCommunity = await CommunityModel.findByIdAndUpdate(
-          communityId,
-          { $inc: { memberCount: -1 } },
-          { new: true, session }
-        );
-
-        await session.commitTransaction();
-        session.endSession();
-
-        return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
-      } else {
+      if (
+        !updatedCommunityMember ||
+        !updatedCommunityMember.members.some((member) => member.userId.toString() === userId)
+      ) {
         await session.abortTransaction();
         session.endSession();
         throw new Error("User is not a member of this community");
       }
+
+      const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+        communityId,
+        { $inc: { memberCount: -1 } },
+        { new: true, session }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
     } catch (error) {
       await session.abortTransaction();
       session.endSession();

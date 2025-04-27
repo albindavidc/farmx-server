@@ -24,4 +24,18 @@ router.post(
   uploadMiddleware.handle(),
   communityController.uploadImage.bind(communityController)
 );
+
+router.get("/", authenticate, communityController.getCommunities.bind(communityController));
+router.get("/:id", authenticate, communityController.getCommunity.bind(communityController));
+router.post(
+  "/:id/members",
+  authenticate,
+  communityController.joinCommunity.bind(communityController)
+);
+router.delete(
+  "/:id/members",
+  authenticate,
+  communityController.leaveCommunity.bind(communityController)
+);
+
 export default router;
