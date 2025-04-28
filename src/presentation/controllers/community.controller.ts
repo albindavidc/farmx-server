@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../container/types";
 import { CommandHandler } from "../../application/use-cases/interfaces/command.handler";
 import { CreateCommunityCommand } from "../../application/use-cases/commands/community/create-community.command";
-import { Community } from "../../domain/entities/community.entity";
+import { Community } from "../../domain/entities/community/community.entity";
 import { ImageUploadService } from "../../application/services/image-upload.service";
 import { Request, Response } from "express";
 import { LoadCommunityHandler } from "../../application/use-cases/handlers/community/load-community.handler";

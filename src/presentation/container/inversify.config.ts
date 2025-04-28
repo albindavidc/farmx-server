@@ -13,7 +13,7 @@ import { CreateUserUseCase } from "../../application/use-cases/use-cases/Signup.
 import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
 import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 import { ChangePasswordUseCase } from "../../application/use-cases/use-cases/ChangePassword.use-case";
-import { CommunityRepository } from "../../domain/interfaces/repositories/community.repository";
+import { CommunityRepository } from "../../domain/interfaces/repositories/community/community.repository";
 import { CommunityRepositoryImpl } from "../../infrastructure/repositories/community.repository";
 import { ImageUploadService } from "../../application/services/image-upload.service";
 import { CreateCommunityHandler } from "../../application/use-cases/handlers/community/create-community.handler";

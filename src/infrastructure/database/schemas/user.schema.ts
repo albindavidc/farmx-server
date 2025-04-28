@@ -47,7 +47,7 @@ const UserSchema: Schema = new Schema(
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
     password: { type: String },
-    role: { type: String, default: "User", enum: ["user", "farmer", "admin"] },
+    role: { type: String, default: "user", enum: ["user", "farmer", "admin"] },
     isVerified: { type: Boolean, default: false },
     isAdmin: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

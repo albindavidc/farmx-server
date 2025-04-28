@@ -4,3 +4,7 @@ export enum UserRole {
   FARMER = "farmer",
 }
 
+export enum UserPostRole {
+  FARMER = "farmer",
+  ADMIN = "admin",
+}

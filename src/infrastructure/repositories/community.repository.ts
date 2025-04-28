@@ -2,11 +2,11 @@ import { injectable } from "inversify";
 import {
   AddMembershipResult,
   CommunityRepository,
-} from "../../domain/interfaces/repositories/community.repository";
+} from "../../domain/interfaces/repositories/community/community.repository";
 import { CommunityDocument, CommunityModel } from "../database/schemas/community.schema";
 import mongoose from "mongoose";
 import { CommunityMemberModel } from "../database/schemas/community-members.schema";
-import { Community } from "../../domain/entities/community.entity";
+import { Community } from "../../domain/entities/community/community.entity";
 
 @injectable()
 export class CommunityRepositoryImpl implements CommunityRepository {

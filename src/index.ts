@@ -84,6 +84,7 @@ async function bootstrap(): Promise<void> {
       skip: (req: Request, res: Response) => res.statusCode < 400,
     })
   );
+  app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
   /* Routes */
   app.use("/auth", authRoute);

@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { CommandHandler } from "../../interfaces/command.handler";
 import { CreateCommunityCommand } from "../../commands/community/create-community.command";
-import { Community } from "../../../../domain/entities/community.entity";
+import { Community } from "../../../../domain/entities/community/community.entity";
 import { TYPES } from "../../../../presentation/container/types";
-import { CommunityRepository } from "../../../../domain/interfaces/repositories/community.repository";
+import { CommunityRepository } from "../../../../domain/interfaces/repositories/community/community.repository";
 
 @injectable()
 export class CreateCommunityHandler implements CommandHandler<CreateCommunityCommand, Community> {

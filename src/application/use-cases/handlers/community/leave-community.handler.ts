@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../presentation/container/types";
-import { CommunityRepository } from "../../../../domain/interfaces/repositories/community.repository";
+import { CommunityRepository } from "../../../../domain/interfaces/repositories/community/community.repository";
 import { LeaveCommunityCommand } from "../../commands/community/leave-community.command";
-import { Community } from "../../../../domain/entities/community.entity";
+import { Community } from "../../../../domain/entities/community/community.entity";
 
 @injectable()
 export class LeaveCommunityHandler {

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Community } from "../../entities/community.entity";
+import { Community } from "../../../entities/community/community.entity";
 
 export interface CommunityMember {
   userId: mongoose.Types.ObjectId;
