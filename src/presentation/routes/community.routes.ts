@@ -4,14 +4,19 @@ import { container } from "../container/inversify.config";
 import { TYPES } from "../container/types";
 import { authenticate } from "../middlewares/auth.middleware";
 import { UploadMiddleware } from "../middlewares/upload-middleware";
+import { PostController } from "../controllers/post.controller";
+import { CommunityImageUploadMiddleware } from "../middlewares/community-image-upload.middleware";
 
 const router = express.Router();
 
 const communityController: CommunityController = container.get<CommunityController>(
   TYPES.CommunityController
 );
+const postController: PostController = container.get<PostController>(TYPES.PostController);
 
 const uploadMiddleware: UploadMiddleware = container.get<UploadMiddleware>(TYPES.UploadMiddleware);
+const communityImageUploadMiddleware: CommunityImageUploadMiddleware =
+  container.get<CommunityImageUploadMiddleware>(TYPES.CommunityImageUploadMiddleware);
 
 router.post(
   "/create-community",
@@ -36,6 +41,19 @@ router.delete(
   "/:id/members",
   authenticate,
   communityController.leaveCommunity.bind(communityController)
+);
+
+/* Community Post */
+router.get("/:id", authenticate, postController.getCommunityPosts.bind(postController));
+router.post("/create-post", authenticate, postController.createPost.bind(postController));
+router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
+router.delete("/posts/:id", authenticate, postController.deletePost.bind(postController));
+
+router.post(
+  "/post-upload-image",
+  authenticate,
+  communityImageUploadMiddleware.handle(),
+  postController.uploadImage.bind(postController)
 );
 
 export default router;

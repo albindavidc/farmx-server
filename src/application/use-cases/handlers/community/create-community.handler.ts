@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { CommandHandler } from "../../interfaces/command.handler";
+import { CommandHandler } from "../../interfaces/command.interface";
 import { CreateCommunityCommand } from "../../commands/community/create-community.command";
 import { Community } from "../../../../domain/entities/community/community.entity";
 import { TYPES } from "../../../../presentation/container/types";

@@ -76,8 +76,8 @@ async function bootstrap(): Promise<void> {
   app.use(cors(corsOptions));
   app.use(cookieParser());
   app.use(express.json());
-  app.use(morgan("dev"));
   app.use(express.urlencoded({ extended: true }));
+  app.use(morgan("dev"));
   app.use(
     logger("combined", {
       stream: errorLogStream,

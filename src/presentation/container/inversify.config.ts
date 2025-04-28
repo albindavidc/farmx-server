@@ -25,6 +25,15 @@ import { LoadCommunitiesHandler } from "../../application/use-cases/handlers/com
 import { LoadCommunityHandler } from "../../application/use-cases/handlers/community/load-community.handler";
 import { JoinCommunityHandler } from "../../application/use-cases/handlers/community/join-community.handler";
 import { LeaveCommunityHandler } from "../../application/use-cases/handlers/community/leave-community.handler";
+import { PostRepository } from "../../domain/interfaces/repositories/community/post.repository";
+import { UpdateCommunityPostHandler } from "../../application/use-cases/handlers/community/post/update-post.handler";
+import { DeleteCommunityPostHandler } from "../../application/use-cases/handlers/community/post/delete-post.handler";
+import { GetCommunityPostQueryHandler } from "../../application/use-cases/handlers/community/post/get-post.handler";
+import { GetCommunityPostsQueryHandler } from "../../application/use-cases/handlers/community/post/get-community-post.handler";
+import { CreateCommunityPostHandler } from "../../application/use-cases/handlers/community/post/create-post.handler";
+import { PostRepositoryImpl } from "../../infrastructure/repositories/post.repository";
+import { PostController } from "../controllers/post.controller";
+import { CommunityImageUploadMiddleware } from "../middlewares/community-image-upload.middleware";
 
 const container = new Container();
 
@@ -71,4 +80,26 @@ container.bind<LoadCommunityHandler>(TYPES.LoadCommunityHandler).to(LoadCommunit
 container.bind<JoinCommunityHandler>(TYPES.JoinCommunityHandler).to(JoinCommunityHandler);
 container.bind<LeaveCommunityHandler>(TYPES.LeaveCommunityHandler).to(LeaveCommunityHandler);
 
+/* Community Post */
+container.bind<PostRepository>(TYPES.PostRepository).to(PostRepositoryImpl);
+container
+  .bind<CreateCommunityPostHandler>(TYPES.CreateCommunityPostHandler)
+  .to(CreateCommunityPostHandler);
+container
+  .bind<UpdateCommunityPostHandler>(TYPES.UpdateCommunityPostHandler)
+  .to(UpdateCommunityPostHandler);
+container
+  .bind<DeleteCommunityPostHandler>(TYPES.DeleteCommunityPostHandler)
+  .to(DeleteCommunityPostHandler);
+container
+  .bind<GetCommunityPostQueryHandler>(TYPES.GetCommunityPostQueryHandler)
+  .to(GetCommunityPostQueryHandler);
+container
+  .bind<GetCommunityPostsQueryHandler>(TYPES.GetCommunityPostsQueryHandler)
+  .to(GetCommunityPostsQueryHandler);
+container.bind<PostController>(TYPES.PostController).to(PostController);
+container
+  .bind<CommunityImageUploadMiddleware>(TYPES.CommunityImageUploadMiddleware)
+  .to(CommunityImageUploadMiddleware)
+  .inSingletonScope();
 export { container };

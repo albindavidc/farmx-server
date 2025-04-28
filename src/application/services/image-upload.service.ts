@@ -38,46 +38,7 @@ export class ImageUploadService {
     });
   }
 
-  // private storage: multer.StorageEngine;
-  // private upload: multer.Multer;
-
-  // constructor() {
-  //   const uploadDir = path.join(process.cwd(), "uploads");
-
-  //   if (!fs.existsSync(uploadDir)) {
-  //     fs.mkdirSync(uploadDir, { recursive: true });
-  //   }
-
-  //   this.storage = multer.diskStorage({
-  //     destination: (req, file, cb) => {
-  //       cb(null, uploadDir);
-  //     },
-  //     filename: (req, file, cb) => {
-  //       const uniqueFileName = `${uuid4()}${path.extname(file.originalname)}`;
-  //       cb(null, uniqueFileName);
-  //     },
-  //   });
-
-  //   this.upload = multer({
-  //     storage: this.storage,
-  //     fileFilter: (req, file, cb) => {
-  //       const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
-  //       if (allowedMimeTypes.includes(file.mimetype)) {
-  //         cb(null, true);
-  //       } else {
-  //         cb(new Error("Only image files are allowed!"));
-  //       }
-  //     },
-  //     limits: {
-  //       fileSize: 10 * 1024 * 1024, //10mb
-  //     },
-  //   });
-  // }
-
-  // getUploadMiddleware() {
-  //   return this.upload.single("file");
-  // }
-
+  /* Category Image Upload */
   getCategoryImageMiddleware(fieldName: string = "file") {
     const uploadDir = path.join(process.cwd(), "uploads/category-images");
     return this.createMulter(uploadDir).single(fieldName);
@@ -97,7 +58,22 @@ export class ImageUploadService {
     return `${baseUrl}${relativePath}`;
   }
 
-  // getImageUrl(filename: string): string {
-  //   return `/uploads/${filename}`;
-  // }
+  /* Community Post Image*/
+  getCommunityPostMiddleware(fieldName: string = "file", postId: string) {
+    const uploadDir = path.join(process.cwd(), "uploads/community/community/post", postId);
+    return this.createMulter(uploadDir).single(fieldName);
+  }
+
+  async uploadCommunityPostImages(req: Request, postId: string): Promise<string> {
+    if (!req.file) {
+      throw new Error("No image file was provided");
+    }
+
+    const baseUrl = process.env.PRODUCTION_URL
+      ? process.env.PRODUCTION_URL
+      : process.env.DEVELOPMENT_URL;
+
+    const relativePath = `/uploads/community/community/post/${postId}/${req.file.filename}`;
+    return `${baseUrl}${relativePath}`;
+  }
 }

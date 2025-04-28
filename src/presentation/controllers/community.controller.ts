@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../container/types";
-import { CommandHandler } from "../../application/use-cases/interfaces/command.handler";
+import { CommandHandler } from "../../application/use-cases/interfaces/command.interface";
 import { CreateCommunityCommand } from "../../application/use-cases/commands/community/create-community.command";
 import { Community } from "../../domain/entities/community/community.entity";
 import { ImageUploadService } from "../../application/services/image-upload.service";

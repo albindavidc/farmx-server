@@ -32,4 +32,14 @@ export const TYPES = {
   LoadCommunitiesHandler: Symbol.for("LoadCommunitesHandler"),
   JoinCommunityHandler: Symbol.for("JoinCommunityHandler"),
   LeaveCommunityHandler: Symbol.for("LeaveCommunityHandler"),
+
+  PostRepository: Symbol.for("PostRepository"),
+  FileUploadService: Symbol.for("FileUploadService"),
+  CreateCommunityPostHandler: Symbol.for("CreateCommunityPostHandler"),
+  UpdateCommunityPostHandler: Symbol.for("UpdateCommunityPostHandler"),
+  DeleteCommunityPostHandler: Symbol.for("DeleteCommunityPostHandler"),
+  GetCommunityPostQueryHandler: Symbol.for("GetCommunityPostQueryHandler"),
+  GetCommunityPostsQueryHandler: Symbol.for("GetCommunityPostsQueryHandler"),
+  PostController: Symbol.for("PostController"),
+  CommunityImageUploadMiddleware: Symbol.for("CommunityImageUploadMiddleware"),
 };
