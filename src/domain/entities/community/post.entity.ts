@@ -12,7 +12,7 @@ export class Post {
     public imageUrl?: string,
     public isEdited?: boolean,
     public lastEditedAt?: Date,
-    public id?: string
+    public _id?: string
   ) {}
 
   public update(text: string, imageUrl?: string): void {

@@ -11,13 +11,12 @@ export class CreatePostDto {
 }
 
 export class UpdatePostDto {
-  id!: string;
+  _id!: string;
   text!: string;
   imageUrl?: string;
 }
 
 export class PostResponseDto {
-  id!: string;
   text!: string;
   imageUrl?: string;
   createdAt!: Date;
@@ -27,11 +26,12 @@ export class PostResponseDto {
   communityId!: string;
   communityName?: string;
   isEdited!: boolean;
+
   lastEditedAt?: Date;
+  id?: string;
 
   static fromEntity(post: Post): PostResponseDto {
     const dto = new PostResponseDto();
-    dto.id = post.id as string;
     dto.text = post.text;
     dto.imageUrl = post.imageUrl;
     dto.createdAt = post.createdAt;
@@ -41,7 +41,10 @@ export class PostResponseDto {
     dto.communityId = post.communityId;
     dto.communityName = post.communityName;
     dto.isEdited = post.isEdited || false;
+
     dto.lastEditedAt = post.lastEditedAt;
+    dto.id = post._id;
+
     return dto;
   }
 }

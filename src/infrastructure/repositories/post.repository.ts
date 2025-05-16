@@ -16,7 +16,8 @@ export class PostRepositoryImpl implements PostRepository {
       document.communityName,
       document.imageUrl || "",
       document.isEdited,
-      document.lastEditedAt
+      document.lastEditedAt,
+      document._id?.toString()
     );
   }
 
@@ -49,7 +50,8 @@ export class PostRepositoryImpl implements PostRepository {
           doc.communityName,
           doc.imageUrl,
           doc.isEdited,
-          doc.lastEditedAt
+          doc.lastEditedAt,
+          doc._id.toString()
         )
     );
   }
@@ -84,7 +86,7 @@ export class PostRepositoryImpl implements PostRepository {
 
   async update(post: Post): Promise<Post> {
     const updated = await PostModel.findByIdAndUpdate(
-      post.id,
+      post._id,
       {
         text: post.text,
         imageUrl: post.imageUrl,
@@ -95,7 +97,7 @@ export class PostRepositoryImpl implements PostRepository {
     ).exec();
 
     if (!updated) {
-      throw new Error(`Post with ID ${post.id} not found`);
+      throw new Error(`Post with ID ${post._id} not found`);
     }
 
     return new Post(

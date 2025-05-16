@@ -12,6 +12,7 @@ export interface PostDocument extends Document {
   imageUrl?: string;
   isEdited?: boolean;
   lastEditedAt?: Date;
+  _id?: string;
 }
 
 const PostSchema = new Schema<PostDocument>(
