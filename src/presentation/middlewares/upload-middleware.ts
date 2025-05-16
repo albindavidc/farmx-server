@@ -9,7 +9,7 @@ export class UploadMiddleware {
 
   handle() {
     return (req: Request, res: Response, next: NextFunction) => {
-      const upload = this.imageUploadService.getCategoryImageMiddleware();
+      const upload = this.imageUploadService.getCommunityImageMiddleware();
       upload(req, res, (err) => {
         if (err) {
           return res.status(400).json({

@@ -44,7 +44,7 @@ router.delete(
 );
 
 /* Community Post */
-router.get("/:id", authenticate, postController.getCommunityPosts.bind(postController));
+router.get("/posts/:id", authenticate, postController.getCommunityPosts.bind(postController));
 router.post("/create-post", authenticate, postController.createPost.bind(postController));
 router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
 router.delete("/posts/:id", authenticate, postController.deletePost.bind(postController));

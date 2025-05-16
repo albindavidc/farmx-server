@@ -31,6 +31,9 @@ export class PostController {
         res.status(401).json({ message: "Authentication required" });
         return;
       }
+      console.log("--------------------------------------------------------------------")
+
+
 
       const { text, communityId } = req.body;
 
@@ -144,11 +147,15 @@ export class PostController {
   }
 
   async getPost(req: Request, res: Response): Promise<void> {
+    console.log("--------------------------------------------------------------------");
     try {
       const { id } = req.params;
       const post = await this.getCommunityPostQuery.execute(id);
 
-      res.status(200).json(post);
+      console.log("this is community posts", post, id);
+
+      // res.status(200).json(post);
+      sendResponseJson(res, StatusCodes.OK, "Community get Successfull", true, post);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
 
@@ -157,13 +164,15 @@ export class PostController {
   }
 
   async getCommunityPosts(req: Request, res: Response): Promise<void> {
+    console.log("--------------------------------------------------------------------");
     try {
-      const { communityId } = req.params;
-      const posts = await this.getCommunityPostsQuery.execute(communityId.toString());
+      const communityId = req.params.id;
+      const posts = await this.getCommunityPostsQuery.execute(communityId);
 
-      console.log('this is community posts', posts)
+      console.log("this is community posts", posts, communityId);
 
-      res.status(200).json(posts);
+      // res.status(200).json(posts);
+      sendResponseJson(res, StatusCodes.OK, "Community get Successfull", true, posts);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
 

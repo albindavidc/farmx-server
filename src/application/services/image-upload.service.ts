@@ -38,9 +38,9 @@ export class ImageUploadService {
     });
   }
 
-  /* Category Image Upload */
-  getCategoryImageMiddleware(fieldName: string = "file") {
-    const uploadDir = path.join(process.cwd(), "uploads/category-images");
+  /* Community Image Upload */
+  getCommunityImageMiddleware(fieldName: string = "file") {
+    const uploadDir = path.join(process.cwd(), "uploads/community-images");
     return this.createMulter(uploadDir).single(fieldName);
   }
 
@@ -53,7 +53,7 @@ export class ImageUploadService {
       ? process.env.PRODUCTION_URL
       : process.env.DEVELOPMENT_URL;
 
-    const relativePath = `/uploads/category-images/${req.file.filename}`;
+    const relativePath = `/uploads/community-images/${req.file.filename}`;
 
     return `${baseUrl}${relativePath}`;
   }
