@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { UserPostRole } from "../../../domain/enums/user-role.enum";
 
 export interface PostDocument extends Document {
+  _id: string;
   text: string;
   createdAt: Date;
   userId: string;
@@ -12,7 +13,6 @@ export interface PostDocument extends Document {
   imageUrl?: string;
   isEdited?: boolean;
   lastEditedAt?: Date;
-  _id?: string;
 }
 
 const PostSchema = new Schema<PostDocument>(

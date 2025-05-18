@@ -46,14 +46,15 @@ router.delete(
 /* Community Post */
 router.get("/posts/:id", authenticate, postController.getCommunityPosts.bind(postController));
 router.post("/create-post", authenticate, postController.createPost.bind(postController));
-router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
 router.delete("/posts/:id", authenticate, postController.deletePost.bind(postController));
 
 router.post(
-  "/post-upload-image",
+  "/post-upload-image/:id",
   authenticate,
   communityImageUploadMiddleware.handle(),
   postController.uploadImage.bind(postController)
 );
+router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
+router.get('/community-post/:id', authenticate, postController.getPost.bind(postController))
 
 export default router;

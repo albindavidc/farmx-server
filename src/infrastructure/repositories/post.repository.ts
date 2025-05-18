@@ -7,6 +7,7 @@ import { PostDocument, PostModel } from "../database/schemas/post.schema";
 export class PostRepositoryImpl implements PostRepository {
   private mapToEntity(document: PostDocument): Post {
     return new Post(
+      document._id.toString(),
       document.text,
       document.createdAt,
       document.userId,
@@ -17,7 +18,6 @@ export class PostRepositoryImpl implements PostRepository {
       document.imageUrl || "",
       document.isEdited,
       document.lastEditedAt,
-      document._id?.toString()
     );
   }
 
@@ -41,6 +41,7 @@ export class PostRepositoryImpl implements PostRepository {
     return documents.map(
       (doc) =>
         new Post(
+          doc._id.toString(),
           doc.text,
           doc.createdAt,
           doc.userId,
@@ -51,7 +52,6 @@ export class PostRepositoryImpl implements PostRepository {
           doc.imageUrl,
           doc.isEdited,
           doc.lastEditedAt,
-          doc._id.toString()
         )
     );
   }
@@ -71,6 +71,7 @@ export class PostRepositoryImpl implements PostRepository {
     const saved = await document.save();
 
     return new Post(
+      saved._id,
       saved.text,
       saved.createdAt,
       saved.userId,
@@ -101,6 +102,7 @@ export class PostRepositoryImpl implements PostRepository {
     }
 
     return new Post(
+      updated._id,
       updated.text,
       updated.createdAt,
       updated.userId,

@@ -19,6 +19,7 @@ export class CreateCommunityPostHandler {
     }
 
     const post = new Post(
+      "",
       dto.text,
       new Date(),
       dto.userId,
@@ -28,7 +29,6 @@ export class CreateCommunityPostHandler {
       community.name,
       dto.imageUrl || "",
       false,
-      undefined,
       undefined
     );
 

@@ -37,13 +37,14 @@ export class PostController {
 
       const { text, communityId } = req.body;
 
+
       // Validate required fields
       const errors: string[] = [];
       if (!text) errors.push("Text is required");
       if (!communityId) errors.push("Community ID is required");
-
+      
       const userRole =
-        req.user.role === UserPostRole.FARMER ? UserPostRole.FARMER : UserPostRole.ADMIN;
+      req.user.role === UserPostRole.FARMER ? UserPostRole.FARMER : UserPostRole.ADMIN;
       const dto: CreatePostDto = {
         text,
         communityId,
@@ -51,8 +52,9 @@ export class PostController {
         userName: req.user.name,
         userRole: userRole,
       };
-
+      
       const post = await this.createPostCommand.execute(dto);
+      console.log('these are the text and communityId', text, communityId)
 
       if (req.file) {
         const imageUrl = await this.imageUploadService.uploadCommunityPostImages(req, post.id);
@@ -182,7 +184,9 @@ export class PostController {
 
   async uploadImage(req: Request, res: Response): Promise<void> {
     try {
-      const postId = req.body.postId || req.query.postId;
+      const postId = req.params.id || req.body.postId || req.query.postId;
+
+      console.log(postId, 'this is the postId from the backend')
 
       if (!postId) {
         throw new Error("Post ID is required for image upload");

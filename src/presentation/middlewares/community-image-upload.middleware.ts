@@ -10,8 +10,10 @@ export class CommunityImageUploadMiddleware {
 
   handle() {
     return (req: Request, res: Response, next: NextFunction) => {
-      const postId = req.body.postId || req.query.postId;
-      console.log("this is the postid", postId);
+
+      const postId = req.params.id;
+      console.log("this is the postid from the middleware", postId);
+
       if (postId) {
         const upload = this.imageUploadService.getCommunityPostMiddleware("file", postId);
         upload(req, res, (err) => {
@@ -24,6 +26,7 @@ export class CommunityImageUploadMiddleware {
           }
         });
       }
+
       next();
     };
   }

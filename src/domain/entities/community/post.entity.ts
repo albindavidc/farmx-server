@@ -2,6 +2,7 @@ import { UserPostRole } from "../../enums/user-role.enum";
 
 export class Post {
   constructor(
+    public _id: string,
     public text: string,
     public createdAt: Date,
     public userId: string,
@@ -12,7 +13,6 @@ export class Post {
     public imageUrl?: string,
     public isEdited?: boolean,
     public lastEditedAt?: Date,
-    public _id?: string
   ) {}
 
   public update(text: string, imageUrl?: string): void {
