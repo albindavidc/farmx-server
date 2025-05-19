@@ -20,4 +20,8 @@ const CommunitySchema = new Schema({
   categories: [{ type: String }],
 });
 
+CommunitySchema.index({ name: 1 }, { unique: true });
+CommunitySchema.index({ categories: 1 });
+CommunitySchema.index({ createdAt: -1 });
+
 export const CommunityModel = mongoose.model<CommunityDocument>("Community", CommunitySchema);

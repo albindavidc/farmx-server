@@ -6,8 +6,22 @@ import { authenticate } from "../middlewares/auth.middleware";
 import { UploadMiddleware } from "../middlewares/upload-middleware";
 import { PostController } from "../controllers/post.controller";
 import { CommunityImageUploadMiddleware } from "../middlewares/community-image-upload.middleware";
+import { queryValidationMiddleware } from "../middlewares/validation.middleware";
 
 const router = express.Router();
+
+const allowedListParams = [
+  "page",
+  "limit",
+  "sortBy",
+  "sortOrder",
+  "sortField",
+  "sortDirection",
+  "name",
+  "categories",
+  "createdBy",
+  "filter",
+];
 
 const communityController: CommunityController = container.get<CommunityController>(
   TYPES.CommunityController
@@ -23,7 +37,6 @@ router.post(
   authenticate,
   communityController.createCommunity.bind(communityController)
 );
-
 router.post(
   "/upload-image",
   uploadMiddleware.handle(),
@@ -32,6 +45,17 @@ router.post(
 
 router.get("/", authenticate, communityController.getCommunities.bind(communityController));
 router.get("/:id", authenticate, communityController.getCommunity.bind(communityController));
+
+router.get(
+  "/admin/communities-listing",
+  authenticate,
+  queryValidationMiddleware(allowedListParams),
+  communityController.listCommunities.bind(communityController)
+);
+
+router.put("/:id", communityController.updateCommunity.bind(communityController));
+router.delete("/:id", communityController.deleteCommunity.bind(communityController));
+
 router.post(
   "/:id/members",
   authenticate,
@@ -55,6 +79,6 @@ router.post(
   postController.uploadImage.bind(postController)
 );
 router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
-router.get('/community-post/:id', authenticate, postController.getPost.bind(postController))
+router.get("/community-post/:id", authenticate, postController.getPost.bind(postController));
 
 export default router;

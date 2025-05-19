@@ -30,8 +30,12 @@ export const TYPES = {
 
   LoadCommunityHandler: Symbol.for("LoadCommunityHandler"),
   LoadCommunitiesHandler: Symbol.for("LoadCommunitesHandler"),
+  ListCommunitiesHandler: Symbol.for("ListCommunitiesHandler"),
   JoinCommunityHandler: Symbol.for("JoinCommunityHandler"),
   LeaveCommunityHandler: Symbol.for("LeaveCommunityHandler"),
+  UpdateCommunityHandler: Symbol.for("UpdateCommunityHandler"),
+  DeleteCommunityHandler: Symbol.for("DeleteCommunityHandler"),
+
 
   PostRepository: Symbol.for("PostRepository"),
   FileUploadService: Symbol.for("FileUploadService"),

@@ -34,6 +34,9 @@ import { CreateCommunityPostHandler } from "../../application/use-cases/handlers
 import { PostRepositoryImpl } from "../../infrastructure/repositories/post.repository";
 import { PostController } from "../controllers/post.controller";
 import { CommunityImageUploadMiddleware } from "../middlewares/community-image-upload.middleware";
+import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
+import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
+import { ListCommunitiesHandler } from "../../application/use-cases/handlers/community/list-communities.handler";
 
 const container = new Container();
 
@@ -77,8 +80,15 @@ container.bind<UploadMiddleware>(TYPES.UploadMiddleware).to(UploadMiddleware).in
 
 container.bind<LoadCommunitiesHandler>(TYPES.LoadCommunitiesHandler).to(LoadCommunitiesHandler);
 container.bind<LoadCommunityHandler>(TYPES.LoadCommunityHandler).to(LoadCommunityHandler);
+container.bind<ListCommunitiesHandler>(TYPES.ListCommunitiesHandler).to(ListCommunitiesHandler)
 container.bind<JoinCommunityHandler>(TYPES.JoinCommunityHandler).to(JoinCommunityHandler);
 container.bind<LeaveCommunityHandler>(TYPES.LeaveCommunityHandler).to(LeaveCommunityHandler);
+container
+  .bind<UpdateCommunityCommandHandler>(TYPES.UpdateCommunityHandler)
+  .to(UpdateCommunityCommandHandler);
+container
+  .bind<DeleteCommunityCommandHandler>(TYPES.DeleteCommunityHandler)
+  .to(DeleteCommunityCommandHandler);
 
 /* Community Post */
 container.bind<PostRepository>(TYPES.PostRepository).to(PostRepositoryImpl);
