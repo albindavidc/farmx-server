@@ -104,9 +104,9 @@ export class CommunityController {
       const createdById = req.params.createdById;
       const communites = await this.loadCommunitiesHandler.execute(createdById);
 
-      console.log('this is createdbyid',createdById)
+      // console.log('this is createdbyid',createdById)
 
-      console.log("this is communities", communites);
+      // console.log("this is communities", communites);
       sendResponseJson(res, StatusCodes.OK, "Communites got successfully", true, communites);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal server error";
@@ -144,7 +144,7 @@ export class CommunityController {
         filter,
       });
 
-      console.log(result, " this is the result that we are sending to the front-end");
+      // console.log(result, " this is the result that we are sending to the front-end");
 
       res.status(200).json({
         success: true,

@@ -25,7 +25,7 @@ export class UpdateCommunityCommandHandler {
 
       // Check if the new name is already taken by another community
       const existingCommunity = await this.communityRepository.findByName(data.name);
-      if (existingCommunity && existingCommunity.id !== id) {
+      if (existingCommunity && existingCommunity.getId() !== id) {
         throw new Error(`Community with name '${data.name}' already exists`);
       }
     }
@@ -43,9 +43,25 @@ export class UpdateCommunityCommandHandler {
     }
 
     // Save the updated community
-    const updatedCommunity = await this.communityRepository.update(community);
+    const updatedCommunity = await this.communityRepository.update(id, community);
+
+    if (!updatedCommunity) {
+      throw new Error("Failed to update community ");
+    }
 
     // Return the response DTO
-    return CommunityResponseDto.fromEntity(updatedCommunity);
+    return CommunityResponseDto.fromEntity({
+      id: updatedCommunity.getId(),
+      name: updatedCommunity.getName(),
+      description: updatedCommunity.getDescription(),
+      isActive: updatedCommunity.getIsActive(),
+      createdBy: updatedCommunity.getCreatedBy(),
+      createdAt: updatedCommunity.getCreatedAt(),
+      membersCount: updatedCommunity.getMemberCount
+        ? updatedCommunity.getMemberCount()
+        : updatedCommunity.getMemberCount?.() || 0,
+      imageUrl: updatedCommunity.getImageUrl(),
+      categories: updatedCommunity.getCategories(),
+    });
   }
 }

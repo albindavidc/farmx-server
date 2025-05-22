@@ -84,7 +84,7 @@ export class CommunityRepositoryImpl implements CommunityRepository {
       ]);
 
       const communities = documents.map((doc) => this.mapToEntity(doc));
-      console.log('this is from the find all communities repository impl', communities)
+      // console.log('this is from the find all communities repository impl', communities)
 
       return { communities, total };
     } catch (error) {
@@ -105,16 +105,47 @@ export class CommunityRepositoryImpl implements CommunityRepository {
   async update(id: string, communityData: Partial<Community>): Promise<Community | null> {
     try {
       const updateData: Partial<CommunityDocument> = {};
-      if (communityData.getName?.()) updateData.name = communityData.getName();
-      if (communityData.getDescription?.()) updateData.description = communityData.getDescription();
-      if (communityData.getCreatedBy?.()) updateData.createdBy = communityData.getCreatedBy();
-      if (communityData.getCreatedAt?.()) updateData.createdAt = communityData.getCreatedAt();
-      if (communityData.getMemberCount?.() !== undefined)
-        updateData.membersCount = communityData.getMemberCount();
-      if (communityData.getImageUrl?.() !== undefined)
-        updateData.imageUrl = communityData.getImageUrl();
-      if (communityData.getCategories?.()) updateData.categories = communityData.getCategories();
-      if (communityData.getIsActive?.() !== undefined) updateData.isActive = communityData.getIsActive();
+
+      // Check if the method exists and the value is not undefined before calling
+      if (communityData.getName && typeof communityData.getName === "function") {
+        const name = communityData.getName();
+        if (name) updateData.name = name;
+      }
+
+      if (communityData.getDescription && typeof communityData.getDescription === "function") {
+        const description = communityData.getDescription();
+        if (description) updateData.description = description;
+      }
+
+      if (communityData.getCreatedBy && typeof communityData.getCreatedBy === "function") {
+        const createdBy = communityData.getCreatedBy();
+        if (createdBy) updateData.createdBy = createdBy;
+      }
+
+      if (communityData.getCreatedAt && typeof communityData.getCreatedAt === "function") {
+        const createdAt = communityData.getCreatedAt();
+        if (createdAt) updateData.createdAt = createdAt;
+      }
+
+      if (communityData.getMemberCount && typeof communityData.getMemberCount === "function") {
+        const memberCount = communityData.getMemberCount();
+        if (memberCount !== undefined) updateData.membersCount = memberCount;
+      }
+
+      if (communityData.getImageUrl && typeof communityData.getImageUrl === "function") {
+        const imageUrl = communityData.getImageUrl();
+        updateData.imageUrl = imageUrl; // Allow undefined/null values for imageUrl
+      }
+
+      if (communityData.getCategories && typeof communityData.getCategories === "function") {
+        const categories = communityData.getCategories();
+        if (categories) updateData.categories = categories;
+      }
+
+      if (communityData.getIsActive && typeof communityData.getIsActive === "function") {
+        const isActive = communityData.getIsActive();
+        if (isActive !== undefined) updateData.isActive = isActive;
+      }
 
       const updatedCommunity = await CommunityModel.findByIdAndUpdate(
         id,
