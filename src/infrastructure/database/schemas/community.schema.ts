@@ -3,9 +3,10 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface CommunityDocument extends Document {
   name: string;
   description: string;
+  isActive: boolean;
   createdAt: Date;
   createdBy: string;
-  memberCount: number;
+  membersCount: number;
   imageUrl?: string;
   categories?: string[];
 }
@@ -13,9 +14,10 @@ export interface CommunityDocument extends Document {
 const CommunitySchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
+  isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: String, required: true },
-  memberCount: { type: Number, default: 1 },
+  membersCount: { type: Number, default: 1 },
   imageUrl: { type: String },
   categories: [{ type: String }],
 });

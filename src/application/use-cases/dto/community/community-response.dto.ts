@@ -3,6 +3,7 @@ export class CommunityResponseDto {
   id: string;
   name: string;
   description: string;
+  isActive: boolean;
   createdBy: string;
   createdAt: Date;
   membersCount: number;
@@ -13,6 +14,7 @@ export class CommunityResponseDto {
     id: string;
     name: string;
     description: string;
+    isActive: boolean;
     createdBy: string;
     createdAt: Date;
     membersCount: number;
@@ -22,6 +24,7 @@ export class CommunityResponseDto {
     this.id = data.id;
     this.name = data.name;
     this.description = data.description;
+    this.isActive = data.isActive;
     this.createdBy = data.createdBy;
     this.createdAt = data.createdAt;
     this.membersCount = data.membersCount;
@@ -33,6 +36,7 @@ export class CommunityResponseDto {
     id: string;
     name: string;
     description: string;
+    isActive: boolean;
     createdBy: string;
     createdAt: Date;
     membersCount: number;
@@ -43,6 +47,7 @@ export class CommunityResponseDto {
       id: community.id,
       name: community.name,
       description: community.description,
+      isActive: community.isActive,
       createdBy: community.createdBy,
       createdAt: community.createdAt,
       membersCount: community.membersCount,

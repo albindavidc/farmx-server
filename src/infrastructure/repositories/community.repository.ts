@@ -11,14 +11,14 @@ import { Community } from "../../domain/entities/community/community.entity";
 @injectable()
 export class CommunityRepositoryImpl implements CommunityRepository {
   private mapToEntity(doc: CommunityDocument): Community {
-    
     return new Community(
       doc.name,
       doc.description,
+      doc.isActive,
       doc.createdBy,
-      doc.id,
+      doc._id ? doc._id.toString() : undefined,
       doc.createdAt,
-      doc.memberCount,
+      doc.membersCount,
       doc.imageUrl,
       doc.categories
     );
@@ -26,13 +26,14 @@ export class CommunityRepositoryImpl implements CommunityRepository {
 
   async create(community: Community): Promise<Community> {
     const communityDoc = new CommunityModel({
-      name: community.name,
-      description: community.description,
-      createdAt: community.createdAt,
-      createdBy: community.createdBy,
-      memberCount: community.membersCount,
-      imageUrl: community.imageUrl,
-      categories: community.categories,
+      name: community.getName(),
+      description: community.getDescription(),
+      isActive: true,
+      createdAt: community.getCreatedAt(),
+      createdBy: community.getCreatedBy(),
+      membersCount: community.getMemberCount(),
+      imageUrl: community.getImageUrl(),
+      categories: community.getCategories(),
     });
 
     const savedCommunity = await communityDoc.save();
@@ -42,6 +43,11 @@ export class CommunityRepositoryImpl implements CommunityRepository {
   async findById(id: string): Promise<Community | null> {
     const community = await CommunityModel.findById(id);
     return community ? this.mapToEntity(community) : null;
+  }
+
+  async findByCreatedById(createdById: string): Promise<Community[]> {
+    const communities = await CommunityModel.find({ createdBy: createdById }).exec();
+    return communities.map((community) => this.mapToEntity(community));
   }
 
   async findByName(name: string): Promise<Community | null> {
@@ -73,11 +79,13 @@ export class CommunityRepositoryImpl implements CommunityRepository {
 
     try {
       const [documents, total] = await Promise.all([
-        CommunityModel.find(filter).sort(sort).skip(skip).limit(limit).lean().exec(),
+        CommunityModel.find(filter).sort(sort).skip(skip).limit(limit).exec(),
         CommunityModel.countDocuments(filter).exec(),
       ]);
 
       const communities = documents.map((doc) => this.mapToEntity(doc));
+      console.log('this is from the find all communities repository impl', communities)
+
       return { communities, total };
     } catch (error) {
       console.error("Error finding all communities:", error);
@@ -94,27 +102,27 @@ export class CommunityRepositoryImpl implements CommunityRepository {
   //   return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
   // }
 
-  async update(community: Community): Promise<Community> {
+  async update(id: string, communityData: Partial<Community>): Promise<Community | null> {
     try {
-      const document = await CommunityModel.findByIdAndUpdate(
-        community.id,
-        {
-          name: community.name,
-          description: community.description,
-          createdBy: community.createdBy,
-          createdAt: community.createdAt,
-          membersCount: community.membersCount,
-          imageUrl: community.imageUrl,
-          categories: community.categories,
-        },
+      const updateData: Partial<CommunityDocument> = {};
+      if (communityData.getName?.()) updateData.name = communityData.getName();
+      if (communityData.getDescription?.()) updateData.description = communityData.getDescription();
+      if (communityData.getCreatedBy?.()) updateData.createdBy = communityData.getCreatedBy();
+      if (communityData.getCreatedAt?.()) updateData.createdAt = communityData.getCreatedAt();
+      if (communityData.getMemberCount?.() !== undefined)
+        updateData.membersCount = communityData.getMemberCount();
+      if (communityData.getImageUrl?.() !== undefined)
+        updateData.imageUrl = communityData.getImageUrl();
+      if (communityData.getCategories?.()) updateData.categories = communityData.getCategories();
+      if (communityData.getIsActive?.() !== undefined) updateData.isActive = communityData.getIsActive();
+
+      const updatedCommunity = await CommunityModel.findByIdAndUpdate(
+        id,
+        { $set: updateData },
         { new: true, runValidators: true }
       ).exec();
 
-      if (!document) {
-        throw new Error("Community not found");
-      }
-
-      return this.mapToEntity(document);
+      return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
     } catch (error) {
       console.error("Error updating community:", error);
       throw error;

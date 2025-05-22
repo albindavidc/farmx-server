@@ -43,7 +43,7 @@ router.post(
   communityController.uploadImage.bind(communityController)
 );
 
-router.get("/", authenticate, communityController.getCommunities.bind(communityController));
+router.get("/:createdById", authenticate, communityController.getCommunities.bind(communityController));
 router.get("/:id", authenticate, communityController.getCommunity.bind(communityController));
 
 router.get(

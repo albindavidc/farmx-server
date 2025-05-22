@@ -58,7 +58,7 @@ export class ListCommunitiesHandler {
 
     // Map to response DTOs
     const communityDtos = communities.map((community) =>
-      CommunityResponseDto.fromEntity(community)
+      CommunityResponseDto.fromEntity(community.toObject())
     );
 
     // Return response

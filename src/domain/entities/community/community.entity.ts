@@ -1,16 +1,18 @@
 export class Community {
-  private _id?: string;
-  private _name: string;
-  private _description: string;
-  private _createdBy: string;
-  private _createdAt: Date;
-  private _membersCount: number;
-  private _imageUrl?: string;
-  private _categories: string[];
+  private id?: string;
+  private name: string;
+  private description: string;
+  private isActive: boolean;
+  private createdBy: string;
+  private createdAt: Date;
+  private membersCount: number;
+  private imageUrl?: string;
+  private categories: string[];
 
   constructor(
     name: string,
     description: string,
+    isActive: boolean,
     createdBy: string,
     id?: string,
     createdAt: Date = new Date(),
@@ -18,50 +20,52 @@ export class Community {
     imageUrl?: string,
     categories: string[] = []
   ) {
-    this._id = id;
-    this._name = name;
-    this._description = description;
-    this._createdBy = createdBy;
-    this._createdAt = createdAt;
-    this._membersCount = membersCount;
-    this._imageUrl = imageUrl;
-    this._categories = categories;
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.isActive = isActive;
+    this.createdBy = createdBy;
+    this.createdAt = createdAt;
+    this.membersCount = membersCount;
+    this.imageUrl = imageUrl;
+    this.categories = categories;
   }
 
   // Getters
-  get id(): string {
-    if (!this._id) {
-      return "";
-    }
-    return this._id;
+  getId(): string {
+    return this.id ?? "";
   }
 
-  get name(): string {
-    return this._name;
+  getName(): string {
+    return this.name;
   }
 
-  get description(): string {
-    return this._description;
+  getDescription(): string {
+    return this.description;
   }
 
-  get createdBy(): string {
-    return this._createdBy;
+  getIsActive(): boolean {
+    return this.isActive;
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
+  getCreatedBy(): string {
+    return this.createdBy;
   }
 
-  get membersCount(): number {
-    return this._membersCount;
+  getCreatedAt(): Date {
+    return this.createdAt;
   }
 
-  get imageUrl(): string | undefined {
-    return this._imageUrl;
+  getMemberCount(): number {
+    return this.membersCount;
   }
 
-  get categories(): string[] {
-    return [...this._categories];
+  getImageUrl(): string | undefined {
+    return this.imageUrl;
+  }
+
+  getCategories(): string[] {
+    return [...this.categories];
   }
 
   // Setters with validation
@@ -69,31 +73,31 @@ export class Community {
     if (!name || name.trim().length === 0) {
       throw new Error("Community name cannot be empty");
     }
-    this._name = name.trim();
+    this.name = name.trim();
   }
 
   updateDescription(description: string): void {
     if (!description || description.trim().length === 0) {
       throw new Error("Community description cannot be empty");
     }
-    this._description = description.trim();
+    this.description = description.trim();
   }
 
   updateImageUrl(imageUrl?: string): void {
-    this._imageUrl = imageUrl;
+    this.imageUrl = imageUrl;
   }
 
   updateCategories(categories: string[]): void {
-    this._categories = [...categories];
+    this.categories = [...categories];
   }
 
-  incrementMembersCount(): void {
-    this._membersCount += 1;
+  incrementMemberCount(): void {
+    this.membersCount += 1;
   }
 
-  decrementMembersCount(): void {
-    if (this._membersCount > 0) {
-      this._membersCount -= 1;
+  decrementMemberCount(): void {
+    if (this.membersCount > 0) {
+      this.membersCount -= 1;
     }
   }
 
@@ -108,6 +112,7 @@ export class Community {
     return new Community(
       name,
       description,
+      true,
       createdBy,
       undefined,
       new Date(),
@@ -118,19 +123,27 @@ export class Community {
   }
 
   // For serialization
-  toObject(): Record<string, string | number | Date | undefined | string[]> {
-    if (!this._id) {
-      return {};
-    }
+  toObject(): {
+    id: string;
+    name: string;
+    description: string;
+    createdBy: string;
+    createdAt: Date;
+    membersCount: number;
+    imageUrl?: string;
+    categories: string[];
+    isActive: boolean;
+  } {
     return {
-      id: this._id,
-      name: this._name,
-      description: this._description,
-      createdBy: this._createdBy,
-      createdAt: this._createdAt,
-      membersCount: this._membersCount,
-      imageUrl: this._imageUrl,
-      categories: this._categories,
+      id: this.getId(),
+      name: this.name,
+      description: this.description,
+      createdBy: this.createdBy,
+      createdAt: this.createdAt,
+      membersCount: this.membersCount,
+      imageUrl: this.imageUrl,
+      categories: this.categories,
+      isActive: this.isActive,
     };
   }
 }

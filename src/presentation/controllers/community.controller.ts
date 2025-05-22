@@ -20,6 +20,7 @@ import { CustomError } from "../middlewares/error-handler.middleware";
 import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
 import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
 import { ListCommunitiesHandler } from "../../application/use-cases/handlers/community/list-communities.handler";
+import { LoadCommunitiesHandler } from "../../application/use-cases/handlers/community/load-communities.handler";
 
 @injectable()
 export class CommunityController {
@@ -28,6 +29,7 @@ export class CommunityController {
     private createCommunityHandler: CommandHandler<CreateCommunityCommand, Community>,
     @inject(TYPES.ImageuploadService) private imageUploadService: ImageUploadService,
     @inject(TYPES.LoadCommunityHandler) private loadCommunityHandler: LoadCommunityHandler,
+    @inject(TYPES.LoadCommunitiesHandler) private loadCommunitiesHandler: LoadCommunitiesHandler,
     @inject(TYPES.ListCommunitiesHandler) private listCommunitiesHandler: ListCommunitiesHandler,
     @inject(TYPES.JoinCommunityHandler) private joinCommunityHandler: JoinCommunityHandler,
     @inject(TYPES.LeaveCommunityHandler) private leaveCommunityHandler: LeaveCommunityHandler,
@@ -99,7 +101,12 @@ export class CommunityController {
 
   async getCommunities(req: Request, res: Response): Promise<void> {
     try {
-      const communites = await this.listCommunitiesHandler.execute();
+      const createdById = req.params.createdById;
+      const communites = await this.loadCommunitiesHandler.execute(createdById);
+
+      console.log('this is createdbyid',createdById)
+
+      console.log("this is communities", communites);
       sendResponseJson(res, StatusCodes.OK, "Communites got successfully", true, communites);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal server error";
@@ -113,6 +120,7 @@ export class CommunityController {
       const limit = Math.min(parseInt(req.query.limit as string) || 10, 100); // Max 100 items per page
       const sortBy = (req.query.sortBy as string) || "createdAt";
       const sortOrder = (req.query.sortOrder as string) || "desc";
+      
       const name = req.query.name as string;
       const categories = req.query.categories
         ? (req.query.categories as string).split(",").map((cat) => cat.trim())
@@ -136,16 +144,16 @@ export class CommunityController {
         filter,
       });
 
-      console.log(result,' this is the result that we are sending to the front-end')
+      console.log(result, " this is the result that we are sending to the front-end");
 
       res.status(200).json({
         success: true,
         message: "Communities retrieved successfully",
         items: result.communities || [],
         totalItems: result.total || 0,
-        totalPages: Math.ceil((result.total || 0)/(result.limit || 1)),
+        totalPages: Math.ceil((result.total || 0) / (result.limit || 1)),
         currentPage: result.page || 1,
-        
+
         pagination: {
           page: result.page,
           limit: result.limit,

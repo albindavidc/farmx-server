@@ -16,8 +16,9 @@ export interface AddMembershipResult {
 export interface CommunityRepository {
   create(community: Community): Promise<Community>;
   findById(id: string): Promise<Community | null>;
+  findByCreatedById(createdById: string): Promise<Community[]>;
   findAll(): Promise<Community[]>;
-  // update(id: string, community: Partial<Community>): Promise<Community | null>;
+  update(id: string, community: Partial<Community>): Promise<Community | null>;
 
   findByName(name: string): Promise<Community | null>;
   findAllCommunities(options?: {
@@ -28,7 +29,7 @@ export interface CommunityRepository {
   }): Promise<{ communities: Community[]; total: number }>;
 
   create(community: Community): Promise<Community>;
-  update(community: Community): Promise<Community>;
+  // update(community: Community): Promise<Community>;
   delete(id: string): Promise<boolean>;
   incrementMembersCount(id: string): Promise<boolean>;
   decrementMembersCount(id: string): Promise<boolean>;

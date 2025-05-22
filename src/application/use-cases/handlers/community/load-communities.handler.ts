@@ -9,7 +9,7 @@ export class LoadCommunitiesHandler {
     @inject(TYPES.CommunityRepository) private communityRepository: CommunityRepository
   ) {}
 
-  async execute(): Promise<Community[]> {
-    return this.communityRepository.findAll();
+  async execute(createdById: string): Promise<Community[]> {
+    return this.communityRepository.findByCreatedById(createdById);
   }
 }
