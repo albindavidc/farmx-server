@@ -23,6 +23,7 @@ const allowedListParams = [
   "filter",
 ];
 
+/* Resolve controllers from container */
 const communityController: CommunityController = container.get<CommunityController>(
   TYPES.CommunityController
 );
@@ -32,6 +33,7 @@ const uploadMiddleware: UploadMiddleware = container.get<UploadMiddleware>(TYPES
 const communityImageUploadMiddleware: CommunityImageUploadMiddleware =
   container.get<CommunityImageUploadMiddleware>(TYPES.CommunityImageUploadMiddleware);
 
+/* Routes */
 router.post(
   "/create-community",
   authenticate,

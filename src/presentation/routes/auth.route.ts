@@ -4,12 +4,14 @@ import OtpController from "../controllers/otp.controller";
 import { container } from "../container/inversify.config";
 import { TYPES } from "../container/types";
 import { authenticate, authorize } from "../middlewares/auth.middleware";
+import { UserController } from "../controllers/user.controller";
 
 const router = express.Router();
 
 /* Resolve controllers from the container */
 const otpController: OtpController = container.get<OtpController>(TYPES.OtpController);
 const authController: AuthController = container.get<AuthController>(TYPES.AuthController);
+const userController: UserController = container.get<UserController>(TYPES.UserController);
 
 // /* Refresh Rate limiter to prevent brute force attacks */
 // const refreshLimiter = rateLimit({
@@ -37,4 +39,11 @@ router.get(
   authorize(["user", "farmer", "admin"]),
   authController.getCurrentUser.bind(authController)
 );
+
+/* Forgot-Password */
+router.post("/auth/send-otp", otpController.generateOtpHandler.bind(otpController));
+router.post("/auth/resend-otp", otpController.resendOtpHandler.bind(otpController));
+router.post("/auth/verify-otp", otpController.profileVerifyOtpHandler.bind(otpController));
+router.post("/auth/change-password", userController.changePassword.bind(userController));
+
 export default router;
