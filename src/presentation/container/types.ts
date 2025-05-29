@@ -20,6 +20,7 @@ export const TYPES = {
   ChangePasswordHandler: Symbol.for("ChangePasswordHandler"),
   GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
   GetUserProfileHandler: Symbol.for("GetUserProfileHandler"),
+  LoginChangePasswordHandler: Symbol.for("LoginChangePasswordHandler"),
 
   /* Community */
   CommunityRepository: Symbol.for("CommunityRepository"),
@@ -35,7 +36,6 @@ export const TYPES = {
   LeaveCommunityHandler: Symbol.for("LeaveCommunityHandler"),
   UpdateCommunityHandler: Symbol.for("UpdateCommunityHandler"),
   DeleteCommunityHandler: Symbol.for("DeleteCommunityHandler"),
-
 
   PostRepository: Symbol.for("PostRepository"),
   FileUploadService: Symbol.for("FileUploadService"),

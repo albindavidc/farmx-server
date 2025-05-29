@@ -14,6 +14,7 @@ export class CreateCommunityHandler implements CommandHandler<CreateCommunityCom
     const community = new Community(
       command.name,
       command.description,
+      true,
       command.createdBy,
       "",
       new Date(),

@@ -41,9 +41,9 @@ router.get(
 );
 
 /* Forgot-Password */
-router.post("/auth/send-otp", otpController.generateOtpHandler.bind(otpController));
-router.post("/auth/resend-otp", otpController.resendOtpHandler.bind(otpController));
-router.post("/auth/verify-otp", otpController.profileVerifyOtpHandler.bind(otpController));
-router.post("/auth/change-password", userController.changePassword.bind(userController));
+router.post("/forgot-password/send-otp", otpController.generateOtpHandler.bind(otpController));
+router.post("/forgot-password/resend-otp", otpController.resendOtpHandler.bind(otpController));
+router.post("/forgot-password/verify-otp", otpController.profileVerifyOtpHandler.bind(otpController));
+router.post("/forgot-password/change-password", userController.loginChangePassword.bind(userController));
 
 export default router;

@@ -10,13 +10,17 @@ import fs from "fs";
 import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
 import { ChangePasswordCommand } from "../../application/use-cases/commands/change-password.command";
 import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
+import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
+import { LoginChangePasswordCommand } from "../../application/use-cases/commands/login-change-password.command";
 
 @injectable()
 export class UserController {
   constructor(
     @inject(TYPES.SettingsUseCase) private readonly settingsUseCase: SettingsUseCase,
     @inject(TYPES.UserRepository) private readonly userRepo: UserRepository,
-    @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler
+    @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler,
+    @inject(TYPES.LoginChangePasswordHandler)
+    private loginChangePasswordHandler: LoginChangePasswordHandler
   ) {}
 
   async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
@@ -155,6 +159,18 @@ export class UserController {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
       sendResponseJson(res, StatusCodes.BAD_REQUEST, errorMessage, false);
+    }
+  }
+
+  async loginChangePassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, newPassword, confirmPassword } = req.body;
+      const command = new LoginChangePasswordCommand(email, newPassword, confirmPassword);
+      await this.loginChangePasswordHandler.execute(command);
+      sendResponseJson(res, StatusCodes.OK, "Password Change Success", true);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
     }
   }
 }

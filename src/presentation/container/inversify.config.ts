@@ -37,6 +37,7 @@ import { CommunityImageUploadMiddleware } from "../middlewares/community-image-u
 import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
 import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
 import { ListCommunitiesHandler } from "../../application/use-cases/handlers/community/list-communities.handler";
+import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
 
 const container = new Container();
 
@@ -70,6 +71,10 @@ container
   .bind<ChangePasswordUseCase>(TYPES.ChangePasswordUseCase)
   .to(ChangePasswordUseCase)
   .inSingletonScope();
+container
+  .bind<LoginChangePasswordHandler>(TYPES.LoginChangePasswordHandler)
+  .to(LoginChangePasswordHandler)
+  .inSingletonScope();
 
 /* Community */
 container.bind<CommunityRepository>(TYPES.CommunityRepository).to(CommunityRepositoryImpl);
@@ -80,7 +85,7 @@ container.bind<UploadMiddleware>(TYPES.UploadMiddleware).to(UploadMiddleware).in
 
 container.bind<LoadCommunitiesHandler>(TYPES.LoadCommunitiesHandler).to(LoadCommunitiesHandler);
 container.bind<LoadCommunityHandler>(TYPES.LoadCommunityHandler).to(LoadCommunityHandler);
-container.bind<ListCommunitiesHandler>(TYPES.ListCommunitiesHandler).to(ListCommunitiesHandler)
+container.bind<ListCommunitiesHandler>(TYPES.ListCommunitiesHandler).to(ListCommunitiesHandler);
 container.bind<JoinCommunityHandler>(TYPES.JoinCommunityHandler).to(JoinCommunityHandler);
 container.bind<LeaveCommunityHandler>(TYPES.LeaveCommunityHandler).to(LeaveCommunityHandler);
 container
