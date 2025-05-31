@@ -4,6 +4,7 @@ import { Email } from "../../value-objects/Email.vo";
 
 export interface UserRepository {
   create(user: User): Promise<User>;
+  findAll(): Promise<User[]>;
   findByEmail(email: Email | string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
   update(id: string, user: Partial<User>): Promise<User | null>;

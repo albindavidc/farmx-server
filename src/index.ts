@@ -89,7 +89,7 @@ async function bootstrap(): Promise<void> {
   /* Routes */
   app.use("/auth", authRoute);
   app.use("/", sharedRoute);
-  app.use("/user", userRoute);
+  app.use("/api", userRoute);
   app.use("/community", communityRoute);
 
   /* Start server */

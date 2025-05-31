@@ -39,6 +39,10 @@ export class UserRepositoryImpl implements UserRepository {
     return this.mapToEntity(userDoc);
   }
 
+  async findAll(): Promise<User[]> {
+    return UserSchema.find()
+  }
+
   async findByEmail(email: Email): Promise<User | null> {
     const userDoc = await UserSchema.findOne({ email }).exec();
     return userDoc ? this.mapToEntity(userDoc) : null;

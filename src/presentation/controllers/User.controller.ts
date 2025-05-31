@@ -12,6 +12,11 @@ import { ChangePasswordCommand } from "../../application/use-cases/commands/chan
 import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
 import { LoginChangePasswordCommand } from "../../application/use-cases/commands/login-change-password.command";
+import { UserDto } from "../../application/use-cases/dto/User.dto";
+import { UpdateUserHandler } from "../../application/use-cases/handlers/user/update-user.handler";
+import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
+import { UpdateUserCommand } from "../../application/use-cases/commands/user/update-user.command";
+import { BlockUserCommand } from "../../application/use-cases/commands/user/block-user.command";
 
 @injectable()
 export class UserController {
@@ -20,7 +25,9 @@ export class UserController {
     @inject(TYPES.UserRepository) private readonly userRepo: UserRepository,
     @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler,
     @inject(TYPES.LoginChangePasswordHandler)
-    private loginChangePasswordHandler: LoginChangePasswordHandler
+    private loginChangePasswordHandler: LoginChangePasswordHandler,
+    @inject(TYPES.UpdateUserHandler) private updateUserHandler: UpdateUserHandler,
+    @inject(TYPES.BlockUserHandler) private blockUserHandler: BlockUserHandler
   ) {}
 
   async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
@@ -168,6 +175,44 @@ export class UserController {
       const command = new LoginChangePasswordCommand(email, newPassword, confirmPassword);
       await this.loginChangePasswordHandler.execute(command);
       sendResponseJson(res, StatusCodes.OK, "Password Change Success", true);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  async getUsers(req: Request, res: Response): Promise<void> {
+    try {
+      const users = await this.userRepo.findAll();
+      sendResponseJson(res, StatusCodes.OK, "Successfully got all users", true, users);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  async updateUser(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id;
+      const dto = req.body as UserDto;
+      const command = new UpdateUserCommand(id, dto);
+
+      const user = await this.updateUserHandler.execute(command);
+
+      sendResponseJson(res, StatusCodes.OK, "Successfully updated all user", true, user);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
+  async blockUser(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id;
+      const { isBlocked } = req.body;
+      const command = new BlockUserCommand(id, isBlocked);
+      const user = await this.blockUserHandler.execute(command);
+      sendResponseJson(res, StatusCodes.OK, "Successfully blocked user", true, user);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);

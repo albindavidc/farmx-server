@@ -38,6 +38,8 @@ import { UpdateCommunityCommandHandler } from "../../application/use-cases/handl
 import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
 import { ListCommunitiesHandler } from "../../application/use-cases/handlers/community/list-communities.handler";
 import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
+import { UpdateUserHandler } from "../../application/use-cases/handlers/user/update-user.handler";
+import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
 
 const container = new Container();
 
@@ -75,6 +77,9 @@ container
   .bind<LoginChangePasswordHandler>(TYPES.LoginChangePasswordHandler)
   .to(LoginChangePasswordHandler)
   .inSingletonScope();
+container.bind<UpdateUserHandler>(TYPES.UpdateUserHandler).to(UpdateUserHandler).inSingletonScope();
+// container.bind<CreateUserHandler>(TYPES.CreateUserHandler).to(CreateUserHandler).inSingletonScope()
+container.bind<BlockUserHandler>(TYPES.BlockUserHandler).to(BlockUserHandler).inSingletonScope();
 
 /* Community */
 container.bind<CommunityRepository>(TYPES.CommunityRepository).to(CommunityRepositoryImpl);

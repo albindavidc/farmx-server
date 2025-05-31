@@ -21,6 +21,9 @@ export const TYPES = {
   GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
   GetUserProfileHandler: Symbol.for("GetUserProfileHandler"),
   LoginChangePasswordHandler: Symbol.for("LoginChangePasswordHandler"),
+  UpdateUserHandler: Symbol.for("UpdateUserHandler"),
+  CreateUserHandler: Symbol.for("CreateUserHandler"),
+  BlockUserHandler: Symbol.for("BlockUserHandler"),
 
   /* Community */
   CommunityRepository: Symbol.for("CommunityRepository"),
