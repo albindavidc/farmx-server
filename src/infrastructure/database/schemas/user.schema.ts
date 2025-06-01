@@ -28,12 +28,12 @@ export interface UserDocument extends Document {
   googleId?: string;
 
   isFarmer: boolean;
+  farmerStatus?: "pending" | "approved" | "rejected";
   farmerRegId: string;
   experience?: number;
   qualification?: string;
   expertise?: string[];
   awards?: string[];
-  farmerStatus?: "pending" | "approved" | "rejected";
   profilePhoto?: string;
   bio?: string;
   courseProgress?: CourseProgress[];

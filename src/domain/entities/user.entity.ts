@@ -1,4 +1,4 @@
-import { CourseProgress } from "../../infrastructure/database/schemas/user.schema";
+import { CourseProgress, UserCertificate } from "../../infrastructure/database/schemas/user.schema";
 import { FarmerStatus } from "../enums/farmer-status.enum";
 import { Password } from "../value-objects/Password.vo";
 
@@ -18,21 +18,20 @@ export class User {
     public googleId?: string,
 
     public isFarmer: boolean = false,
+    public farmerStatus?: FarmerStatus,
     public farmerRegId?: string,
     public experience?: number,
     public qualification?: string,
     public expertise?: string[],
     public awards?: string[],
-    public farmerStatus?: FarmerStatus,
     public profilePhoto?: string,
     public bio?: string,
     public courseProgress?: CourseProgress[],
-    public reason?: string
+    public reason?: string,
+    public courseCertificate?: UserCertificate[]
   ) {
     this._password =
-      typeof password === "string"
-        ? Password.hash(password)
-        : Promise.resolve(password);
+      typeof password === "string" ? Password.hash(password) : Promise.resolve(password);
   }
 
   async getHashedPassword(): Promise<string> {

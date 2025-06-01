@@ -9,6 +9,6 @@ const userController: UserController = container.get<UserController>(TYPES.UserC
 
 router.get("/admin/get-users", authenticate, userController.getUsers.bind(userController));
 router.put("/admin/:id", userController.updateUser.bind(userController));
-router.put("/admin/block-user/:id", userController.blockUser.bind(userController));
+router.put("/admin/block-user/:id", authenticate, userController.blockUser.bind(userController));
 
 export default router;

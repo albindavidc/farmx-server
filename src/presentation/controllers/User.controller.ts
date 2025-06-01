@@ -184,7 +184,36 @@ export class UserController {
   async getUsers(req: Request, res: Response): Promise<void> {
     try {
       const users = await this.userRepo.findAll();
-      sendResponseJson(res, StatusCodes.OK, "Successfully got all users", true, users);
+
+      const transformedUsers = users.map((user) => {
+        return {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          role: user.role,
+          phone: user.phone,
+          isVerified: user.isVerified,
+          isAdmin: user.isAdmin,
+          isBlocked: user.isBlocked,
+          googleId: user.googleId,
+
+          isFarmer: user.isFarmer,
+          farmerStatus: user.farmerStatus,
+          farmerRegId: user.farmerRegId,
+          experience: user.experience,
+          qualification: user.qualification,
+          expertise: user.expertise,
+          awards: user.awards,
+          profilePhoto: user.profilePhoto,
+          bio: user.bio,
+          courseProgress: user.courseProgress,
+          reason: user.reason,
+          courseCertificate: user.courseCertificate,
+        };
+      });
+
+      sendResponseJson(res, StatusCodes.OK, "Successfully got all users", true, transformedUsers);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
@@ -210,7 +239,10 @@ export class UserController {
     try {
       const id = req.params.id;
       const { isBlocked } = req.body;
+
       const command = new BlockUserCommand(id, isBlocked);
+
+      console.log("this is in the backend block user", id, isBlocked, command);
       const user = await this.blockUserHandler.execute(command);
       sendResponseJson(res, StatusCodes.OK, "Successfully blocked user", true, user);
     } catch (error) {

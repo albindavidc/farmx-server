@@ -20,16 +20,17 @@ export class UserRepositoryImpl implements UserRepository {
       userDoc.googleId,
 
       userDoc.isFarmer,
+      userDoc.farmerStatus as FarmerStatus,
       userDoc.farmerRegId,
       userDoc.experience,
       userDoc.qualification,
       userDoc.expertise,
       userDoc.awards,
-      userDoc.farmerStatus as FarmerStatus,
       userDoc.profilePhoto,
       userDoc.bio,
       userDoc.courseProgress ?? [],
-      userDoc.reason
+      userDoc.reason,
+      userDoc.courseCertificate ?? []
     );
   }
 
@@ -40,7 +41,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async findAll(): Promise<User[]> {
-    return UserSchema.find()
+    return UserSchema.find();
   }
 
   async findByEmail(email: Email): Promise<User | null> {
