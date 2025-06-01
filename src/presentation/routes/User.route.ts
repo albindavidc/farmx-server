@@ -8,7 +8,8 @@ const router = express.Router();
 const userController: UserController = container.get<UserController>(TYPES.UserController);
 
 router.get("/admin/get-users", authenticate, userController.getUsers.bind(userController));
-router.put("/admin/:id", userController.updateUser.bind(userController));
+router.put("/admin/:id", authenticate, userController.updateUser.bind(userController));
+router.post("/admin/create-user", authenticate, userController.createUser.bind(userController));
 router.put("/admin/block-user/:id", authenticate, userController.blockUser.bind(userController));
 
 export default router;

@@ -17,6 +17,8 @@ import { UpdateUserHandler } from "../../application/use-cases/handlers/user/upd
 import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
 import { UpdateUserCommand } from "../../application/use-cases/commands/user/update-user.command";
 import { BlockUserCommand } from "../../application/use-cases/commands/user/block-user.command";
+import { CreateUserCommand } from "../../application/use-cases/commands/user/create-user.command";
+import { CreateUserHandler } from "../../application/use-cases/handlers/user/create-user.handler";
 
 @injectable()
 export class UserController {
@@ -26,6 +28,7 @@ export class UserController {
     @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler,
     @inject(TYPES.LoginChangePasswordHandler)
     private loginChangePasswordHandler: LoginChangePasswordHandler,
+    @inject(TYPES.CreateUserHandler) private createUserHandler: CreateUserHandler,
     @inject(TYPES.UpdateUserHandler) private updateUserHandler: UpdateUserHandler,
     @inject(TYPES.BlockUserHandler) private blockUserHandler: BlockUserHandler
   ) {}
@@ -220,15 +223,53 @@ export class UserController {
     }
   }
 
+  async createUser(req: Request, res: Response): Promise<void> {
+    try {
+      const userData = req.body as UserDto;
+      const command = new CreateUserCommand(userData);
+      const user = await this.createUserHandler.execute(command);
+
+      sendResponseJson(res, StatusCodes.OK, "Successfully created user", true, user);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
+
   async updateUser(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id;
       const dto = req.body as UserDto;
       const command = new UpdateUserCommand(id, dto);
 
-      const user = await this.updateUserHandler.execute(command);
+      const userDetails = await this.updateUserHandler.execute(command);
 
-      sendResponseJson(res, StatusCodes.OK, "Successfully updated all user", true, user);
+      const transformedUser = {
+        id: userDetails._id,
+        name: userDetails.name,
+        email: userDetails.email,
+        password: userDetails.password,
+        role: userDetails.role,
+        phone: userDetails.phone,
+        isVerified: userDetails.isVerified,
+        isAdmin: userDetails.isAdmin,
+        isBlocked: userDetails.isBlocked,
+        googleId: userDetails.googleId,
+        isFarmer: userDetails.isFarmer,
+        farmerStatus: userDetails.farmerStatus,
+        farmerRegId: userDetails.farmerRegId,
+        experience: userDetails.experience,
+        qualification: userDetails.qualification,
+        expertise: userDetails.expertise,
+        awards: userDetails.awards,
+        profilePhoto: userDetails.profilePhoto,
+        bio: userDetails.bio,
+        courseProgress: userDetails.courseProgress,
+        reason: userDetails.reason,
+        courseCertificate: userDetails.courseCertificate,
+      };
+
+      sendResponseJson(res, StatusCodes.OK, "Successfully updated all user", true, transformedUser);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);

@@ -40,6 +40,7 @@ import { ListCommunitiesHandler } from "../../application/use-cases/handlers/com
 import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
 import { UpdateUserHandler } from "../../application/use-cases/handlers/user/update-user.handler";
 import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
+import { CreateUserHandler } from "../../application/use-cases/handlers/user/create-user.handler";
 
 const container = new Container();
 
@@ -78,7 +79,7 @@ container
   .to(LoginChangePasswordHandler)
   .inSingletonScope();
 container.bind<UpdateUserHandler>(TYPES.UpdateUserHandler).to(UpdateUserHandler).inSingletonScope();
-// container.bind<CreateUserHandler>(TYPES.CreateUserHandler).to(CreateUserHandler).inSingletonScope()
+container.bind<CreateUserHandler>(TYPES.CreateUserHandler).to(CreateUserHandler).inSingletonScope()
 container.bind<BlockUserHandler>(TYPES.BlockUserHandler).to(BlockUserHandler).inSingletonScope();
 
 /* Community */
