@@ -1,21 +1,21 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
-import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
-import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
-import sendResponseJson from "../../application/utils/message";
-import { EmailService } from "../../domain/interfaces/repositories/email.service";
-import { Email } from "../../domain/value-objects/email.vo";
-import { AuthService } from "../../infrastructure/services/auth.service";
-import { TYPES } from "../container/types";
+import { OtpRequestDto, OtpResponseDto } from "@application/dto/otp.dto";
+import { EmailRepository } from "@domain/repositories/email.repository";
+import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-otp.handler";
+import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler";
+import sendResponseJson from "@application/utils/message";
+import { Email } from "@domain/value-objects/email.vo";
+import { AuthService } from "@infrastructure/services/auth.service";
+import { TYPES } from "@presentation/container/types";
 
 @injectable()
 export class OtpController {
   constructor(
-    @inject(TYPES.GenerateOtpUseCase) private generateOtp: GenerateOtpUseCase,
-    @inject(TYPES.VerifyOtpUseCase) private verifyOtp: VerifyOtpUseCase,
-    @inject(TYPES.EmailService) private emailService: EmailService,
+    @inject(TYPES.GenerateOtpHandler) private generateOtp: GenerateOtpHandler,
+    @inject(TYPES.VerifyOtpHandler) private verifyOtp: VerifyOtpHandler,
+    @inject(TYPES.EmailRepository) private EmailRepository: EmailRepository,
     @inject(TYPES.AuthService) private authService: AuthService
   ) {}
 
@@ -33,7 +33,7 @@ export class OtpController {
       if (!otpResponse.otp) {
         throw new Error("OTP was not generated");
       }
-      await this.emailService.sendOtpEmail(email, otpResponse.otp);
+      await this.EmailRepository.sendOtpEmail(email, otpResponse.otp);
       sendResponseJson(res, StatusCodes.OK, "OTP generated successfully.", true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error generating OTP";
@@ -56,7 +56,7 @@ export class OtpController {
       if (!otpResponse.otp) {
         throw new Error("Otp was not generated");
       }
-      await this.emailService.sendOtpEmail(email, otpResponse.otp);
+      await this.EmailRepository.sendOtpEmail(email, otpResponse.otp);
       sendResponseJson(res, StatusCodes.OK, "OTP resend successfull", true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error resending Otp";

@@ -1,32 +1,32 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { CreateCommunityCommand } from "../../application/use-cases/commands/community/create-community.command";
-import { DeleteCommunityCommand } from "../../application/use-cases/commands/community/delete-community.command";
-import { JoinCommunityCommand } from "../../application/use-cases/commands/community/join-community-command";
-import { LeaveCommunityCommand } from "../../application/use-cases/commands/community/leave-community.command";
-import { UpdateCommunityCommand } from "../../application/use-cases/commands/community/update-community.command";
-import { UpdateCommunityRequestDto } from "../../application/use-cases/dto/community/update-community.dto";
-import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
-import { JoinCommunityHandler } from "../../application/use-cases/handlers/community/join-community.handler";
-import { LeaveCommunityHandler } from "../../application/use-cases/handlers/community/leave-community.handler";
-import { ListCommunitiesHandler } from "../../application/use-cases/handlers/community/list-communities.handler";
-import { LoadCommunitiesHandler } from "../../application/use-cases/handlers/community/load-communities.handler";
-import { LoadCommunityHandler } from "../../application/use-cases/handlers/community/load-community.handler";
-import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
-import { CommandHandler } from "../../application/use-cases/interfaces/command.interface";
-import { LoadCommunityQuery } from "../../application/use-cases/queries/community/load-community.query";
-import sendResponseJson from "../../application/utils/message";
-import { Community } from "../../domain/entities/community/community.entity";
-import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
-import { TYPES } from "../container/types";
-import { CustomError } from "../middlewares/error-handler.middleware";
+import { CreateCommunityCommand } from "@application/commands/community/create-community.command";
+import { UpdateCommunityCommand } from "@application/commands/community/update-community.command";
+import { DeleteCommunityCommand } from "@application/commands/community/delete-community.command";
+import { LoadCommunityQuery } from "@application/queries/community/load-community.query";
+import { UpdateCommunityRequestDto } from "@application/dto/community/update-community.dto";
+// import {CommandHandler} from "@application/interfaces/command.interface";
+import { LoadCommunityHandler } from "@application/handlers/query/community/load-community.handler";
+import { LoadCommunitiesHandler } from "@application/handlers/query/community/load-communities.handler";
+import { ListCommunitiesHandler } from "@application/handlers/query/community/list-communities.handler";
+import { JoinCommunityHandler } from "@application/handlers/command/community/join-community.handler";
+import { LeaveCommunityHandler } from "@application/handlers/command/community/leave-community.handler";
+import { UpdateCommunityCommandHandler } from "@application/handlers/command/community/update-community.handler";
+import { DeleteCommunityCommandHandler } from "@application/handlers/command/community/delete-community.handler";
+import sendResponseJson from "@application/utils/message";
+import { ImageUploadService } from "@infrastructure/services/image-upload.service";
+import { TYPES } from "@presentation/container/types";
+import { CustomError } from "@presentation/middlewares/error-handler.middleware";
+import { CreateCommunityHandler } from "@application/handlers/command/community/create-community.handler";
+import { JoinCommunityCommand } from "@application/commands/community/join-community-command";
+import { LeaveCommunityCommand } from "@application/commands/community/leave-community.command";
 
 @injectable()
 export class CommunityController {
   constructor(
     @inject(TYPES.CreateCommunityHandler)
-    private createCommunityHandler: CommandHandler<CreateCommunityCommand, Community>,
+    private createCommunityHandler: CreateCommunityHandler,
     @inject(TYPES.ImageuploadService) private imageUploadService: ImageUploadService,
     @inject(TYPES.LoadCommunityHandler) private loadCommunityHandler: LoadCommunityHandler,
     @inject(TYPES.LoadCommunitiesHandler) private loadCommunitiesHandler: LoadCommunitiesHandler,

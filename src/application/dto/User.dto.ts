@@ -9,7 +9,7 @@ export interface UserDto {
   password: string | Password;
   role: string;
   phone: string;
-  isVerified: boolean;
+  isVerified?: boolean ;
   isAdmin?: boolean;
   isBlocked?: boolean;
   googleId?: string;

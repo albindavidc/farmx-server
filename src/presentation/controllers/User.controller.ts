@@ -3,27 +3,27 @@ import fs from "fs";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import path from "path";
-import { ChangePasswordCommand } from "../../application/use-cases/commands/change-password.command";
-import { LoginChangePasswordCommand } from "../../application/use-cases/commands/login-change-password.command";
-import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/upload-profile-photo.command";
-import { BlockUserCommand } from "../../application/use-cases/commands/user/block-user.command";
-import { CreateUserCommand } from "../../application/use-cases/commands/user/create-user.command";
-import { UpdateUserCommand } from "../../application/use-cases/commands/user/update-user.command";
-import { UserDto } from "../../application/use-cases/dto/User.dto";
-import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
-import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
-import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
-import { CreateUserHandler } from "../../application/use-cases/handlers/user/create-user.handler";
-import { UpdateUserHandler } from "../../application/use-cases/handlers/user/update-user.handler";
-import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
-import sendResponseJson from "../../application/utils/message";
-import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
-import { TYPES } from "../container/types";
+import { ChangePasswordCommand } from "@application/commands/change-password.command";
+import { LoginChangePasswordCommand } from "@application/commands/login-change-password.command";
+import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-photo.command";
+import { BlockUserCommand } from "@application/commands/user/block-user.command";
+import { CreateUserCommand } from "@application/commands/user/create-user.command";
+import { UpdateUserCommand } from "@application/commands/user/update-user.command";
+import { UserDto } from "@application/dto/user.dto";
+import { ChangePasswordHandler } from "@application/handlers/command/change-password.handler";
+import { LoginChangePasswordHandler } from "@application/handlers/command/login-change-password.handler";
+import { BlockUserHandler } from "@application/handlers/command/user/block-user.handler";
+import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
+import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler";
+import { UserRepository } from "@domain/repositories/user.repository";
+import { TYPES } from "@presentation/container/types";
+import sendResponseJson from "@application/utils/message";
+import { SettingsHandler } from "@application/handlers/command/auth/settings.handler";
 
 @injectable()
 export class UserController {
   constructor(
-    @inject(TYPES.SettingsUseCase) private readonly settingsUseCase: SettingsUseCase,
+    @inject(TYPES.SettingsHandler) private readonly settingsUseCase: SettingsHandler,
     @inject(TYPES.UserRepository) private readonly userRepo: UserRepository,
     @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler,
     @inject(TYPES.LoginChangePasswordHandler)

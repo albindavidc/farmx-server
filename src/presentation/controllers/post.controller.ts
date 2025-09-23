@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { CreatePostDto, UpdatePostDto } from "../../application/use-cases/dto/community/post.dto";
-import { CreateCommunityPostHandler } from "../../application/use-cases/handlers/community/post/create-post.handler";
-import { DeleteCommunityPostHandler } from "../../application/use-cases/handlers/community/post/delete-post.handler";
-import { GetCommunityPostsQueryHandler } from "../../application/use-cases/handlers/community/post/get-community-post.handler";
-import { GetCommunityPostQueryHandler } from "../../application/use-cases/handlers/community/post/get-post.handler";
-import { UpdateCommunityPostHandler } from "../../application/use-cases/handlers/community/post/update-post.handler";
-import sendResponseJson from "../../application/utils/message";
-import { UserPostRole, UserRole } from "../../domain/enums/user-role.enum";
-import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
-import { TYPES } from "../container/types";
+import { CreatePostDto, UpdatePostDto } from "@application/dto/community/post.dto";
+import { TYPES } from "@presentation/container/types";
+import { CreateCommunityPostHandler } from "@application/handlers/command/community/post/create-post.handler";
+import { UpdateCommunityPostHandler } from "@application/handlers/command/community/post/update-post.handler";
+import { DeleteCommunityPostHandler } from "@application/handlers/command/community/post/delete-post.handler";
+import { GetCommunityPostsQueryHandler } from "@application/handlers/query/community/post/get-community-post.handler";
+import { GetCommunityPostQueryHandler } from "@application/handlers/query/community/post/get-post.handler";
+import { ImageUploadService } from "@infrastructure/services/image-upload.service";
+import sendResponseJson from "@application/utils/message";
+import { UserPostRole, UserRole } from "@domain/enums/user-role.enum";
 
 @injectable()
 export class PostController {
@@ -31,20 +31,17 @@ export class PostController {
         res.status(401).json({ message: "Authentication required" });
         return;
       }
-      console.log("--------------------------------------------------------------------")
-
-
+      console.log("--------------------------------------------------------------------");
 
       const { text, communityId } = req.body;
-
 
       // Validate required fields
       const errors: string[] = [];
       if (!text) errors.push("Text is required");
       if (!communityId) errors.push("Community ID is required");
-      
+
       const userRole =
-      req.user.role === UserPostRole.FARMER ? UserPostRole.FARMER : UserPostRole.ADMIN;
+        req.user.role === UserPostRole.FARMER ? UserPostRole.FARMER : UserPostRole.ADMIN;
       const dto: CreatePostDto = {
         text,
         communityId,
@@ -52,9 +49,9 @@ export class PostController {
         userName: req.user.name,
         userRole: userRole,
       };
-      
+
       const post = await this.createPostCommand.execute(dto);
-      console.log('these are the text and communityId', text, communityId)
+      console.log("these are the text and communityId", text, communityId);
 
       if (req.file) {
         const imageUrl = await this.imageUploadService.uploadCommunityPostImages(req, post.id);
@@ -186,7 +183,7 @@ export class PostController {
     try {
       const postId = req.params.id || req.body.postId || req.query.postId;
 
-      console.log(postId, 'this is the postId from the backend')
+      console.log(postId, "this is the postId from the backend");
 
       if (!postId) {
         throw new Error("Post ID is required for image upload");

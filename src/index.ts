@@ -17,6 +17,9 @@ import communityRoute from "./presentation/routes/community.routes";
 import sharedRoute from "./presentation/routes/shared.route";
 import userRoute from "./presentation/routes/user.route";
 
+import 'tsconfig-paths/register';
+
+
 dotenv.config();
 
 const allowOrigins = [

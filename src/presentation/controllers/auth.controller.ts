@@ -1,18 +1,19 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/login.dto";
-import { UserUseCase } from "../../application/use-cases/interfaces/user.use-case";
-import sendResponseJson from "../../application/utils/message";
-import { User } from "../../domain/entities/user.entity";
-import { AuthService } from "../../infrastructure/services/auth.service";
-import { LoginService } from "../../infrastructure/services/login.service";
-import { TYPES } from "../container/types";
+import { LoginRequest, LoginResponse } from "@application/dto/login.dto";
+import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
+
+import sendResponseJson from "@application/utils/message";
+import { AuthService } from "@infrastructure/services/auth.service";
+import { LoginService } from "@infrastructure/services/login.service";
+import { TYPES } from "@presentation/container/types";
+import { CreateUserCommand } from "../../application/commands/user/create-user.command";
 
 @injectable()
 export default class AuthController {
   constructor(
-    @inject(TYPES.CreateUserUseCase) private createUserUseCase: UserUseCase,
+    @inject(TYPES.CreateUserHandler) private createUserHander: CreateUserHandler,
     @inject(TYPES.AuthService) private authService: AuthService,
     @inject(TYPES.LoginService) private loginService: LoginService
   ) {}
@@ -26,15 +27,15 @@ export default class AuthController {
         return;
       }
 
-      const user = new User(name, email, password, role, phone);
+      const command = new CreateUserCommand({ name, email, password, role, phone });
 
-      if (user.role === "farmer") {
-        user.isFarmer = true;
+      if (command.dto.role === "farmer") {
+        command.dto.isFarmer = true;
       }
 
-      console.log(user, "this is from the backend - to validate");
+      console.log(command, "this is from the backend - to validate");
 
-      const response = await this.createUserUseCase.execute(user);
+      const response = await this.createUserHander.execute(command);
       console.log(response, "this is from the backend - to validate");
 
       const successMessage =

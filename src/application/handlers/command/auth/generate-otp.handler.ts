@@ -9,7 +9,7 @@ import { GenerateNewOtp } from "../../../utils/generate-otp";
 export class GenerateOtpHandler {
   constructor(
     @inject(TYPES.OtpRepository) private otpRepository: OTPRepository,
-    @inject(TYPES.EmailService) private emailService: EmailRepository
+    @inject(TYPES.EmailRepository) private emailService: EmailRepository
   ) {}
 
   public async execute(dto: OtpRequestDto): Promise<OtpResponseDto> {

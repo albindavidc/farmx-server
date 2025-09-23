@@ -1,20 +1,20 @@
 export const TYPES = {
-  GenerateOtpUseCase: Symbol.for("GenerateOtpUseCase"),
-  VerifyOtpUseCase: Symbol.for("VerifyOtpUseCase"),
-  CreateUserUseCase: Symbol.for("CreateUserUseCase"),
+  GenerateOtpHandler: Symbol.for("GenerateOtpHandler"),
+  VerifyOtpHandler: Symbol.for("VerifyOtpHandler"),
+  CreateUserHandler: Symbol.for("CreateUserHandler"),
 
   OtpController: Symbol.for("OtpController"),
   AuthController: Symbol.for("AuthController"),
 
   OtpRepository: Symbol.for("OtpRepository"),
-  EmailService: Symbol.for("EmailService"),
+  EmailRepository: Symbol.for("EmailRepository"),
   UserRepository: Symbol.for("UserRepository"),
 
   AuthService: Symbol.for("AuthService"),
   LoginService: Symbol.for("LoginService"),
 
   /* User */
-  SettingsUseCase: Symbol.for("SettingsUseCase"),
+  SettingsHandler: Symbol.for("SettingsHandler"),
   UserController: Symbol.for("UserController"),
   ChangePasswordUseCase: Symbol.for("ChangePasswordUseCase"),
   ChangePasswordHandler: Symbol.for("ChangePasswordHandler"),
@@ -22,7 +22,6 @@ export const TYPES = {
   GetUserProfileHandler: Symbol.for("GetUserProfileHandler"),
   LoginChangePasswordHandler: Symbol.for("LoginChangePasswordHandler"),
   UpdateUserHandler: Symbol.for("UpdateUserHandler"),
-  CreateUserHandler: Symbol.for("CreateUserHandler"),
   BlockUserHandler: Symbol.for("BlockUserHandler"),
 
   /* Community */
