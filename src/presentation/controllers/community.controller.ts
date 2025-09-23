@@ -120,7 +120,7 @@ export class CommunityController {
       const limit = Math.min(parseInt(req.query.limit as string) || 10, 100); // Max 100 items per page
       const sortBy = (req.query.sortBy as string) || "createdAt";
       const sortOrder = (req.query.sortOrder as string) || "desc";
-      
+
       const name = req.query.name as string;
       const categories = req.query.categories
         ? (req.query.categories as string).split(",").map((cat) => cat.trim())
@@ -164,6 +164,20 @@ export class CommunityController {
         },
         statusCode: 200,
       });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(new CustomError(error.message, 400, "LIST_COMMUNITIES_FAILED"));
+      }
+    }
+  }
+
+  async listAllCommunities(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await this.listCommunitiesHandler.execute();
+
+      // console.log(result, " this is the result that we are sending to the front-end");
+
+      res.status(200).json(result.communities || []);
     } catch (error) {
       if (error instanceof Error) {
         next(new CustomError(error.message, 400, "LIST_COMMUNITIES_FAILED"));

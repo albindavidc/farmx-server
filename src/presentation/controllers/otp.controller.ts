@@ -1,14 +1,14 @@
-import { StatusCodes } from "http-status-codes";
-import sendResponseJson from "../../application/utils/Message";
 import { Request, Response } from "express";
-import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../container/types";
-import { EmailService } from "../../domain/interfaces/services/email.service";
 import { AuthService } from "../../application/services/Auth.service";
-import { Email } from "../../domain/value-objects/Email.vo";
-import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
+import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
 import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
+import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
+import sendResponseJson from "../../application/utils/Message";
+import { EmailService } from "../../domain/interfaces/repositories/email.service";
+import { Email } from "../../domain/value-objects/Email.vo";
+import { TYPES } from "../container/types";
 
 @injectable()
 export class OtpController {

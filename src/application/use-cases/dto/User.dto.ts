@@ -10,7 +10,7 @@ export interface UserDto {
   _id?: string;
   name: string;
   email: string;
-  password: string | Password;
+  // password: string | Password;
   role: string;
   phone: string;
   isVerified: boolean;

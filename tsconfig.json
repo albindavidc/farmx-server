@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",  // ← This is the key setting
-    "moduleResolution": "node",
+    "target": "esnext" /* It will always update to the newest version */,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "strict": true,
     "outDir": "./dist",

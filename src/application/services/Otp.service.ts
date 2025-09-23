@@ -1,8 +1,8 @@
-import nodemailer, { Transporter } from "nodemailer";
-import { configBrevo } from "../../infrastructure/config/ConfigSetup";
-import winston from "winston";
 import { injectable } from "inversify";
-import { EmailService } from "../../domain/interfaces/services/email.service";
+import nodemailer, { Transporter } from "nodemailer";
+import winston from "winston";
+import { EmailService } from "../../domain/interfaces/repositories/email.service";
+import { configBrevo } from "../../infrastructure/config/ConfigSetup";
 
 interface MailOptions {
   from: string;

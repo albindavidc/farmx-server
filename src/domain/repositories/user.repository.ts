@@ -1,6 +1,6 @@
-import { UserDto } from "../../../application/use-cases/dto/User.dto";
-import { User } from "../../entities/user.entity";
-import { Email } from "../../value-objects/Email.vo";
+import { UserDto } from "../../application/use-cases/dto/User.dto";
+import { User } from "../entities/user.entity";
+import { Email } from "../value-objects/Email.vo";
 
 export interface UserRepository {
   create(user: User): Promise<User>;

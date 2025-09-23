@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
+import { EmailService } from "../../../domain/interfaces/repositories/email.service";
 import { OTPRepository } from "../../../domain/interfaces/repositories/otp.repository";
-import { EmailService } from "../../../domain/interfaces/services/email.service";
+import { TYPES } from "../../../presentation/container/types";
 import { GenerateNewOtp } from "../../utils/GenerateOtp";
 import { OtpRequestDto, OtpResponseDto } from "../dto/Otp.dto";
-import { TYPES } from "../../../presentation/container/types";
 
 @injectable()
 export class GenerateOtpUseCase {

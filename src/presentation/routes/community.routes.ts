@@ -87,4 +87,11 @@ router.post(
 router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
 router.get("/community-post/:id", authenticate, postController.getPost.bind(postController));
 
+/* User side Community */
+router.get(
+  "/user/get-all-community",
+  authenticate,
+  communityController.listAllCommunities.bind(communityController)
+);
+
 export default router;
