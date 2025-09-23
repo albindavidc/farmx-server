@@ -1,26 +1,26 @@
-import { inject, injectable } from "inversify";
-import { TYPES } from "../container/types";
-import { CommandHandler } from "../../application/use-cases/interfaces/command.interface";
-import { CreateCommunityCommand } from "../../application/use-cases/commands/community/create-community.command";
-import { Community } from "../../domain/entities/community/community.entity";
-import { ImageUploadService } from "../../application/services/image-upload.service";
 import { NextFunction, Request, Response } from "express";
-import { LoadCommunityHandler } from "../../application/use-cases/handlers/community/load-community.handler";
-import { JoinCommunityHandler } from "../../application/use-cases/handlers/community/join-community.handler";
-import { LeaveCommunityHandler } from "../../application/use-cases/handlers/community/leave-community.handler";
-import { LoadCommunityQuery } from "../../application/use-cases/queries/community/load-community.query";
-import sendResponseJson from "../../application/utils/Message";
 import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+import { CreateCommunityCommand } from "../../application/use-cases/commands/community/create-community.command";
+import { DeleteCommunityCommand } from "../../application/use-cases/commands/community/delete-community.command";
 import { JoinCommunityCommand } from "../../application/use-cases/commands/community/join-community-command";
 import { LeaveCommunityCommand } from "../../application/use-cases/commands/community/leave-community.command";
 import { UpdateCommunityCommand } from "../../application/use-cases/commands/community/update-community.command";
-import { DeleteCommunityCommand } from "../../application/use-cases/commands/community/delete-community.command";
 import { UpdateCommunityRequestDto } from "../../application/use-cases/dto/community/update-community.dto";
-import { CustomError } from "../middlewares/error-handler.middleware";
 import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
-import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
+import { JoinCommunityHandler } from "../../application/use-cases/handlers/community/join-community.handler";
+import { LeaveCommunityHandler } from "../../application/use-cases/handlers/community/leave-community.handler";
 import { ListCommunitiesHandler } from "../../application/use-cases/handlers/community/list-communities.handler";
 import { LoadCommunitiesHandler } from "../../application/use-cases/handlers/community/load-communities.handler";
+import { LoadCommunityHandler } from "../../application/use-cases/handlers/community/load-community.handler";
+import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
+import { CommandHandler } from "../../application/use-cases/interfaces/command.interface";
+import { LoadCommunityQuery } from "../../application/use-cases/queries/community/load-community.query";
+import sendResponseJson from "../../application/utils/Message";
+import { Community } from "../../domain/entities/community/community.entity";
+import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
+import { TYPES } from "../container/types";
+import { CustomError } from "../middlewares/error-handler.middleware";
 
 @injectable()
 export class CommunityController {

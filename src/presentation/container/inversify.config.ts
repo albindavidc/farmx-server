@@ -1,8 +1,4 @@
 import { Container } from "inversify";
-import { AuthService } from "../../application/services/Auth.service";
-import { ImageUploadService } from "../../application/services/image-upload.service";
-import { LoginService } from "../../application/services/Login.service";
-import EmailServiceImpl from "../../application/services/Otp.service";
 import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
 import { CreateCommunityHandler } from "../../application/use-cases/handlers/community/create-community.handler";
 import { DeleteCommunityCommandHandler } from "../../application/use-cases/handlers/community/delete-community.handler";
@@ -33,6 +29,10 @@ import { CommunityRepositoryImpl } from "../../infrastructure/repositories/commu
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/otp.repository";
 import { PostRepositoryImpl } from "../../infrastructure/repositories/post.repository";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/user.repository";
+import { AuthService } from "../../infrastructure/services/Auth.service";
+import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
+import { LoginService } from "../../infrastructure/services/Login.service";
+import EmailServiceImpl from "../../infrastructure/services/Otp.service";
 import AuthController from "../controllers/auth.controller";
 import { CommunityController } from "../controllers/community.controller";
 import OtpController from "../controllers/otp.controller";
@@ -124,3 +124,4 @@ container
   .to(CommunityImageUploadMiddleware)
   .inSingletonScope();
 export { container };
+

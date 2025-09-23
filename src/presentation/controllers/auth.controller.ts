@@ -1,13 +1,13 @@
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/login.dto";
 import { UserUseCase } from "../../application/use-cases/interfaces/user.use-case";
 import sendResponseJson from "../../application/utils/Message";
 import { User } from "../../domain/entities/user.entity";
-import { StatusCodes } from "http-status-codes";
-import { Request, Response } from "express";
-import { inject, injectable } from "inversify";
+import { AuthService } from "../../infrastructure/services/Auth.service";
+import { LoginService } from "../../infrastructure/services/Login.service";
 import { TYPES } from "../container/types";
-import { AuthService } from "../../application/services/Auth.service";
-import { LoginService } from "../../application/services/Login.service";
-import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/login.dto";
 
 @injectable()
 export default class AuthController {

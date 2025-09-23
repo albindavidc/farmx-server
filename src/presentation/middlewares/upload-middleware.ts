@@ -1,6 +1,6 @@
-import { inject, injectable } from "inversify";
-import { ImageUploadService } from "../../application/services/image-upload.service";
 import { NextFunction, Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
 import { TYPES } from "../container/types";
 
 @injectable()

@@ -1,8 +1,7 @@
+import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
+import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
 import { TYPES } from "../container/types";
-import { NextFunction } from "express";
-import { ImageUploadService } from "../../application/services/image-upload.service";
-import { Request, Response } from "express";
 
 @injectable()
 export class CommunityImageUploadMiddleware {
