@@ -2,10 +2,10 @@ import * as admin from "firebase-admin";
 import { inject, injectable } from "inversify";
 import { UserRepository } from "../../../../domain/repositories/user.repository";
 import { TYPES } from "../../../../presentation/container/types";
-import { GoogleAuthResponseDto } from "../../../dto/Auth.dto";
-import { UserMapper } from "../../../mappers/User.mapper";
-import { generateAcessToken, generateRefreshToken } from "../../../utils/TokenUtility";
-import { AuthException } from "../../../exceptions/Auth.exception";
+import { GoogleAuthResponseDto } from "../../../dto/auth.dto";
+import { AuthException } from "../../../exceptions/auth.exception";
+import { UserMapper } from "../../../mappers/user.mapper";
+import { generateAcessToken, generateRefreshToken } from "../../../utils/token-utility";
 
 @injectable()
 export class GoogleAuthHandler {

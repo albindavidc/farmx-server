@@ -1,9 +1,13 @@
 import { inject, injectable } from "inversify";
-import { generateAcessToken, generateRefreshToken, TokenPayload } from "../../application/utils/TokenUtility";
-import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
-import { Email } from "../../domain/value-objects/Email.vo";
-import { TYPES } from "../../presentation/container/types";
-import { LoginRequest, LoginResponse } from "../use-cases/dto/login.dto";
+import {
+  generateAcessToken,
+  generateRefreshToken,
+  TokenPayload,
+} from "@application/utils/token-utility";
+import { UserRepository } from "@domain/repositories/user.repository";
+import { Email } from "@domain/value-objects/email.vo";
+import { TYPES } from "@presentation/container/types";
+import { LoginRequest, LoginResponse } from "@application/dto/login.dto";
 
 @injectable()
 export class LoginService {

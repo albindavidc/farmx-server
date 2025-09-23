@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import sendResponseJson from "../../application/utils/Message";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import sendResponseJson from "../../application/utils/message";
 import {
   generateAcessToken,
   verifyAccessToken,
   verifyRefreshToken,
-} from "../../application/utils/TokenUtility";
+} from "../../application/utils/token-utility";
 import UserSchema, { UserDocument } from "../../infrastructure/database/schemas/user.schema";
 
 interface AuthRequest extends Request {

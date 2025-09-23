@@ -1,24 +1,24 @@
-import { inject, injectable } from "inversify";
-import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
-import { TYPES } from "../container/types";
-import sendResponseJson from "../../application/utils/Message";
-import { StatusCodes } from "http-status-codes";
-import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/upload-profile-photo.command";
 import { Request, Response } from "express";
-import path from "path";
 import fs from "fs";
-import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+import path from "path";
 import { ChangePasswordCommand } from "../../application/use-cases/commands/change-password.command";
-import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
-import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
 import { LoginChangePasswordCommand } from "../../application/use-cases/commands/login-change-password.command";
-import { UserDto } from "../../application/use-cases/dto/User.dto";
-import { UpdateUserHandler } from "../../application/use-cases/handlers/user/update-user.handler";
-import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
-import { UpdateUserCommand } from "../../application/use-cases/commands/user/update-user.command";
+import { UploadProfilePhotoCommand } from "../../application/use-cases/commands/upload-profile-photo.command";
 import { BlockUserCommand } from "../../application/use-cases/commands/user/block-user.command";
 import { CreateUserCommand } from "../../application/use-cases/commands/user/create-user.command";
+import { UpdateUserCommand } from "../../application/use-cases/commands/user/update-user.command";
+import { UserDto } from "../../application/use-cases/dto/User.dto";
+import { ChangePasswordHandler } from "../../application/use-cases/handlers/change-password.handler";
+import { LoginChangePasswordHandler } from "../../application/use-cases/handlers/login-change-password.handler";
+import { BlockUserHandler } from "../../application/use-cases/handlers/user/block-user.handler";
 import { CreateUserHandler } from "../../application/use-cases/handlers/user/create-user.handler";
+import { UpdateUserHandler } from "../../application/use-cases/handlers/user/update-user.handler";
+import { SettingsUseCase } from "../../application/use-cases/use-cases/Settings.use-case";
+import sendResponseJson from "../../application/utils/message";
+import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
+import { TYPES } from "../container/types";
 
 @injectable()
 export class UserController {

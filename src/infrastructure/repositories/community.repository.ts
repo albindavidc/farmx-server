@@ -1,12 +1,16 @@
 import { injectable } from "inversify";
+import mongoose, { FilterQuery, Types } from "mongoose";
+
 import {
   AddMembershipResult,
   CommunityRepository,
-} from "../../domain/interfaces/repositories/community/community.repository";
-import { CommunityDocument, CommunityModel } from "../database/schemas/community.schema";
-import mongoose, { FilterQuery, Types } from "mongoose";
-import { CommunityMemberModel } from "../database/schemas/community-members.schema";
-import { Community } from "../../domain/entities/community/community.entity";
+} from "@domain/repositories/community/community.repository";
+import { Community } from "@domain/entities/community/community.entity";
+import {
+  CommunityDocument,
+  CommunityModel,
+} from "@infrastructure/database/schemas/community.schema";
+import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema";
 
 @injectable()
 export class CommunityRepositoryImpl implements CommunityRepository {

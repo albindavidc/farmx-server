@@ -29,10 +29,10 @@ import { CommunityRepositoryImpl } from "../../infrastructure/repositories/commu
 import { OtpRepositoryImpl } from "../../infrastructure/repositories/otp.repository";
 import { PostRepositoryImpl } from "../../infrastructure/repositories/post.repository";
 import { UserRepositoryImpl } from "../../infrastructure/repositories/user.repository";
-import { AuthService } from "../../infrastructure/services/Auth.service";
+import { AuthService } from "../../infrastructure/services/auth.service";
 import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
-import { LoginService } from "../../infrastructure/services/Login.service";
-import EmailServiceImpl from "../../infrastructure/services/Otp.service";
+import { LoginService } from "../../infrastructure/services/login.service";
+import EmailServiceImpl from "../../infrastructure/services/otp.service";
 import AuthController from "../controllers/auth.controller";
 import { CommunityController } from "../controllers/community.controller";
 import OtpController from "../controllers/otp.controller";

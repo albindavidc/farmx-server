@@ -4,10 +4,10 @@ import {
   generateRefreshToken,
   TokenPayload,
   verifyRefreshToken,
-} from "../../application/utils/TokenUtility";
-import { User } from "../../domain/entities/user.entity";
-import { UserRepository } from "../../domain/interfaces/repositories/user.repository";
-import { Email } from "../../domain/value-objects/Email.vo";
+} from "@application/utils/token-utility";
+import { User } from "@domain/entities/user.entity";
+import { Email } from "@domain/value-objects/email.vo";
+import { UserRepository } from "@domain/repositories/user.repository";
 import { TYPES } from "../../presentation/container/types";
 
 @injectable()

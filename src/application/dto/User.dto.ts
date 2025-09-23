@@ -1,5 +1,5 @@
 import { FarmerStatus } from "../../domain/enums/farmer-status.enum";
-import { Password } from "../../domain/value-objects/Password.vo";
+import { Password } from "../../domain/value-objects/password.vo";
 import { CourseProgress, UserCertificate } from "../../infrastructure/database/schemas/user.schema";
 
 export interface UserDto {

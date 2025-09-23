@@ -1,11 +1,11 @@
-import { inject, injectable } from "inversify";
-import { TYPES } from "../../../../presentation/container/types";
-import { UserExistsException } from "../../../exceptions/UserExists.exception";
-import { User } from "../../../../domain/entities/user.entity";
 import { UserRepository } from "@domain/repositories/user.repository";
-import { Email } from "../../../../domain/value-objects/Email.vo";
-import { SignupRequestDto, UserDto } from "../../../dto/User.dto";
-import { UserMapper } from "../../../mappers/User.mapper";
+import { inject, injectable } from "inversify";
+import { User } from "../../../../domain/entities/user.entity";
+import { Email } from "../../../../domain/value-objects/email.vo";
+import { TYPES } from "../../../../presentation/container/types";
+import { SignupRequestDto, UserDto } from "../../../dto/user.dto";
+import { UserExistsException } from "../../../exceptions/user-exists.exception";
+import { UserMapper } from "../../../mappers/user.mapper";
 
 @injectable()
 export class CreateUserHandler {

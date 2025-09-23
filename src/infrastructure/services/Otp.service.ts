@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 import nodemailer, { Transporter } from "nodemailer";
 import winston from "winston";
-import { EmailService } from "../../domain/interfaces/repositories/email.service";
-import { configBrevo } from "../config/ConfigSetup";
+import { EmailRepository } from "@domain/repositories/email.repository";
+import { configBrevo } from "@infrastructure/config/config-setup";
 
 interface MailOptions {
   from: string;
@@ -13,7 +13,7 @@ interface MailOptions {
 }
 
 @injectable()
-export class EmailServiceImpl implements EmailService {
+export class EmailServiceImpl implements EmailRepository {
   private transporter: Transporter;
   private logger: winston.Logger;
 
@@ -58,8 +58,12 @@ export class EmailServiceImpl implements EmailService {
       await this.transporter.sendMail(mailOptions);
       console.log(`OTP email sent to ${email} ${otp}`);
     } catch (error) {
-      this.logger.error(`Failed to send OTP to ${email}:`, { error: error instanceof Error ? error.message : error });
-      throw new Error(`Failed to send OTP email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.error(`Failed to send OTP to ${email}:`, {
+        error: error instanceof Error ? error.message : error,
+      });
+      throw new Error(
+        `Failed to send OTP email: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 }

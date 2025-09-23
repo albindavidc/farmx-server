@@ -1,5 +1,5 @@
 import { CreateUserCommand } from "@application/commands/user/create-user.command";
-import { UserDto } from "@application/dto/User.dto";
+import { UserDto } from "@application/dto/user.dto";
 import { User } from "@domain/entities/user.entity";
 import { UserRepository } from "@domain/repositories/user.repository";
 import { TYPES } from "@presentation/container/types";

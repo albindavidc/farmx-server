@@ -1,7 +1,8 @@
 import { injectable } from "inversify";
-import { Post } from "../../domain/entities/community/post.entity";
-import { PostRepository } from "../../domain/interfaces/repositories/community/post.repository";
-import { PostDocument, PostModel } from "../database/schemas/post.schema";
+
+import { Post } from "@domain/entities/community/post.entity";
+import { PostRepository } from "@domain/repositories/community/post.repository";
+import { PostDocument, PostModel } from "@infrastructure/database/schemas/post.schema";
 
 @injectable()
 export class PostRepositoryImpl implements PostRepository {
@@ -17,7 +18,7 @@ export class PostRepositoryImpl implements PostRepository {
       document.communityName,
       document.imageUrl || "",
       document.isEdited,
-      document.lastEditedAt,
+      document.lastEditedAt
     );
   }
 
@@ -51,7 +52,7 @@ export class PostRepositoryImpl implements PostRepository {
           doc.communityName,
           doc.imageUrl,
           doc.isEdited,
-          doc.lastEditedAt,
+          doc.lastEditedAt
         )
     );
   }

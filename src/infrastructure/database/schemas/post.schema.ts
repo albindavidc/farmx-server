@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { UserPostRole } from "../../../domain/enums/user-role.enum";
+import { UserPostRole } from "@domain/enums/user-role.enum";
 
 export interface PostDocument extends Document {
   _id: string;

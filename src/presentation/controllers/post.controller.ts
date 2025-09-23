@@ -7,7 +7,7 @@ import { DeleteCommunityPostHandler } from "../../application/use-cases/handlers
 import { GetCommunityPostsQueryHandler } from "../../application/use-cases/handlers/community/post/get-community-post.handler";
 import { GetCommunityPostQueryHandler } from "../../application/use-cases/handlers/community/post/get-post.handler";
 import { UpdateCommunityPostHandler } from "../../application/use-cases/handlers/community/post/update-post.handler";
-import sendResponseJson from "../../application/utils/Message";
+import sendResponseJson from "../../application/utils/message";
 import { UserPostRole, UserRole } from "../../domain/enums/user-role.enum";
 import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
 import { TYPES } from "../container/types";

@@ -16,7 +16,7 @@ import { LoadCommunityHandler } from "../../application/use-cases/handlers/commu
 import { UpdateCommunityCommandHandler } from "../../application/use-cases/handlers/community/update-community.handler";
 import { CommandHandler } from "../../application/use-cases/interfaces/command.interface";
 import { LoadCommunityQuery } from "../../application/use-cases/queries/community/load-community.query";
-import sendResponseJson from "../../application/utils/Message";
+import sendResponseJson from "../../application/utils/message";
 import { Community } from "../../domain/entities/community/community.entity";
 import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
 import { TYPES } from "../container/types";

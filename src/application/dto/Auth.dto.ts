@@ -1,5 +1,5 @@
 import { User } from "../../domain/entities/user.entity";
-import { UserDto } from "./User.dto";
+import { UserDto } from "./user.dto";
 
 export interface AuthResponseDto {
   user: User;

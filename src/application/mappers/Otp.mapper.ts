@@ -1,5 +1,5 @@
+import { OtpResponseDto } from "@application/dto/otp.dto";
 import { Otp } from "@domain/entities/otp.entity";
-import { OtpResponseDto } from "@application/dto/Otp.dto";
 
 export class OtpMapper {
   static toDto(otp: Otp | null, isVerified: boolean): OtpResponseDto {

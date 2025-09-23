@@ -2,8 +2,8 @@ import { inject, injectable } from "inversify";
 import { UserRepository } from "../../../../domain/repositories/user.repository";
 import { TYPES } from "../../../../presentation/container/types";
 import { UploadProfilePhotoCommand } from "../../../commands/upload-profile-photo.command";
-import { UserDto } from "../../../dto/User.dto";
-import { UserNotFoundException } from "../../../exceptions/UserNotFound.exception";
+import { UserDto } from "../../../dto/user.dto";
+import { UserNotFoundException } from "../../../exceptions/user-not-found.exception";
 
 @injectable()
 export class SettingsHandler {

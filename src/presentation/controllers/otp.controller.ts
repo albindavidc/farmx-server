@@ -4,10 +4,10 @@ import { inject, injectable } from "inversify";
 import { OtpRequestDto, OtpResponseDto } from "../../application/use-cases/dto/Otp.dto";
 import { GenerateOtpUseCase } from "../../application/use-cases/use-cases/GenerateOtp.use-case";
 import { VerifyOtpUseCase } from "../../application/use-cases/use-cases/VerifyOtp.use-case";
-import sendResponseJson from "../../application/utils/Message";
+import sendResponseJson from "../../application/utils/message";
 import { EmailService } from "../../domain/interfaces/repositories/email.service";
-import { Email } from "../../domain/value-objects/Email.vo";
-import { AuthService } from "../../infrastructure/services/Auth.service";
+import { Email } from "../../domain/value-objects/email.vo";
+import { AuthService } from "../../infrastructure/services/auth.service";
 import { TYPES } from "../container/types";
 
 @injectable()

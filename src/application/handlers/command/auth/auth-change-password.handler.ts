@@ -1,7 +1,7 @@
+import { UserRepository } from "@domain/repositories/user.repository";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../presentation/container/types";
-import { UserRepository } from "@domain/repositories/user.repository";
-import { UserNotFoundException } from "../../../exceptions/UserNotFound.exception";
+import { UserNotFoundException } from "../../../exceptions/user-not-found.exception";
 
 @injectable()
 export class AuthChangePasswordHandler {

@@ -3,10 +3,10 @@ import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import { LoginRequest, LoginResponse } from "../../application/use-cases/dto/login.dto";
 import { UserUseCase } from "../../application/use-cases/interfaces/user.use-case";
-import sendResponseJson from "../../application/utils/Message";
+import sendResponseJson from "../../application/utils/message";
 import { User } from "../../domain/entities/user.entity";
-import { AuthService } from "../../infrastructure/services/Auth.service";
-import { LoginService } from "../../infrastructure/services/Login.service";
+import { AuthService } from "../../infrastructure/services/auth.service";
+import { LoginService } from "../../infrastructure/services/login.service";
 import { TYPES } from "../container/types";
 
 @injectable()

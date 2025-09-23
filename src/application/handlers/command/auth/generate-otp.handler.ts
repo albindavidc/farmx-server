@@ -2,8 +2,8 @@ import { inject, injectable } from "inversify";
 import { EmailRepository } from "../../../../domain/repositories/email.repository";
 import { OTPRepository } from "../../../../domain/repositories/otp.repository";
 import { TYPES } from "../../../../presentation/container/types";
-import { GenerateNewOtp } from "../../../utils/GenerateOtp";
-import { OtpResponseDto, OtpRequestDto } from "../../../dto/Otp.dto";
+import { OtpRequestDto, OtpResponseDto } from "../../../dto/otp.dto";
+import { GenerateNewOtp } from "../../../utils/generate-otp";
 
 @injectable()
 export class GenerateOtpHandler {

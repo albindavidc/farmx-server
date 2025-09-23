@@ -1,6 +1,6 @@
 import { CourseProgress, UserCertificate } from "../../infrastructure/database/schemas/user.schema";
 import { FarmerStatus } from "../enums/farmer-status.enum";
-import { Password } from "../value-objects/Password.vo";
+import { Password } from "../value-objects/password.vo";
 
 export class User {
   private readonly _password: Promise<Password>;

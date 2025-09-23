@@ -1,7 +1,7 @@
+import { UserDto } from "@application/dto/user.dto";
+import { UserNotFoundException } from "@application/exceptions/user-not-found.exception";
+import { UserMapper } from "@application/mappers/user.mapper";
 import { UserRepository } from "@domain/repositories/user.repository";
-import { UserNotFoundException } from "@application/exceptions/UserNotFound.exception";
-import { UserDto } from "@application/dto/User.dto";
-import { UserMapper } from "@application/mappers/User.mapper";
 
 export class GetUserQueryHandler {
   constructor(private userRepository: UserRepository) {}

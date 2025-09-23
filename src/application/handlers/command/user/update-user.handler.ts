@@ -1,5 +1,5 @@
 import { UpdateUserCommand } from "@application/commands/user/update-user.command";
-import { UserDto } from "@application/dto/User.dto";
+import { UserDto } from "@application/dto/user.dto";
 import { UserRepository } from "@domain/repositories/user.repository";
 import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";

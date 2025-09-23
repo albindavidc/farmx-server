@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
 import { UserRepository } from "../../../../domain/repositories/user.repository";
 import { TYPES } from "../../../../presentation/container/types";
-import { RoleResponseDto, RoleUpdateDto } from "../../../dto/Role.dto";
-import { UserMapper } from "../../../mappers/User.mapper";
-import { generateAcessToken, generateRefreshToken } from "../../../utils/TokenUtility";
-import { UserNotFoundException } from "../../../exceptions/UserNotFound.exception";
+import { RoleResponseDto, RoleUpdateDto } from "../../../dto/role.dto";
+import { UserNotFoundException } from "../../../exceptions/user-not-found.exception";
+import { UserMapper } from "../../../mappers/user.mapper";
+import { generateAcessToken, generateRefreshToken } from "../../../utils/token-utility";
 
 @injectable()
 export class SetRoleHandler {
