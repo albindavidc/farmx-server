@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import { Community } from "@domain/entities/community/community.entity";
 import { TYPES } from "@presentation/container/types";
-import { CommandHandler } from "@application/interfaces/command.interface";
 import { CreateCommunityCommand } from "@application/commands/community/create-community.command";
-import { CommunityRepository } from "@domain/repositories/community/community.repository";
+import { ICreateCommunity } from "@application/interfaces/command/community/create-community.interface";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
 
 @injectable()
-export class CreateCommunityHandler implements CommandHandler<CreateCommunityCommand, Community> {
+export class CreateCommunityHandler implements ICreateCommunity {
   constructor(
-    @inject(TYPES.CommunityRepository) private communityRepository: CommunityRepository
+    @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
   async execute(command: CreateCommunityCommand): Promise<Community> {
     const community = new Community(

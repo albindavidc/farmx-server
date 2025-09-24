@@ -1,16 +1,17 @@
 import { injectable, inject } from "inversify";
 import { TYPES } from "@presentation/container/types";
 import { UpdateCommunityCommand } from "@application/commands/community/update-community.command";
-import { CommunityResponseDto } from "@application/dto/community/community-response.dto";
-import { CommunityRepository } from "@domain/repositories/community/community.repository";
+import { IUpdateCommunity } from "@application/interfaces/command/community/update-community.interface";
+import { CommunityResponseDto } from "@application/dtos/community/community-response.dto";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
 
 @injectable()
-export class UpdateCommunityCommandHandler {
+export class UpdateCommunityCommandHandler implements IUpdateCommunity {
   constructor(
-    @inject(TYPES.CommunityRepository) private communityRepository: CommunityRepository
+    @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
 
-  async handle(command: UpdateCommunityCommand): Promise<CommunityResponseDto> {
+  async execute(command: UpdateCommunityCommand): Promise<CommunityResponseDto> {
     const { id, data } = command;
 
     // Find the community

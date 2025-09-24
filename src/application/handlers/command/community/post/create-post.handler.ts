@@ -1,15 +1,16 @@
 import { inject, injectable } from "inversify";
 import { Post } from "@domain/entities/community/post.entity";
-import { CommunityRepository } from "@domain/repositories/community/community.repository";
-import { PostRepository } from "@domain/repositories/community/post.repository";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
 import { TYPES } from "@presentation/container/types";
 import { CreatePostDto, PostResponseDto } from "@application/dto/community/post.dto";
+import { ICreateCommunityPost } from "@application/interfaces/command/community/post/create-post.interface";
 
 @injectable()
-export class CreateCommunityPostHandler {
+export class CreateCommunityPostHandler implements ICreateCommunityPost {
   constructor(
-    @inject(TYPES.PostRepository) private postRepository: PostRepository,
-    @inject(TYPES.CommunityRepository) private communityRepository: CommunityRepository
+    @inject(TYPES.PostRepository) private postRepository: IPostRepository,
+    @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
 
   async execute(dto: CreatePostDto): Promise<PostResponseDto> {

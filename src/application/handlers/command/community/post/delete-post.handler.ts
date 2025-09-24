@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "@presentation/container/types";
-import { PostRepository } from "@domain/repositories/community/post.repository";
+import { IDeleteCommunityPost } from "@application/interfaces/command/community/post/delete-post.interface";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
 
 @injectable()
-export class DeleteCommunityPostHandler {
-  constructor(@inject(TYPES.PostRepository) private postRepository: PostRepository) {}
+export class DeleteCommunityPostHandler implements IDeleteCommunityPost {
+  constructor(@inject(TYPES.PostRepository) private postRepository: IPostRepository) {}
 
   async execute(postId: string, userId: string, isAdmin: boolean): Promise<void> {
     const post = await this.postRepository.findById(postId);
