@@ -1,13 +1,14 @@
 import { CreateUserCommand } from "@application/commands/user/create-user.command";
-import { UserDto } from "@application/dto/user.dto";
 import { User } from "@domain/entities/user.entity";
-import { UserRepository } from "@domain/repositories/user.repository";
 import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
+import { UserDto } from "@application/dtos/user.dto";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
+import { ICreateUser } from "@application/interfaces/command/user/create-user.interface";
 
 @injectable()
-export class CreateUserHandler {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
+export class CreateUserHandler implements ICreateUser {
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async execute(command: CreateUserCommand): Promise<UserDto> {
     const { dto } = command;

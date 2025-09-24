@@ -1,12 +1,13 @@
 import { BlockUserCommand } from "@application/commands/user/block-user.command";
-import { UserDto } from "@application/dto/user.dto";
-import { UserRepository } from "@domain/repositories/user.repository";
+import { UserDto } from "@application/dtos/user.dto";
 import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
+import { IBlockUser } from "@application/interfaces/command/user/block-user.interface";
 
 @injectable()
-export class BlockUserHandler {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
+export class BlockUserHandler implements IBlockUser {
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async execute(command: BlockUserCommand): Promise<UserDto | null> {
     return this.userRepository.update(command.id, { isBlocked: command.isBlocked });

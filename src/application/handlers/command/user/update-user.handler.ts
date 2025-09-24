@@ -1,12 +1,13 @@
 import { UpdateUserCommand } from "@application/commands/user/update-user.command";
-import { UserDto } from "@application/dto/user.dto";
-import { UserRepository } from "@domain/repositories/user.repository";
 import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
+import { UserDto } from "@application/dtos/user.dto";
+import { IUpdateUser } from "@application/interfaces/command/user/update-user.interface";
 
 @injectable()
-export class UpdateUserHandler {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
+export class UpdateUserHandler implements IUpdateUser {
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async execute(command: UpdateUserCommand): Promise<UserDto> {
     const { id, dto } = command;

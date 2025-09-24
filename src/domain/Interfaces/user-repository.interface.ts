@@ -1,4 +1,4 @@
-import { UserDto } from "../../application/dto/user.dto";
+import { UserDto } from "../../application/dtos/user.dto";
 import { User } from "../entities/user.entity";
 import { Email } from "../value-objects/email.vo";
 
