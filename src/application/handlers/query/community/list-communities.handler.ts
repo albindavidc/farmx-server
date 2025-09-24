@@ -1,23 +1,24 @@
 import { inject, injectable } from "inversify";
 
 import { TYPES } from "@presentation/container/types";
-import { CommunityRepository } from "@domain/repositories/community/community.repository";
+import { Types } from "mongoose";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
 import {
   CommunitiesListResponseDto,
   CommunityResponseDto,
-} from "@application/dto/community/community-response.dto";
-import { Types } from "mongoose";
+} from "@application/dtos/community/community-response.dto";
+import { IListCommunities } from "@application/interfaces/query/community/list-communities.interface";
 
-export interface CommunityFilter {
+export interface ICommunityFilter {
   name?: { $regex: string; $options: string };
   categories?: { $in: string[] };
   createdBy?: string | Types.ObjectId;
 }
 
 @injectable()
-export class ListCommunitiesHandler {
+export class ListCommunitiesHandler implements IListCommunities {
   constructor(
-    @inject(TYPES.CommunityRepository) private communityRepository: CommunityRepository
+    @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
 
   async execute(options?: {
@@ -35,7 +36,7 @@ export class ListCommunitiesHandler {
     const sort = options?.sort || { createdAt: -1 };
 
     // Build filter
-    const filter: CommunityFilter = {};
+    const filter: ICommunityFilter = {};
 
     if (options?.filter?.name) {
       filter.name = { $regex: options.filter.name, $options: "i" };

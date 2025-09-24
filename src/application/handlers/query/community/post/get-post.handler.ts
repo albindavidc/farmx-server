@@ -1,11 +1,12 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "@presentation/container/types";
-import { PostRepository } from "@domain/repositories/community/post.repository";
-import { PostResponseDto } from "@application/dto/community/post.dto";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
+import { IGetPost } from "@application/interfaces/query/community/post/get-post.interface";
+import { PostResponseDto } from "@application/dtos/community/post.dto";
 
 @injectable()
-export class GetCommunityPostQueryHandler {
-  constructor(@inject(TYPES.PostRepository) private postRepository: PostRepository) {}
+export class GetCommunityPostQueryHandler implements IGetPost {
+  constructor(@inject(TYPES.PostRepository) private postRepository: IPostRepository) {}
 
   async execute(id: string): Promise<PostResponseDto> {
     const post = await this.postRepository.findById(id);
