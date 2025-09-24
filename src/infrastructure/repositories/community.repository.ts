@@ -4,17 +4,17 @@ import mongoose, { FilterQuery, Types } from "mongoose";
 import {
   IAddMembershipResult,
   ICommunityRepository,
-} from "@domain/repositories/community/community.repository";
+} from "@domain/interfaces/community/community-repository.interface";
 import { Community } from "@domain/entities/community/community.entity";
 import {
-  CommunityDocument,
+  ICommunityDocument,
   CommunityModel,
 } from "@infrastructure/database/schemas/community.schema";
 import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema";
 
 @injectable()
 export class CommunityRepositoryImpl implements ICommunityRepository {
-  private mapToEntity(doc: CommunityDocument): Community {
+  private mapToEntity(doc: ICommunityDocument): Community {
     return new Community(
       doc.name,
       doc.description,
@@ -108,7 +108,7 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
 
   async update(id: string, communityData: Partial<Community>): Promise<Community | null> {
     try {
-      const updateData: Partial<CommunityDocument> = {};
+      const updateData: Partial<ICommunityDocument> = {};
 
       // Check if the method exists and the value is not undefined before calling
       if (communityData.getName && typeof communityData.getName === "function") {

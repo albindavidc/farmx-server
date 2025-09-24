@@ -3,7 +3,7 @@ import { Post } from "@domain/entities/community/post.entity";
 import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
 import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
 import { TYPES } from "@presentation/container/types";
-import { CreatePostDto, PostResponseDto } from "@application/dto/community/post.dto";
+import { CreatePostDto, PostResponseDto } from "@application/dtos/community/post.dto";
 import { ICreateCommunityPost } from "@application/interfaces/command/community/post/create-post.interface";
 
 @injectable()

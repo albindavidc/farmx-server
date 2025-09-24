@@ -5,7 +5,7 @@ import { CreateCommunityCommand } from "@application/commands/community/create-c
 import { UpdateCommunityCommand } from "@application/commands/community/update-community.command";
 import { DeleteCommunityCommand } from "@application/commands/community/delete-community.command";
 import { LoadCommunityQuery } from "@application/queries/community/load-community.query";
-import { UpdateCommunityRequestDto } from "@application/dto/community/update-community.dto";
+import { UpdateCommunityRequestDto } from "@application/dtos/community/update-community.dto";
 // import {CommandHandler} from "@application/interfaces/command.interface";
 import { LoadCommunityHandler } from "@application/handlers/query/community/load-community.handler";
 import { LoadCommunitiesHandler } from "@application/handlers/query/community/load-communities.handler";
@@ -190,7 +190,7 @@ export class CommunityController {
       const { id } = req.params;
       const dto: UpdateCommunityRequestDto = req.body;
       const command = new UpdateCommunityCommand(id, dto);
-      const community = await this.updateCommunityCommand.handle(command);
+      const community = await this.updateCommunityCommand.execute(command);
 
       res.status(200).json({
         success: true,
@@ -215,7 +215,7 @@ export class CommunityController {
     try {
       const { id } = req.params;
       const command = new DeleteCommunityCommand(id);
-      const deleted = await this.deleteCommunityCommand.handle(command);
+      const deleted = await this.deleteCommunityCommand.execute(command);
 
       if (deleted) {
         res.status(200).json({

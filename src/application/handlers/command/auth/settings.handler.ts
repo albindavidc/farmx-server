@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
-import { IUserRepository } from "@domain/repositories/user.repository";
-import { ISettings } from "@application/Interfaces/command/auth/settings.interface";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
+import { ISettings } from "@application/interfaces/command/auth/settings.interface";
 import { TYPES } from "@presentation/container/types";
 import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-photo.command";
-import { UserDto } from "@application/dto/user.dto";
+import { UserDto } from "@application/dtos/user.dto";
 import { UserNotFoundException } from "@application/exceptions/user-not-found.exception";
 
 @injectable()

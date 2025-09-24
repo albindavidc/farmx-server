@@ -1,4 +1,4 @@
-import { OtpResponseDto } from "@application/dto/otp.dto";
+import { OtpResponseDto } from "@application/dtos/otp.dto";
 import { Otp } from "@domain/entities/otp.entity";
 
 export class OtpMapper {

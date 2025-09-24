@@ -9,13 +9,13 @@ import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-
 import { BlockUserCommand } from "@application/commands/user/block-user.command";
 import { CreateUserCommand } from "@application/commands/user/create-user.command";
 import { UpdateUserCommand } from "@application/commands/user/update-user.command";
-import { UserDto } from "@application/dto/user.dto";
+import { UserDto } from "@application/dtos/user.dto";
 import { ChangePasswordHandler } from "@application/handlers/command/change-password.handler";
 import { LoginChangePasswordHandler } from "@application/handlers/command/login-change-password.handler";
 import { BlockUserHandler } from "@application/handlers/command/user/block-user.handler";
 import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
 import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler";
-import { UserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { TYPES } from "@presentation/container/types";
 import sendResponseJson from "@application/utils/message";
 import { SettingsHandler } from "@application/handlers/command/auth/settings.handler";
@@ -24,7 +24,7 @@ import { SettingsHandler } from "@application/handlers/command/auth/settings.han
 export class UserController {
   constructor(
     @inject(TYPES.SettingsHandler) private readonly settingsUseCase: SettingsHandler,
-    @inject(TYPES.UserRepository) private readonly userRepo: UserRepository,
+    @inject(TYPES.UserRepository) private readonly userRepo: IUserRepository,
     @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler,
     @inject(TYPES.LoginChangePasswordHandler)
     private loginChangePasswordHandler: LoginChangePasswordHandler,

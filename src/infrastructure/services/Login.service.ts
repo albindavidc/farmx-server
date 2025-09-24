@@ -4,14 +4,14 @@ import {
   generateRefreshToken,
   TokenPayload,
 } from "@application/utils/token-utility";
-import { UserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { Email } from "@domain/value-objects/email.vo";
 import { TYPES } from "@presentation/container/types";
-import { LoginRequest, LoginResponse } from "@application/dto/login.dto";
+import { LoginRequest, LoginResponse } from "@application/dtos/login.dto";
 
 @injectable()
 export class LoginService {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async login(request: LoginRequest): Promise<LoginResponse> {
     const email = Email.create(request.email);

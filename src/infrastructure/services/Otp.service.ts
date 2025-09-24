@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 import nodemailer, { Transporter } from "nodemailer";
 import winston from "winston";
-import { EmailRepository } from "@domain/repositories/email.repository";
+import { IEmailRepository } from "@domain/interfaces/email-repository.interface";
 import { configBrevo } from "@infrastructure/config/config-setup";
 
-interface MailOptions {
+interface IMailOptions {
   from: string;
   to: string;
   subject: string;
@@ -13,7 +13,7 @@ interface MailOptions {
 }
 
 @injectable()
-export class EmailServiceImpl implements EmailRepository {
+export class EmailServiceImpl implements IEmailRepository {
   private transporter: Transporter;
   private logger: winston.Logger;
 
@@ -36,7 +36,7 @@ export class EmailServiceImpl implements EmailRepository {
   }
 
   async sendOtpEmail(email: string, otp: string): Promise<void> {
-    const mailOptions: MailOptions = {
+    const mailOptions: IMailOptions = {
       from: configBrevo.EMAIL_FROM,
       to: email,
       subject: "Your OTP Code",

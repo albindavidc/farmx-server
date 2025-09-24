@@ -5,6 +5,7 @@ import { inject, injectable } from "inversify";
 import { UserDto } from "@application/dtos/user.dto";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { ICreateUser } from "@application/interfaces/command/user/create-user.interface";
+import { UserMapper } from "@application/mappers/user.mapper";
 
 @injectable()
 export class CreateUserHandler implements ICreateUser {
@@ -50,29 +51,6 @@ export class CreateUserHandler implements ICreateUser {
     );
 
     const createdUser = await this.userRepository.create(userData);
-    return {
-      _id: createdUser._id,
-      name: createdUser.name,
-      email: createdUser.email,
-      password: createdUser.password,
-      role: createdUser.role,
-      phone: createdUser.phone,
-      isVerified: createdUser.isVerified,
-      isAdmin: createdUser.isAdmin,
-      isBlocked: createdUser.isBlocked,
-      googleId: createdUser.googleId,
-      isFarmer: createdUser.isFarmer,
-      farmerStatus: createdUser.farmerStatus,
-      farmerRegId: createdUser.farmerRegId,
-      experience: createdUser.experience,
-      qualification: createdUser.qualification,
-      expertise: createdUser.expertise,
-      awards: createdUser.awards,
-      profilePhoto: createdUser.profilePhoto,
-      bio: createdUser.bio,
-      courseProgress: createdUser.courseProgress,
-      reason: createdUser.reason,
-      courseCertificate: createdUser.courseCertificate,
-    };
+    return UserMapper.toDto(createdUser) as UserDto;
   }
 }

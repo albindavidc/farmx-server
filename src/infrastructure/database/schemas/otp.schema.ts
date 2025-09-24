@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface OtpDocument extends Document {
+export interface IOtpDocument extends Document {
   email: string;
   otp: string;
   expiresAt: Date;
@@ -22,4 +22,4 @@ const OtpSchema: Schema = new Schema(
 
 OtpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export const OtpModel = mongoose.model<OtpDocument>("Otp", OtpSchema);
+export const OtpModel = mongoose.model<IOtpDocument>("Otp", OtpSchema);

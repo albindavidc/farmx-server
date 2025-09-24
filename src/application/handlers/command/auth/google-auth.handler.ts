@@ -1,12 +1,12 @@
 import * as admin from "firebase-admin";
 import { inject, injectable } from "inversify";
-import { IUserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { TYPES } from "@presentation/container/types";
-import { GoogleAuthResponseDto } from "@application/dto/auth.dto";
+import { GoogleAuthResponseDto } from "@application/dtos/auth.dto";
 import { AuthException } from "@application/exceptions/auth.exception";
 import { UserMapper } from "@application/mappers/user.mapper";
 import { generateAcessToken, generateRefreshToken } from "@application/utils/token-utility";
-import { IGoogleAuth } from "@application/Interfaces/command/auth/google-auth.interface";
+import { IGoogleAuth } from "@application/interfaces/command/auth/google-auth.interface";
 
 @injectable()
 export class GoogleAuthHandler implements IGoogleAuth {

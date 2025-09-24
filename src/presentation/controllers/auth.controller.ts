@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { LoginRequest, LoginResponse } from "@application/dto/login.dto";
+import { LoginRequest, LoginResponse } from "@application/dtos/login.dto";
 import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
 
 import sendResponseJson from "@application/utils/message";
 import { AuthService } from "@infrastructure/services/auth.service";
 import { LoginService } from "@infrastructure/services/login.service";
 import { TYPES } from "@presentation/container/types";
-import { CreateUserCommand } from "../../application/commands/user/create-user.command";
+import { CreateUserCommand } from "@application/commands/user/create-user.command";
+import { UserMapper } from "@application/mappers/user.mapper";
+import { UserDto } from "@application/dtos/user.dto";
 
 @injectable()
 export default class AuthController {
@@ -27,7 +29,10 @@ export default class AuthController {
         return;
       }
 
-      const command = new CreateUserCommand({ name, email, password, role, phone });
+      const dto: Partial<UserDto> = { name, email, password, role, phone };
+      const userEntity = UserMapper.toEntity(dto);
+
+      const command = new CreateUserCommand(userEntity);
 
       if (command.dto.role === "farmer") {
         command.dto.isFarmer = true;
@@ -35,7 +40,8 @@ export default class AuthController {
 
       console.log(command, "this is from the backend - to validate");
 
-      const response = await this.createUserHander.execute(command);
+      const response: UserDto = await this.createUserHander.execute(command);
+
       console.log(response, "this is from the backend - to validate");
 
       const successMessage =

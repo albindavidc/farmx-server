@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
 
 import { Post } from "@domain/entities/community/post.entity";
-import { IPostRepository } from "@domain/repositories/community/post.repository";
-import { PostDocument, PostModel } from "@infrastructure/database/schemas/post.schema";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
+import { IPostDocument, PostModel } from "@infrastructure/database/schemas/post.schema";
 
 @injectable()
 export class PostRepositoryImpl implements IPostRepository {
-  private mapToEntity(document: PostDocument): Post {
+  private mapToEntity(document: IPostDocument): Post {
     return new Post(
       document._id.toString(),
       document.text,

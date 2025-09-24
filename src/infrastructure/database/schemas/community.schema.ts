@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface CommunityDocument extends Document {
+export interface ICommunityDocument extends Document {
   name: string;
   description: string;
   isActive: boolean;
@@ -26,4 +26,4 @@ CommunitySchema.index({ name: 1 }, { unique: true });
 CommunitySchema.index({ categories: 1 });
 CommunitySchema.index({ createdAt: -1 });
 
-export const CommunityModel = mongoose.model<CommunityDocument>("Community", CommunitySchema);
+export const CommunityModel = mongoose.model<ICommunityDocument>("Community", CommunitySchema);

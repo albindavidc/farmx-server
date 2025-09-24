@@ -7,12 +7,12 @@ import {
 } from "@application/utils/token-utility";
 import { User } from "@domain/entities/user.entity";
 import { Email } from "@domain/value-objects/email.vo";
-import { UserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { TYPES } from "../../presentation/container/types";
 
 @injectable()
 export class AuthService {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async verifyOtp(
     email: Email

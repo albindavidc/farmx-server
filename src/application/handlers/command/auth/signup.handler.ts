@@ -1,10 +1,10 @@
-import { IUserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { inject, injectable } from "inversify";
-import { ISignUp } from "@application/Interfaces/command/auth/signup.interface";
+import { ISignUp } from "@application/interfaces/command/auth/signup.interface";
 import { User } from "@domain/entities/user.entity";
 import { Email } from "@domain/value-objects/email.vo";
 import { TYPES } from "@presentation/container/types";
-import { SignupRequestDto, UserDto } from "@application/dto/user.dto";
+import { SignupRequestDto, UserDto } from "@application/dtos/user.dto";
 import { UserExistsException } from "@application/exceptions/user-exists.exception";
 import { UserMapper } from "@application/mappers/user.mapper";
 

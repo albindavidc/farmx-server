@@ -1,8 +1,8 @@
-import { UserDto } from "@application/dto/user.dto";
+import { UserDto } from "@application/dtos/user.dto";
 import { User } from "@domain/entities/user.entity";
 
 export class UserMapper {
-  static toDto(user: User): UserDto {
+  static toDto(user: User): Partial<UserDto> {
     return {
       _id: user._id,
       name: user.name,
@@ -33,7 +33,7 @@ export class UserMapper {
     return new User(
       dto.name ?? "",
       dto.email ?? "",
-      "",
+      dto.password ?? "",
       dto.role ?? "",
       dto.phone ?? "",
       dto._id,

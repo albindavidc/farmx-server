@@ -1,8 +1,8 @@
-import { IUserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@presentation/container/types";
 import { UserNotFoundException } from "@application/exceptions/user-not-found.exception";
-import { IAuthChangePassword } from "@application/Interfaces/command/auth/auth-change-password.interface";
+import { IAuthChangePassword } from "@application/interfaces/command/auth/auth-change-password.interface";
 
 @injectable()
 export class AuthChangePasswordHandler implements IAuthChangePassword {

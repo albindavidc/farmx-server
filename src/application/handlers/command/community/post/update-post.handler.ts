@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "@presentation/container/types";
-import { PostResponseDto, UpdatePostDto } from "@application/dto/community/post.dto";
+import { PostResponseDto, UpdatePostDto } from "@application/dtos/community/post.dto";
 import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
 import { IUpdateCommunityPost } from "@application/interfaces/command/community/post/update-post.interface";
 

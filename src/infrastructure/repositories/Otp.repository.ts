@@ -1,5 +1,5 @@
 import { Otp } from "@domain/entities/otp.entity";
-import { IOTPRepository } from "@domain/repositories/otp.repository";
+import { IOTPRepository } from "@domain/interfaces/otp-repository.interface";
 import { OtpModel } from "@infrastructure/database/schemas/otp.schema";
 
 export class OtpRepositoryImpl implements IOTPRepository {

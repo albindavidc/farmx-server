@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { OtpRequestDto, OtpResponseDto } from "@application/dto/otp.dto";
-import { EmailRepository } from "@domain/repositories/email.repository";
+import { OtpRequestDto, OtpResponseDto } from "@application/dtos/otp.dto";
+import { IEmailRepository } from "@domain/interfaces/email-repository.interface";
 import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-otp.handler";
 import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler";
 import sendResponseJson from "@application/utils/message";
@@ -15,7 +15,7 @@ export class OtpController {
   constructor(
     @inject(TYPES.GenerateOtpHandler) private generateOtp: GenerateOtpHandler,
     @inject(TYPES.VerifyOtpHandler) private verifyOtp: VerifyOtpHandler,
-    @inject(TYPES.EmailRepository) private EmailRepository: EmailRepository,
+    @inject(TYPES.EmailRepository) private EmailRepository: IEmailRepository,
     @inject(TYPES.AuthService) private authService: AuthService
   ) {}
 

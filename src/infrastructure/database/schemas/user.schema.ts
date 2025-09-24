@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface CourseProgress {
+export interface ICourseProgress {
   courseId: string;
   progress: number;
   completedChapters: string[];
   totalChapters: number;
 }
 
-export interface UserCertificate {
+export interface IUserCertificate {
   courseId: string;
   status: "approved" | "unavailable";
   certificateUrl?: string;
@@ -15,7 +15,7 @@ export interface UserCertificate {
   approvedBy?: string;
 }
 
-export interface UserDocument extends Document {
+export interface IUserDocument extends Document {
   name: string;
   email: string;
   password: string;
@@ -36,9 +36,9 @@ export interface UserDocument extends Document {
   awards?: string[];
   profilePhoto?: string;
   bio?: string;
-  courseProgress?: CourseProgress[];
+  courseProgress?: ICourseProgress[];
   reason?: string;
-  courseCertificate?: UserCertificate[];
+  courseCertificate?: IUserCertificate[];
 }
 
 const UserSchema: Schema = new Schema(
@@ -96,4 +96,4 @@ const UserSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.model<UserDocument>("User", UserSchema);
+export default mongoose.model<IUserDocument>("User", UserSchema);

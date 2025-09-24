@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface CommunityMembersDocument extends Document {
+export interface ICommunityMembersDocument extends Document {
   communityId: mongoose.Types.ObjectId;
   members: {
     userId: mongoose.Types.ObjectId;
@@ -43,7 +43,7 @@ const CommunityMemberSchema: Schema = new Schema({
 
 CommunityMemberSchema.index({ communityId: 1, "members.userId": 1 }, { unique: true });
 
-export const CommunityMemberModel = mongoose.model<CommunityMembersDocument>(
+export const CommunityMemberModel = mongoose.model<ICommunityMembersDocument>(
   "CommunityMember",
   CommunityMemberSchema
 );

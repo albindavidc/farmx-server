@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { CreatePostDto, UpdatePostDto } from "@application/dto/community/post.dto";
+import { CreatePostDto, UpdatePostDto } from "@application/dtos/community/post.dto";
 import { TYPES } from "@presentation/container/types";
 import { CreateCommunityPostHandler } from "@application/handlers/command/community/post/create-post.handler";
 import { UpdateCommunityPostHandler } from "@application/handlers/command/community/post/update-post.handler";

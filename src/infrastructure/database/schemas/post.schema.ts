@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { UserPostRole } from "@domain/enums/user-role.enum";
 
-export interface PostDocument extends Document {
+export interface IPostDocument extends Document {
   _id: string;
   text: string;
   createdAt: Date;
@@ -15,7 +15,7 @@ export interface PostDocument extends Document {
   lastEditedAt?: Date;
 }
 
-const PostSchema = new Schema<PostDocument>(
+const PostSchema = new Schema<IPostDocument>(
   {
     text: { type: String, required: true },
     imageUrl: { type: String },
@@ -41,4 +41,4 @@ const PostSchema = new Schema<PostDocument>(
 PostSchema.index({ communityId: 1, createdAt: -1 });
 PostSchema.index({ userId: 1 });
 
-export const PostModel = mongoose.model<PostDocument>("Post", PostSchema);
+export const PostModel = mongoose.model<IPostDocument>("Post", PostSchema);
