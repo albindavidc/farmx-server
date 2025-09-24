@@ -1,19 +1,19 @@
 import mongoose, { FilterQuery } from "mongoose";
 import { Community } from "../../entities/community/community.entity";
 
-export interface CommunityMember {
+export interface ICommunityMember {
   userId: mongoose.Types.ObjectId;
   joinedAt: Date;
   role: string;
   status: string;
 }
 
-export interface AddMembershipResult {
-  membership: CommunityMember;
+export interface IAddMembershipResult {
+  membership: ICommunityMember;
   community: Community | null;
 }
 
-export interface CommunityRepository {
+export interface ICommunityRepository {
   create(community: Community): Promise<Community>;
   findById(id: string): Promise<Community | null>;
   findByCreatedById(createdById: string): Promise<Community[]>;
@@ -35,6 +35,6 @@ export interface CommunityRepository {
   decrementMembersCount(id: string): Promise<boolean>;
   exists(id: string): Promise<boolean>;
 
-  addMember(communityId: string, userId: string): Promise<AddMembershipResult | null>;
+  addMember(communityId: string, userId: string): Promise<IAddMembershipResult | null>;
   removeMember(communityId: string, userId: string): Promise<Community | null>;
 }

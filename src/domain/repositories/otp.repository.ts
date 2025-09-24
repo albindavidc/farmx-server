@@ -1,6 +1,6 @@
 import { Otp } from "../entities/otp.entity";
 
-export interface OTPRepository {
+export interface IOTPRepository {
   create(otp: Otp): Promise<Otp>;
 
   findByEmail(email: string): Promise<Otp | null>;

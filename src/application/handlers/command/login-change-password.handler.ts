@@ -1,10 +1,10 @@
-import { UserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/repositories/user.repository";
 import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
 
 @injectable()
 export class LoginChangePasswordHandler {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async execute(command: { email: string; newPassword: string; confirmPassword: string }) {
     const user = await this.userRepository.findByEmail(command.email);

@@ -1,6 +1,6 @@
 import { Post } from "../../entities/community/post.entity";
 
-export interface PostRepository {
+export interface IPostRepository {
   findById(id: string): Promise<Post | null>;
   findByCommunityId(communityId: string): Promise<Post[]>;
   create(post: Post): Promise<Post>;

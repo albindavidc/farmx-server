@@ -2,7 +2,7 @@ import { UserDto } from "../../application/dto/user.dto";
 import { User } from "../entities/user.entity";
 import { Email } from "../value-objects/email.vo";
 
-export interface UserRepository {
+export interface IUserRepository {
   create(user: User): Promise<User>;
   findAll(): Promise<User[]>;
   findByEmail(email: Email | string): Promise<User | null>;

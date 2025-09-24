@@ -1,15 +1,16 @@
 import { inject, injectable } from "inversify";
-import { EmailRepository } from "../../../../domain/repositories/email.repository";
-import { OTPRepository } from "../../../../domain/repositories/otp.repository";
-import { TYPES } from "../../../../presentation/container/types";
-import { OtpRequestDto, OtpResponseDto } from "../../../dto/otp.dto";
-import { GenerateNewOtp } from "../../../utils/generate-otp";
+import { IEmailRepository } from "@domain/repositories/email.repository";
+import { IOTPRepository } from "@domain/repositories/otp.repository";
+import { TYPES } from "@presentation/container/types";
+import { OtpRequestDto, OtpResponseDto } from "@application/dto/otp.dto";
+import { GenerateNewOtp } from "@application/utils/generate-otp";
+import { IGenerateOtp } from "@application/Interfaces/command/auth/generate-otp.interface";
 
 @injectable()
-export class GenerateOtpHandler {
+export class GenerateOtpHandler implements IGenerateOtp {
   constructor(
-    @inject(TYPES.OtpRepository) private otpRepository: OTPRepository,
-    @inject(TYPES.EmailRepository) private emailService: EmailRepository
+    @inject(TYPES.OtpRepository) private otpRepository: IOTPRepository,
+    @inject(TYPES.EmailRepository) private emailService: IEmailRepository
   ) {}
 
   public async execute(dto: OtpRequestDto): Promise<OtpResponseDto> {

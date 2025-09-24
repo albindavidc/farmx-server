@@ -1,13 +1,14 @@
 import { inject, injectable } from "inversify";
-import { UserRepository } from "../../../../domain/repositories/user.repository";
-import { TYPES } from "../../../../presentation/container/types";
-import { UploadProfilePhotoCommand } from "../../../commands/upload-profile-photo.command";
-import { UserDto } from "../../../dto/user.dto";
-import { UserNotFoundException } from "../../../exceptions/user-not-found.exception";
+import { IUserRepository } from "@domain/repositories/user.repository";
+import { ISettings } from "@application/Interfaces/command/auth/settings.interface";
+import { TYPES } from "@presentation/container/types";
+import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-photo.command";
+import { UserDto } from "@application/dto/user.dto";
+import { UserNotFoundException } from "@application/exceptions/user-not-found.exception";
 
 @injectable()
-export class SettingsHandler {
-  constructor(@inject(TYPES.UserRepository) private readonly userRepo: UserRepository) {}
+export class SettingsHandler implements ISettings {
+  constructor(@inject(TYPES.UserRepository) private readonly userRepo: IUserRepository) {}
 
   async executeProfilePhotoUpdate(command: UploadProfilePhotoCommand): Promise<void> {
     const user = await this.userRepo.findById(command.userId);

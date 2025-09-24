@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { OTPRepository } from "../../../../domain/repositories/otp.repository";
-import { UserRepository } from "../../../../domain/repositories/user.repository";
+import { IOTPRepository } from "../../../../domain/repositories/otp.repository";
+import { IUserRepository } from "../../../../domain/repositories/user.repository";
 import { Email } from "../../../../domain/value-objects/email.vo";
 import { TYPES } from "../../../../presentation/container/types";
 import { OtpRequestDto, OtpResponseDto } from "../../../dto/otp.dto";
@@ -10,8 +10,8 @@ import { UserNotFoundException } from "../../../exceptions/user-not-found.except
 @injectable()
 export class VerifyOtpHandler {
   constructor(
-    @inject(TYPES.OtpRepository) private otpRepository: OTPRepository,
-    @inject(TYPES.UserRepository) private userRepository: UserRepository
+    @inject(TYPES.OtpRepository) private otpRepository: IOTPRepository,
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository
   ) {}
 
   public async execute(dto: OtpRequestDto): Promise<OtpResponseDto> {

@@ -1,8 +1,8 @@
 import { Otp } from "@domain/entities/otp.entity";
-import { OTPRepository } from "@domain/repositories/otp.repository";
+import { IOTPRepository } from "@domain/repositories/otp.repository";
 import { OtpModel } from "@infrastructure/database/schemas/otp.schema";
 
-export class OtpRepositoryImpl implements OTPRepository {
+export class OtpRepositoryImpl implements IOTPRepository {
   async create(otp: { email: string; otp: string; expiresAt: Date }): Promise<Otp> {
     const createdOtp = OtpModel.create(otp);
     return createdOtp;

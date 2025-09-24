@@ -2,8 +2,8 @@ import { injectable } from "inversify";
 import mongoose, { FilterQuery, Types } from "mongoose";
 
 import {
-  AddMembershipResult,
-  CommunityRepository,
+  IAddMembershipResult,
+  ICommunityRepository,
 } from "@domain/repositories/community/community.repository";
 import { Community } from "@domain/entities/community/community.entity";
 import {
@@ -13,7 +13,7 @@ import {
 import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema";
 
 @injectable()
-export class CommunityRepositoryImpl implements CommunityRepository {
+export class CommunityRepositoryImpl implements ICommunityRepository {
   private mapToEntity(doc: CommunityDocument): Community {
     return new Community(
       doc.name,
@@ -205,7 +205,7 @@ export class CommunityRepositoryImpl implements CommunityRepository {
     }
   }
 
-  async addMember(communityId: string, userId: string): Promise<AddMembershipResult | null> {
+  async addMember(communityId: string, userId: string): Promise<IAddMembershipResult | null> {
     const session = await mongoose.startSession();
     session.startTransaction();
 

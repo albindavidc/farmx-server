@@ -1,11 +1,11 @@
 import { UserDto } from "@application/dto/user.dto";
 import { User } from "@domain/entities/user.entity";
 import { FarmerStatus } from "@domain/enums/farmer-status.enum";
-import { UserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/repositories/user.repository";
 import { Email } from "@domain/value-objects/email.vo";
 import UserSchema, { UserDocument } from "@infrastructure/database/schemas/user.schema";
 
-export class UserRepositoryImpl implements UserRepository {
+export class UserRepositoryImpl implements IUserRepository {
   private mapToEntity(userDoc: UserDocument): User {
     return new User(
       userDoc.name,

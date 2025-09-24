@@ -1,11 +1,12 @@
-import { UserRepository } from "@domain/repositories/user.repository";
+import { IUserRepository } from "@domain/repositories/user.repository";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../../presentation/container/types";
-import { UserNotFoundException } from "../../../exceptions/user-not-found.exception";
+import { TYPES } from "@presentation/container/types";
+import { UserNotFoundException } from "@application/exceptions/user-not-found.exception";
+import { IAuthChangePassword } from "@application/Interfaces/command/auth/auth-change-password.interface";
 
 @injectable()
-export class AuthChangePasswordHandler {
-  constructor(@inject(TYPES.UserRepository) private userRepo: UserRepository) {}
+export class AuthChangePasswordHandler implements IAuthChangePassword {
+  constructor(@inject(TYPES.UserRepository) private userRepo: IUserRepository) {}
 
   async changePassword(
     userId: string,
