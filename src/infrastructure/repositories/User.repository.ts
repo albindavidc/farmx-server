@@ -4,36 +4,9 @@ import { EmailVO } from "@domain/value-objects/user/email.vo";
 import UserSchema from "@infrastructure/database/schemas/user.schema";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { UserMapper } from "@application/mappers/user.mapper";
+import { PasswordVO } from "../../domain/value-objects/user/password.vo";
 
 export class UserRepositoryImpl implements IUserRepository {
-  // private mapToEntity(userDoc: IUserDocument): User {
-  //   return new User(
-  //     userDoc.name,
-  //     userDoc.email,
-  //     userDoc.password,
-  //     userDoc.role,
-  //     userDoc.phone,
-  //     userDoc._id.toString(),
-  //     userDoc.isVerified,
-  //     userDoc.isAdmin,
-  //     userDoc.isBlocked,
-  //     userDoc.googleId,
-
-  //     userDoc.isFarmer,
-  //     userDoc.farmerStatus as FarmerStatus,
-  //     userDoc.farmerRegId,
-  //     userDoc.experience,
-  //     userDoc.qualification,
-  //     userDoc.expertise,
-  //     userDoc.awards,
-  //     userDoc.profilePhoto,
-  //     userDoc.bio,
-  //     userDoc.courseProgress ?? [],
-  //     userDoc.reason,
-  //     userDoc.courseCertificate ?? []
-  //   );
-  // }
-
   async create(user: User): Promise<User> {
     const userDoc = new UserSchema(user);
     await userDoc.save();
@@ -47,24 +20,24 @@ export class UserRepositoryImpl implements IUserRepository {
 
   async findByEmail(email: EmailVO): Promise<User | null> {
     const userDoc = await UserSchema.findOne({ email }).exec();
-    return userDoc ? this.mapToEntity(userDoc) : null;
+    return userDoc ? UserMapper.fromPersistence(userDoc) : null;
   }
 
   async findById(id: string): Promise<User | null> {
     const userDoc = await UserSchema.findById(id).exec();
-    return userDoc ? this.mapToEntity(userDoc) : null;
+    return userDoc ? UserMapper.fromPersistence(userDoc) : null;
   }
 
   async update(id: string, user: Partial<User>): Promise<User | null> {
     const userDoc = await UserSchema.findByIdAndUpdate(id, user, {
       new: true,
     }).exec();
-    return userDoc ? this.mapToEntity(userDoc) : null;
+    return userDoc ? UserMapper.fromPersistence(userDoc) : null;
   }
 
   async setRole(userId: string, role: string): Promise<User | null> {
     const userdoc = await UserSchema.findByIdAndUpdate(userId, { role }, { new: true });
-    return userdoc ? this.mapToEntity(userdoc) : null;
+    return userdoc ? UserMapper.fromPersistence(userdoc) : null;
   }
 
   async googleAuthLogin(userData: Partial<UserDto>): Promise<{ user: User; isNewUser: boolean }> {
@@ -84,7 +57,7 @@ export class UserRepositoryImpl implements IUserRepository {
       isNewUser = true;
     }
 
-    return { user: this.mapToEntity(userDoc), isNewUser };
+    return { user: UserMapper.fromPersistence(userDoc), isNewUser };
   }
 
   async getProfilePhotoPath(userId: string | number): Promise<string | null> {
@@ -96,15 +69,14 @@ export class UserRepositoryImpl implements IUserRepository {
     const user = await this.findById(id);
 
     if (!user) throw new Error("User not found");
-    user.password = newPasswordHash;
+    const hashedPassword = await PasswordVO.hash(newPasswordHash);
 
-    const hashedPassword = await user.getHashedPassword();
     const updatedDoc = await UserSchema.findByIdAndUpdate(
       id,
       { password: hashedPassword },
       { new: true, lean: true }
     ).exec();
-    return updatedDoc ? this.mapToEntity(updatedDoc) : null;
+    return updatedDoc ? UserMapper.fromPersistence(updatedDoc) : null;
   }
 
   async validatePassword(id: string, oldPassword: string): Promise<boolean> {
