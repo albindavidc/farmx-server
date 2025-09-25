@@ -8,7 +8,7 @@ export class Email {
   }
 
   static create(email: string): Email {
-    return new Email(email);
+    return new Email(email.toLowerCase());
   }
 
   toString(): string {

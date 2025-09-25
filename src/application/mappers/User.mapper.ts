@@ -7,7 +7,7 @@ export class UserMapper {
       _id: user._id,
       name: user.name,
       email: user.email,
-      password: user.password,
+      // password: user.password, // Exclude password for security reasons
       role: user.role,
       phone: user.phone,
       isVerified: user.isVerified,

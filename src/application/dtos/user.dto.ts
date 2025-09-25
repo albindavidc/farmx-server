@@ -1,6 +1,6 @@
 import { FarmerStatus } from "../../domain/enums/farmer-status.enum";
 import { Password } from "../../domain/value-objects/password.vo";
-import { CourseProgress, UserCertificate } from "../../infrastructure/database/schemas/user.schema";
+import { ICourseProgress, IUserCertificate } from "../../infrastructure/database/schemas/user.schema";
 
 export interface UserDto {
   _id?: string;
@@ -23,9 +23,9 @@ export interface UserDto {
   awards?: string[];
   profilePhoto?: string;
   bio?: string;
-  courseProgress?: CourseProgress[];
+  courseProgress?: ICourseProgress[];
   reason?: string;
-  courseCertificate?: UserCertificate[];
+  courseCertificate?: IUserCertificate[];
 }
 
 export type SignupRequestDto = Pick<UserDto, "name" | "email" | "password" | "role" | "phone">;

@@ -1,4 +1,4 @@
-import { CourseProgress, UserCertificate } from "../../infrastructure/database/schemas/user.schema";
+import {ICourseProgress, IUserCertificate} from "@infrastructure/database/schemas/user.schema";
 import { FarmerStatus } from "../enums/farmer-status.enum";
 import { Password } from "../value-objects/password.vo";
 
@@ -26,9 +26,9 @@ export class User {
     public awards?: string[],
     public profilePhoto?: string,
     public bio?: string,
-    public courseProgress?: CourseProgress[],
+    public courseProgress?: ICourseProgress[],
     public reason?: string,
-    public courseCertificate?: UserCertificate[]
+    public courseCertificate?: IUserCertificate[]
   ) {
     this._password =
       typeof password === "string" ? Password.hash(password) : Promise.resolve(password);

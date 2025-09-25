@@ -1,4 +1,4 @@
-import { UserDto } from "../../dto/user.dto";
+import {UserDto} from "@application/dtos/user.dto";
 
 export class CreateUserCommand {
   constructor(public readonly dto: UserDto) {}
