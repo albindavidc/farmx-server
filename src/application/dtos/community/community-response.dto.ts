@@ -8,7 +8,7 @@ export class CommunityResponseDto {
   createdAt: Date;
   membersCount: number;
   imageUrl?: string;
-  categories: string[];
+  categories?: string[];
 
   constructor(data: {
     id: string;

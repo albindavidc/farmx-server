@@ -97,15 +97,6 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
     }
   }
 
-  // async update(id: string, communityData: Partial<Community>): Promise<Community | null> {
-  //   const updatedCommunity = await CommunityModel.findByIdAndUpdate(
-  //     id,
-  //     { $set: communityData },
-  //     { new: true }
-  //   );
-  //   return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
-  // }
-
   async update(id: string, communityData: Partial<Community>): Promise<Community | null> {
     try {
       const updateData: Partial<ICommunityDocument> = {};

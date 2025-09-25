@@ -1,11 +1,11 @@
 import { UserDto } from "../../application/dtos/user.dto";
 import { User } from "../entities/user.entity";
-import { Email } from "../value-objects/user/email.vo";
+import { EmailVO } from "@domain/value-objects/user/email.vo";
 
 export interface IUserRepository {
   create(user: User): Promise<User>;
   findAll(): Promise<User[]>;
-  findByEmail(email: Email | string): Promise<User | null>;
+  findByEmail(email: EmailVO | string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
   update(id: string, user: Partial<User>): Promise<User | null>;
 

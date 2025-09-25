@@ -56,7 +56,7 @@ export class Community {
     return this.createdAt;
   }
 
-  getMemberCount(): number {
+  getMembersCount(): number {
     return this.membersCount;
   }
 
