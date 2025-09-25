@@ -1,10 +1,10 @@
-export class UserNameVO {
+export class NameVO {
   private constructor(private readonly value: string) {}
 
-  static create(name: string): UserNameVO {
+  static create(name: string): NameVO {
     if (name.length < 2 || !name || name.length > 50) {
       throw new Error("Invalid name");
     }
-    return new UserNameVO(name);
+    return new NameVO(name);
   }
 }

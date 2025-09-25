@@ -1,12 +1,12 @@
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { inject, injectable } from "inversify";
-import { ISignUp } from "@application/interfaces/command/auth/signup.interface";
-import { User } from "@domain/entities/user.entity";
-import { Email } from "@domain/value-objects/email.vo";
-import { TYPES } from "@presentation/container/types";
 import { SignupRequestDto, UserDto } from "@application/dtos/user.dto";
 import { UserExistsException } from "@application/exceptions/user-exists.exception";
+import { ISignUp } from "@application/interfaces/command/auth/signup.interface";
 import { UserMapper } from "@application/mappers/user.mapper";
+import { User } from "@domain/entities/user.entity";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface";
+import { Email } from "@domain/value-objects/user/email.vo";
+import { TYPES } from "@presentation/container/types";
+import { inject, injectable } from "inversify";
 
 @injectable()
 export class CreateUserHandler implements ISignUp {

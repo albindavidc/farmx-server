@@ -1,6 +1,6 @@
 import { UserDto } from "../../application/dtos/user.dto";
 import { User } from "../entities/user.entity";
-import { Email } from "../value-objects/email.vo";
+import { Email } from "../value-objects/user/email.vo";
 
 export interface IUserRepository {
   create(user: User): Promise<User>;

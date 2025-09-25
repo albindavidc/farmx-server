@@ -1,4 +1,3 @@
-import { inject, injectable } from "inversify";
 import {
   generateAcessToken,
   generateRefreshToken,
@@ -6,8 +5,9 @@ import {
   verifyRefreshToken,
 } from "@application/utils/token-utility";
 import { User } from "@domain/entities/user.entity";
-import { Email } from "@domain/value-objects/email.vo";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
+import { Email } from "@domain/value-objects/user/email.vo";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../presentation/container/types";
 
 @injectable()

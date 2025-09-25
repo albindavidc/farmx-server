@@ -5,14 +5,17 @@ export interface ICourseProgress {
   progress: number;
   completedChapters: string[];
   totalChapters: number;
+  startedAt?: Date;
+  completedAt?: Date;
 }
 
 export interface IUserCertificate {
   courseId: string;
   status: "approved" | "unavailable";
+  certificateId: string;
   certificateUrl?: string;
-  issusedDate?: Date;
   approvedBy?: string;
+  issusedAt?: Date;
 }
 
 export interface IUserDocument extends Document {

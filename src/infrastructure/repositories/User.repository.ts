@@ -2,7 +2,7 @@ import { UserDto } from "@application/dtos/user.dto";
 import { User } from "@domain/entities/user.entity";
 import { FarmerStatus } from "@domain/enums/farmer-status.enum";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { Email } from "@domain/value-objects/email.vo";
+import { Email } from "@domain/value-objects/user/email.vo";
 import UserSchema, { IUserDocument } from "@infrastructure/database/schemas/user.schema";
 
 export class UserRepositoryImpl implements IUserRepository {

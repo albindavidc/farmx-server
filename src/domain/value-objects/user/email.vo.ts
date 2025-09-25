@@ -1,4 +1,4 @@
-export class Email {
+export class EmailVO {
   private readonly value: string;
   private constructor(email: string) {
     if (!this.isValid(email)) {
@@ -7,8 +7,8 @@ export class Email {
     this.value = email;
   }
 
-  static create(email: string): Email {
-    return new Email(email.toLowerCase());
+  static create(email: string): EmailVO {
+    return new EmailVO(email.toLowerCase());
   }
 
   toString(): string {
