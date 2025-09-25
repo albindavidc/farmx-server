@@ -18,10 +18,19 @@ export interface IUserCertificate {
   issusedAt?: Date;
 }
 
+export interface IFarmerProfile {
+  farmerStatus?: "pending" | "approved" | "rejected";
+  farmerRegId: string;
+  experience?: number;
+  qualification?: string;
+  expertise?: string[];
+  awards?: string[];
+}
+
 export interface IUserDocument extends Document {
   name: string;
   email: string;
-  password: string;
+  hashedPassword: string;
   role: string;
   phone: string;
   _id: string;
@@ -31,17 +40,13 @@ export interface IUserDocument extends Document {
   googleId?: string;
 
   isFarmer: boolean;
-  farmerStatus?: "pending" | "approved" | "rejected";
-  farmerRegId: string;
-  experience?: number;
-  qualification?: string;
-  expertise?: string[];
-  awards?: string[];
+  farmerProfile: IFarmerProfile;
   profilePhoto?: string;
   bio?: string;
   courseProgress?: ICourseProgress[];
   reason?: string;
   courseCertificate?: IUserCertificate[];
+  timestamps: { createdAt: Date; updatedAt: Date };
 }
 
 const UserSchema: Schema = new Schema(
@@ -57,16 +62,19 @@ const UserSchema: Schema = new Schema(
     googleId: { type: String },
 
     isFarmer: { type: Boolean, default: false },
-    farmerRegId: { type: String },
-    experience: { type: Number },
-    qualification: { type: String },
-    expertise: { type: [String] },
-    awards: { type: [String] },
-    farmerStatus: {
-      type: String,
-      default: "pending",
-      enum: ["pending", "approved", "rejected"],
+    farmerProfile: {
+      farmerRegId: { type: String },
+      experience: { type: Number },
+      qualification: { type: String },
+      expertise: { type: [String] },
+      awards: { type: [String] },
+      farmerStatus: {
+        type: String,
+        default: "pending",
+        enum: ["pending", "approved", "rejected"],
+      },
     },
+
     profilePhoto: { type: String },
     bio: { type: String },
     courseProgress: {

@@ -5,8 +5,31 @@ import { EmailVO } from "@domain/value-objects/user/email.vo";
 import { RoleVO } from "@domain/value-objects/user/role.vo";
 import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo";
 import { FarmerProfile } from "@domain/entities/user.entity";
-import { ICourseProgress } from "@infrastructure/database/schemas/user.schema";
+import { ICourseProgress, IUserDocument } from "@infrastructure/database/schemas/user.schema";
 import { IUserCertificate } from "@infrastructure/database/schemas/user.schema";
+import { FarmerStatus } from "@domain/enums/farmer-status.enum";
+
+export interface IPersistenceData {
+  _id: string;
+  name: string;
+  email: string;
+  hashedPassword: string;
+  role: string;
+  phone: string;
+  isVerified: boolean;
+  isAdmin: boolean;
+  isBlocked: boolean;
+  googleId?: string;
+
+  isFarmer: boolean;
+  farmerProfile?: FarmerProfile;
+  profilePhoto?: string;
+  bio?: string;
+  courseProgress: ICourseProgress[];
+  courseCertificate: IUserCertificate[];
+  reason?: string;
+  timestamps: { createdAt: Date; updatedAt: Date };
+}
 
 export class UserMapper {
   static toDto(user: User): Partial<UserDto> {
@@ -161,5 +184,66 @@ export class UserMapper {
       courseCertificate: updates.courseCertificate ?? entity.courseCertificate,
       timestamps: { createdAt: entity.timestamps.createdAt, updatedAt: new Date() },
     });
+  }
+
+  static fromPersistence(persistence: IUserDocument): User {
+    return User.reconstitute({
+      id: persistence._id.toString(),
+      name: persistence.name,
+      email: persistence.email,
+      hashedPassword: persistence.hashedPassword,
+      role: persistence.role,
+      phone: persistence.phone,
+      isVerified: persistence.isVerified,
+      isAdmin: persistence.isAdmin,
+      isBlocked: persistence.isBlocked,
+      isFarmer: persistence.isFarmer,
+      farmerProfile: persistence.farmerProfile
+        ? new FarmerProfile(
+            persistence.farmerProfile.farmerStatus as FarmerStatus,
+            persistence.farmerProfile.farmerRegId,
+            persistence.farmerProfile.experience,
+            persistence.farmerProfile.qualification,
+            persistence.farmerProfile.expertise,
+            persistence.farmerProfile.awards
+          )
+        : undefined,
+      profilePhoto: persistence.profilePhoto,
+      bio: persistence.bio,
+      courseProgress: persistence.courseProgress,
+      reason: persistence.reason,
+      courseCertificate: persistence.courseCertificate,
+      timestamps: {
+        createdAt: persistence.timestamps.createdAt,
+        updatedAt: persistence.timestamps.updatedAt,
+      },
+      googleId: persistence.googleId,
+    });
+  }
+
+  static toPersistence(user: User): IPersistenceData {
+    return {
+      _id: user.id.value,
+      name: user.name.value,
+      email: user.email.value,
+      hashedPassword: user.hashedPassword.hashedPassword,
+      role: user.role.value,
+      phone: user.phone.value,
+      isVerified: user.isVerified,
+      isAdmin: user.isAdmin,
+      isBlocked: user.isBlocked,
+      isFarmer: user.isFarmer,
+      farmerProfile: user.farmerProfile,
+      profilePhoto: user.profilePhoto,
+      bio: user.bio,
+      courseProgress: user.courseProgress,
+      reason: user.reason,
+      courseCertificate: user.courseCertificate,
+      timestamps: {
+        createdAt: user.timestamps.createdAt,
+        updatedAt: user.timestamps.updatedAt,
+      },
+      googleId: user.googleId,
+    };
   }
 }

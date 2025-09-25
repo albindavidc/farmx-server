@@ -1,50 +1,51 @@
 import { UserDto } from "@application/dtos/user.dto";
 import { User } from "@domain/entities/user.entity";
-import { FarmerStatus } from "@domain/enums/farmer-status.enum";
+import { EmailVO } from "@domain/value-objects/user/email.vo";
+import UserSchema from "@infrastructure/database/schemas/user.schema";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { Email } from "@domain/value-objects/user/email.vo";
-import UserSchema, { IUserDocument } from "@infrastructure/database/schemas/user.schema";
+import { UserMapper } from "@application/mappers/user.mapper";
 
 export class UserRepositoryImpl implements IUserRepository {
-  private mapToEntity(userDoc: IUserDocument): User {
-    return new User(
-      userDoc.name,
-      userDoc.email,
-      userDoc.password,
-      userDoc.role,
-      userDoc.phone,
-      userDoc._id.toString(),
-      userDoc.isVerified,
-      userDoc.isAdmin,
-      userDoc.isBlocked,
-      userDoc.googleId,
+  // private mapToEntity(userDoc: IUserDocument): User {
+  //   return new User(
+  //     userDoc.name,
+  //     userDoc.email,
+  //     userDoc.password,
+  //     userDoc.role,
+  //     userDoc.phone,
+  //     userDoc._id.toString(),
+  //     userDoc.isVerified,
+  //     userDoc.isAdmin,
+  //     userDoc.isBlocked,
+  //     userDoc.googleId,
 
-      userDoc.isFarmer,
-      userDoc.farmerStatus as FarmerStatus,
-      userDoc.farmerRegId,
-      userDoc.experience,
-      userDoc.qualification,
-      userDoc.expertise,
-      userDoc.awards,
-      userDoc.profilePhoto,
-      userDoc.bio,
-      userDoc.courseProgress ?? [],
-      userDoc.reason,
-      userDoc.courseCertificate ?? []
-    );
-  }
+  //     userDoc.isFarmer,
+  //     userDoc.farmerStatus as FarmerStatus,
+  //     userDoc.farmerRegId,
+  //     userDoc.experience,
+  //     userDoc.qualification,
+  //     userDoc.expertise,
+  //     userDoc.awards,
+  //     userDoc.profilePhoto,
+  //     userDoc.bio,
+  //     userDoc.courseProgress ?? [],
+  //     userDoc.reason,
+  //     userDoc.courseCertificate ?? []
+  //   );
+  // }
 
   async create(user: User): Promise<User> {
     const userDoc = new UserSchema(user);
     await userDoc.save();
-    return this.mapToEntity(userDoc);
+    return UserMapper.fromPersistence(userDoc);
   }
 
   async findAll(): Promise<User[]> {
-    return UserSchema.find();
+    const userDocs = await UserSchema.find().exec();
+    return userDocs.map((userDoc) => UserMapper.fromPersistence(userDoc));
   }
 
-  async findByEmail(email: Email): Promise<User | null> {
+  async findByEmail(email: EmailVO): Promise<User | null> {
     const userDoc = await UserSchema.findOne({ email }).exec();
     return userDoc ? this.mapToEntity(userDoc) : null;
   }
