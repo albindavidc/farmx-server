@@ -1,5 +1,5 @@
 export class EmailVO {
-  private readonly value: string;
+  public readonly value: string;
   private constructor(email: string) {
     if (!this.isValid(email)) {
       throw new Error("Invalid email address");

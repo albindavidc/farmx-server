@@ -1,7 +1,7 @@
 import * as argon2 from "argon2";
 
 export class PasswordVO {
-  private constructor(private readonly hashedPassword: string) {}
+  private constructor(public readonly hashedPassword: string) {}
 
   /* Creates a hashed password from plain text */
   public static async hash(plainText: string): Promise<PasswordVO> {
@@ -13,6 +13,10 @@ export class PasswordVO {
         parallelism: 1,
       })
     );
+  }
+
+  public static create(hashedPassword: string): PasswordVO {
+    return new PasswordVO(hashedPassword);
   }
 
   /* Compares plain text with stored hash */

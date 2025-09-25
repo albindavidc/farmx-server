@@ -1,5 +1,5 @@
 export class NameVO {
-  private constructor(private readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
   static create(name: string): NameVO {
     if (name.length < 2 || !name || name.length > 50) {

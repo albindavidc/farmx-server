@@ -1,12 +1,13 @@
 import { isValidObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 export class UserIdVO {
-  private constructor(private readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
-  static create(id: string): UserIdVO {
+  static create(id?: string): UserIdVO {
     if (!id || !isValidObjectId(id)) {
       throw new Error("Invalid User ID");
     }
-    return new UserIdVO(id);
+    return new UserIdVO(id || new Types.ObjectId().toString());
   }
 }

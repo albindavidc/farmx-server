@@ -3,7 +3,7 @@ export class RoleVO {
   static readonly USER = "user";
   static readonly FARMER = "farmer";
 
-  private constructor(private readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
   static create(role: string): RoleVO {
     const validRoles = [this.ADMIN, this.USER, this.FARMER];

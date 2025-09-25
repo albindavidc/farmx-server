@@ -1,5 +1,5 @@
 export class PhoneNumberVO {
-  private constructor(private readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
   static create(phone: string): PhoneNumberVO {
     const cleaned = phone.replace(/\D/g, "");

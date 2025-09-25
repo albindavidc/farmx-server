@@ -5,6 +5,7 @@ import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo";
 import { NameVO } from "@domain/value-objects/user/name.vo";
 import { PasswordVO } from "@domain/value-objects/user/password.vo";
 import { RoleVO } from "@domain/value-objects/user/role.vo";
+import { UserIdVO } from "@domain/value-objects/user/user-id.vo";
 
 export class FarmerProfile {
   constructor(
@@ -34,7 +35,7 @@ export class User {
       createdAt: Date;
       updatedAt: Date;
     },
-    public readonly _id?: string,
+    public readonly id: UserIdVO,
     public readonly googleId?: string,
 
     public readonly farmerProfile?: FarmerProfile,
@@ -54,17 +55,20 @@ export class User {
     role?: string;
     phone?: string;
     googleId?: string;
+    farmerProfile?: FarmerProfile;
+    isFarmer?: boolean;
   }): Promise<User> {
+    const id = UserIdVO.create();
     const name = NameVO.create(createProps.name);
     const email = EmailVO.create(createProps.email);
     const role = RoleVO.create(createProps.role || RoleVO.USER);
     const phone = PhoneNumberVO.create(createProps.phone || "");
-    const password = await PasswordVO.hash(createProps.password);
+    const hashedPassword = await PasswordVO.hash(createProps.password);
 
     return new User(
       name,
       email,
-      password,
+      hashedPassword,
       role,
       phone,
       false,
@@ -74,8 +78,53 @@ export class User {
       [],
       [],
       { createdAt: new Date(), updatedAt: new Date() },
-      undefined,
+      id,
       createProps.googleId
+    );
+  }
+
+  static reconstitute(reconstituteProps: {
+    name: string;
+    email: string;
+    hashedPassword: string;
+    role: string;
+    phone: string;
+    isVerified: boolean;
+    isAdmin: boolean;
+    isBlocked: boolean;
+    isFarmer: boolean;
+    courseCertificate?: IUserCertificate[];
+    courseProgress?: ICourseProgress[];
+    timestamps: {
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    id: string;
+    googleId?: string;
+    farmerProfile?: FarmerProfile;
+    profilePhoto?: string;
+    bio?: string;
+    reason?: string;
+  }): User {
+    return new User(
+      NameVO.create(reconstituteProps.name),
+      EmailVO.create(reconstituteProps.email),
+      PasswordVO.create(reconstituteProps.hashedPassword),
+      RoleVO.create(reconstituteProps.role),
+      PhoneNumberVO.create(reconstituteProps.phone),
+      reconstituteProps.isVerified,
+      reconstituteProps.isAdmin,
+      reconstituteProps.isBlocked,
+      reconstituteProps.isFarmer,
+      reconstituteProps.courseCertificate,
+      reconstituteProps.courseProgress,
+      reconstituteProps.timestamps,
+      UserIdVO.create(reconstituteProps.id),
+      reconstituteProps.googleId,
+      reconstituteProps.farmerProfile,
+      reconstituteProps.profilePhoto,
+      reconstituteProps.bio,
+      reconstituteProps.reason
     );
   }
 }
