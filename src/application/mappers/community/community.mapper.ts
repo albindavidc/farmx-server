@@ -62,7 +62,7 @@ export class CommunityMapper {
     };
   }
 
-  static entitysToDtos(entities: Community[]): CommunityResponseDto[] {
+  static entitiesToDtos(entities: Community[]): CommunityResponseDto[] {
     return entities.map((entity) => this.entityToDto(entity));
   }
 }

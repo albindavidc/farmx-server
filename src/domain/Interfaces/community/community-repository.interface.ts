@@ -1,6 +1,6 @@
 import mongoose, { FilterQuery } from "mongoose";
-import {Community} from "@domain/entities/community/community.entity";
-import {CommunityResponseDto} from "@application/dtos/community/community-response.dto";
+import { Community } from "@domain/entities/community/community.entity";
+import { CommunityResponseDto } from "@application/dtos/community/community-response.dto";
 
 export interface ICommunityMember {
   userId: mongoose.Types.ObjectId;
@@ -16,7 +16,7 @@ export interface IAddMembershipResult {
 
 export interface ICommunityRepository {
   create(community: Community): Promise<CommunityResponseDto>;
-  findById(id: string): Promise<CommunityResponseDto | null>;
+  findById(id: string): Promise<Community>;
   findByCreatedById(createdById: string): Promise<Community[]>;
   findAll(): Promise<Community[]>;
   update(id: string, community: Partial<Community>): Promise<Community | null>;
@@ -36,5 +36,5 @@ export interface ICommunityRepository {
   exists(id: string): Promise<boolean>;
 
   addMember(communityId: string, userId: string): Promise<IAddMembershipResult | null>;
-  removeMember(communityId: string, userId: string): Promise<Community | null>;
+  removeMember(communityId: string, userId: string): Promise<Community >;
 }

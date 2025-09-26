@@ -1,6 +1,6 @@
 import {LoadCommunityQuery} from "@application/queries/community/load-community.query";
-import {Community} from "@domain/entities/community/community.entity";
+import {CommunityResponseDto} from "@application/dtos/community/community-response.dto";
 
 export interface ILoadCommunity{
-    execute(query: LoadCommunityQuery): Promise<Community | null>;
+    execute(query: LoadCommunityQuery): Promise<CommunityResponseDto>;
 }

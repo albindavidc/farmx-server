@@ -3,12 +3,12 @@ import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-
 import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler";
 import sendResponseJson from "@application/utils/message";
 import { IEmailRepository } from "@domain/interfaces/email-repository.interface";
-import { Email } from "@domain/value-objects/user/email.vo";
 import { AuthService } from "@infrastructure/services/auth.service";
 import { TYPES } from "@presentation/container/types";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
+import { EmailVO } from "@domain/value-objects/user/email.vo";
 
 @injectable()
 export class OtpController {
@@ -75,7 +75,7 @@ export class OtpController {
       const isValid = await this.verifyOtp.execute(otpRequest);
 
       // Issue tokens upon signup
-      const newEmail = Email.create(email);
+      const newEmail = EmailVO.create(email);
       const { user, accessToken, refreshToken } = await this.authService.verifyOtp(newEmail);
 
       res.cookie("refreshToken", refreshToken, {

@@ -48,4 +48,9 @@ export const TYPES = {
   GetCommunityPostsQueryHandler: Symbol.for("GetCommunityPostsQueryHandler"),
   PostController: Symbol.for("PostController"),
   CommunityImageUploadMiddleware: Symbol.for("CommunityImageUploadMiddleware"),
+
+  //* ========== Mappers ========== *//
+  UserMapper: Symbol.for("UserMapper"),
+  CommunityMapper: Symbol.for("CommunityMapper"),
+  PostMapper: Symbol.for("PostMapper"),
 };

@@ -6,7 +6,6 @@ import { UpdateCommunityCommand } from "@application/commands/community/update-c
 import { DeleteCommunityCommand } from "@application/commands/community/delete-community.command";
 import { LoadCommunityQuery } from "@application/queries/community/load-community.query";
 import { UpdateCommunityRequestDto } from "@application/dtos/community/update-community.dto";
-// import {CommandHandler} from "@application/interfaces/command.interface";
 import { LoadCommunityHandler } from "@application/handlers/query/community/load-community.handler";
 import { LoadCommunitiesHandler } from "@application/handlers/query/community/load-communities.handler";
 import { ListCommunitiesHandler } from "@application/handlers/query/community/list-communities.handler";
@@ -21,6 +20,8 @@ import { CustomError } from "@presentation/middlewares/error-handler.middleware"
 import { CreateCommunityHandler } from "@application/handlers/command/community/create-community.handler";
 import { JoinCommunityCommand } from "@application/commands/community/join-community-command";
 import { LeaveCommunityCommand } from "@application/commands/community/leave-community.command";
+import { CommunityMapper } from "@application/mappers/community/community.mapper";
+import { CreateCommunityRequestDto } from "@application/dtos/community/community-request.dto";
 
 @injectable()
 export class CommunityController {
@@ -43,16 +44,28 @@ export class CommunityController {
     try {
       const { name, description, categories, imageUrl } = req.body;
       const userId = req.user?.id;
-      //   let imageUrl: string | undefined;
-      //   if (req.file) {
-      //     imageUrl = this.imageUploadService.getImageUrl(req.file.filename);
-      //   }
 
-      const command = new CreateCommunityCommand(name, description, userId, imageUrl, categories);
+      const createDto: CreateCommunityRequestDto = {
+        name: name?.trim(),
+        description: description?.trim(),
+        createdBy: userId,
+        categories: categories?.map((cat: string) => cat.trim()),
+        imageUrl,
+      };
 
-      const community = await this.createCommunityHandler.execute(command);
+      const command = CommunityMapper.dtoToEntity(createDto);
+      const commandEntity = new CreateCommunityCommand(
+        command.name,
+        command.description,
+        command.createdBy,
+        command.imageUrl,
+        command.categories
+      );
 
-      res.status(201).json(community);
+      const community = await this.createCommunityHandler.execute(commandEntity);
+      const responseDto = CommunityMapper.entityToDto(community);
+
+      res.status(201).json(responseDto);
     } catch (error) {
       console.error("Error creating community:", error);
       res
@@ -84,14 +97,16 @@ export class CommunityController {
     try {
       const communityId = req.params.id;
       const command = new LoadCommunityQuery(communityId);
-      const community = this.loadCommunityHandler.execute(command);
+      const community = await this.loadCommunityHandler.execute(command);
 
       if (!community) {
         sendResponseJson(res, StatusCodes.BAD_REQUEST, "Community not found", false);
         return;
       }
 
-      sendResponseJson(res, StatusCodes.OK, "Community get Successfull", true, community);
+      const responseDto = CommunityMapper.entityToDto(community);
+
+      sendResponseJson(res, StatusCodes.OK, "Community get Successfull", true, responseDto);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal server error";
 
@@ -107,7 +122,8 @@ export class CommunityController {
       // console.log('this is createdbyid',createdById)
 
       // console.log("this is communities", communites);
-      sendResponseJson(res, StatusCodes.OK, "Communites got successfully", true, communites);
+      const communityEntities = CommunityMapper.entitiesToDtos(communites);
+      sendResponseJson(res, StatusCodes.OK, "Communites got successfully", true, communityEntities);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal server error";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
@@ -144,12 +160,14 @@ export class CommunityController {
         filter,
       });
 
+      const communityDtos = CommunityMapper.entitiesToDtos(result.communities || []);
+
       // console.log(result, " this is the result that we are sending to the front-end");
 
       res.status(200).json({
         success: true,
         message: "Communities retrieved successfully",
-        items: result.communities || [],
+        items: communityDtos || [],
         totalItems: result.total || 0,
         totalPages: Math.ceil((result.total || 0) / (result.limit || 1)),
         currentPage: result.page || 1,
@@ -163,6 +181,7 @@ export class CommunityController {
           hasPrev: result.page > 1,
         },
         statusCode: 200,
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -249,8 +268,9 @@ export class CommunityController {
 
       const command = new JoinCommunityCommand(communityId, userId);
       const community = await this.joinCommunityHandler.execute(command);
+      const responseDto = CommunityMapper.entityToDto(community);
 
-      sendResponseJson(res, StatusCodes.OK, "Successfully joined community", true, community);
+      sendResponseJson(res, StatusCodes.OK, "Successfully joined community", true, responseDto);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal server error";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
@@ -268,13 +288,14 @@ export class CommunityController {
 
       const command = new LeaveCommunityCommand(communityId, userId);
       const community = await this.leaveCommunityHandler.execute(command);
+      const responseDto = CommunityMapper.entityToDto(community);
 
       sendResponseJson(
         res,
         StatusCodes.OK,
         "Successfully leaved from the community",
         true,
-        community
+        responseDto
       );
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";

@@ -11,7 +11,7 @@ export class JoinCommunityHandler implements IJoinCommunity {
     @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
 
-  async execute(command: JoinCommunityCommand): Promise<Community | null> {
+  async execute(command: JoinCommunityCommand): Promise<Community> {
     const result = await this.communityRepository.addMember(command.communityId, command.userId);
 
     if (!result?.community) {

@@ -5,6 +5,8 @@ import { IUpdateCommunity } from "@application/interfaces/command/community/upda
 import { CommunityResponseDto } from "@application/dtos/community/community-response.dto";
 import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
 
+import { CommunityMapper } from "@application/mappers/community/community.mapper";
+
 @injectable()
 export class UpdateCommunityCommandHandler implements IUpdateCommunity {
   constructor(
@@ -20,27 +22,33 @@ export class UpdateCommunityCommandHandler implements IUpdateCommunity {
       throw new Error(`Community with ID '${id}' not found`);
     }
 
+    const communityEntity = CommunityMapper.updateDtoToEntity(data, community);
+
+    if (!communityEntity) {
+      throw new Error("Failed to update community");
+    }
+
     // Update the community entity
     if (data.name !== undefined) {
-      community.updateName(data.name);
+      communityEntity.name = data.name.trim();
 
       // Check if the new name is already taken by another community
       const existingCommunity = await this.communityRepository.findByName(data.name);
-      if (existingCommunity && existingCommunity.getId() !== id) {
+      if (existingCommunity && existingCommunity.id !== id) {
         throw new Error(`Community with name '${data.name}' already exists`);
       }
     }
 
     if (data.description !== undefined) {
-      community.updateDescription(data.description);
+      communityEntity.description = data.description.trim();
     }
 
     if (data.imageUrl !== undefined) {
-      community.updateImageUrl(data.imageUrl);
+      communityEntity.imageUrl = data.imageUrl;
     }
 
     if (data.categories !== undefined) {
-      community.updateCategories(data.categories);
+      communityEntity.categories = data.categories;
     }
 
     // Save the updated community
@@ -50,19 +58,6 @@ export class UpdateCommunityCommandHandler implements IUpdateCommunity {
       throw new Error("Failed to update community ");
     }
 
-    // Return the response DTO
-    return CommunityResponseDto.fromEntity({
-      id: updatedCommunity.getId(),
-      name: updatedCommunity.getName(),
-      description: updatedCommunity.getDescription(),
-      isActive: updatedCommunity.getIsActive(),
-      createdBy: updatedCommunity.getCreatedBy(),
-      createdAt: updatedCommunity.getCreatedAt(),
-      membersCount: updatedCommunity.getMemberCount
-        ? updatedCommunity.getMemberCount()
-        : updatedCommunity.getMemberCount?.() || 0,
-      imageUrl: updatedCommunity.getImageUrl(),
-      categories: updatedCommunity.getCategories(),
-    });
+    return CommunityMapper.entityToDto(updatedCommunity);
   }
 }

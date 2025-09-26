@@ -11,7 +11,7 @@ export class LeaveCommunityHandler implements ILeaveCommunity {
     @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
 
-  async execute(command: LeaveCommunityCommand): Promise<Community | null> {
+  async execute(command: LeaveCommunityCommand): Promise<Community> {
     return this.communityRepository.removeMember(command.communityId, command.userId);
   }
 }

@@ -5,7 +5,6 @@ import { Types } from "mongoose";
 import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
 import {
   CommunitiesListResponseDto,
-  CommunityResponseDto,
 } from "@application/dtos/community/community-response.dto";
 import { IListCommunities } from "@application/interfaces/query/community/list-communities.interface";
 
@@ -58,14 +57,14 @@ export class ListCommunitiesHandler implements IListCommunities {
       filter,
     });
 
-    // Map to response DTOs
-    const communityDtos = communities.map((community) =>
-      CommunityResponseDto.fromEntity(community.toObject())
-    );
+    // // Map to response DTOs
+    // const communityDtos = communities.map((community) =>
+    //   CommunityResponseDto.fromEntity(community.toObject())
+    // );
 
     // Return response
     return new CommunitiesListResponseDto({
-      communities: communityDtos,
+      communities: communities,
       total,
       page,
       limit,

@@ -2,5 +2,5 @@ import { LeaveCommunityCommand } from "@application/commands/community/leave-com
 import { Community } from "@domain/entities/community/community.entity";
 
 export interface ILeaveCommunity {
-  execute(command: LeaveCommunityCommand): Promise<Community | null>;
+  execute(command: LeaveCommunityCommand): Promise<Community>;
 }
