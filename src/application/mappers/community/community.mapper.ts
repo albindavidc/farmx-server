@@ -6,7 +6,7 @@ import { UpdateCommunityRequestDto } from "@application/dtos/community/update-co
 
 export class CommunityMapper {
 
-  
+
   /* To Entity */
 
   static dtoToEntity(dto: CreateCommunityRequestDto): Community {
@@ -27,7 +27,7 @@ export class CommunityMapper {
     );
   }
 
-  static updateEntityFromDto(dto: UpdateCommunityRequestDto, existingEntity: Community): Community {
+  static updateDtoToEntity(dto: UpdateCommunityRequestDto, existingEntity: Community): Community {
     if (!dto || !existingEntity) {
       throw new Error("DTO and existing entity cannot be null or undefined");
     }
@@ -81,7 +81,7 @@ export class CommunityMapper {
     };
   }
 
-  static updatePersistenceFromEntity(entity: Community): Partial<ICommunityDocument> {
+  static updateEntityToPersistence(entity: Community): Partial<ICommunityDocument> {
     if (!entity) {
       throw new Error("Entity cannot be null or undefined");
     }

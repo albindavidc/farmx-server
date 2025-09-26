@@ -26,13 +26,13 @@ export class PostResponseDto {
   userRole!: UserPostRole;
   communityId!: string;
   communityName?: string;
-  isEdited!: boolean;
+  isEdited?: boolean;
 
   lastEditedAt?: Date;
 
   static fromEntity(post: Post): PostResponseDto {
     const dto = new PostResponseDto();
-    dto.id = post._id;
+    dto.id = post.id;
     dto.text = post.text;
     dto.imageUrl = post.imageUrl;
     dto.createdAt = post.createdAt;

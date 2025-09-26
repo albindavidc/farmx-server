@@ -1,26 +1,95 @@
-import { UserPostRole } from "../../enums/user-role.enum";
+import { UserPostRole } from "@domain/enums/user-role.enum";
 
 export class Post {
-  constructor(
-    public _id: string,
-    public text: string,
-    public createdAt: Date,
-    public userId: string,
-    public userName: string,
-    public userRole: UserPostRole,
-    public communityId: string,
-    public communityName: string,
-    public imageUrl?: string,
-    public isEdited?: boolean,
-    public lastEditedAt?: Date,
-  ) {}
+  #id: string;
+  #text: string;
+  #createdAt: Date;
+  #userId: string;
+  #userName: string;
+  #userRole: UserPostRole;
+  #communityId: string;
+  #communityName: string;
+  #imageUrl?: string;
+  #isEdited?: boolean;
+  #lastEditedAt?: Date;
 
-  public update(text: string, imageUrl?: string): void {
-    this.text = text;
-    if (imageUrl !== undefined) {
-      this.imageUrl = imageUrl;
-    }
-    this.isEdited = true;
-    this.lastEditedAt = new Date();
+  constructor(
+    id: string,
+    text: string,
+    createdAt: Date,
+    userId: string,
+    userName: string,
+    userRole: UserPostRole,
+    communityId: string,
+    communityName: string,
+    imageUrl?: string,
+    isEdited?: boolean,
+    lastEditedAt?: Date
+  ) {
+    this.#id = id;
+    this.#text = text;
+    this.#createdAt = createdAt;
+    this.#userId = userId;
+    this.#userName = userName;
+    this.#userRole = userRole;
+    this.#communityId = communityId;
+    this.#communityName = communityName;
+    this.#imageUrl = imageUrl;
+    this.#isEdited = isEdited;
+    this.#lastEditedAt = lastEditedAt;
+  }
+
+  get id(): string {
+    return this.#id;
+  }
+
+  get text(): string {
+    return this.#text;
+  }
+
+  set text(text: string) {
+    this.#text = text;
+
+    this.#isEdited = true;
+    this.#lastEditedAt = new Date();
+  }
+  set imageUrl(imageUrl: string) {
+    this.#imageUrl = imageUrl;
+  }
+
+  get imageUrl(): string | undefined {
+    return this.#imageUrl;
+  }
+
+  get createdAt(): Date {
+    return this.#createdAt;
+  }
+
+  get userId(): string {
+    return this.#userId;
+  }
+
+  get userName(): string {
+    return this.#userName;
+  }
+
+  get userRole(): UserPostRole {
+    return this.#userRole;
+  }
+
+  get communityId(): string {
+    return this.#communityId;
+  }
+
+  get communityName(): string {
+    return this.#communityName;
+  }
+
+  get isEdited(): boolean | undefined {
+    return this.#isEdited;
+  }
+
+  get lastEditedAt(): Date | undefined {
+    return this.#lastEditedAt;
   }
 }
