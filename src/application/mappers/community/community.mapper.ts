@@ -25,7 +25,7 @@ export class CommunityMapper {
     );
   }
 
-  static updateDtoToEntity(dto: UpdateCommunityRequestDto, existingEntity: Community): Community {
+  static updateEntityFromDto(dto: UpdateCommunityRequestDto, existingEntity: Community): Community {
     if (!dto || !existingEntity) {
       throw new Error("DTO and existing entity cannot be null or undefined");
     }
@@ -41,6 +41,24 @@ export class CommunityMapper {
       dto.imageUrl ?? existingEntity.getImageUrl(),
       dto.categories ?? existingEntity.getCategories()
     );
+  }
+
+  static persistenceToEntity(persistence: ICommunityDocument): CommunityResponseDto {
+    if (!persistence) {
+      throw new Error("Persistence cannot be null or undefined");
+    }
+
+    return {
+      id: persistence.id.toString(),
+      name: persistence.name,
+      description: persistence.description,
+      isActive: persistence.isActive,
+      createdBy: persistence.createdBy,
+      createdAt: persistence.createdAt,
+      membersCount: persistence.membersCount,
+      imageUrl: persistence.imageUrl,
+      categories: persistence.categories,
+    };
   }
 
   /* To Persistence */
@@ -61,7 +79,7 @@ export class CommunityMapper {
     };
   }
 
-  static updateEntityToPersistence(entity: Community): Partial<ICommunityDocument> {
+  static updatePersistenceFromEntity(entity: Community): Partial<ICommunityDocument> {
     if (!entity) {
       throw new Error("Entity cannot be null or undefined");
     }
