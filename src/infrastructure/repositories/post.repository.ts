@@ -2,30 +2,15 @@ import { injectable } from "inversify";
 
 import { Post } from "@domain/entities/community/post.entity";
 import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
-import { IPostDocument, PostModel } from "@infrastructure/database/schemas/post.schema";
+import { PostModel } from "@infrastructure/database/schemas/post.schema";
+import { PostPersistenceMapper } from "@infrastructure/mappers/community/post-persistence.mapper";
 
 @injectable()
 export class PostRepositoryImpl implements IPostRepository {
-  private mapToEntity(document: IPostDocument): Post {
-    return new Post(
-      document._id.toString(),
-      document.text,
-      document.createdAt,
-      document.userId,
-      document.userName,
-      document.userRole,
-      document.communityId,
-      document.communityName,
-      document.imageUrl || "",
-      document.isEdited,
-      document.lastEditedAt
-    );
-  }
-
   async findById(id: string): Promise<Post | null> {
     try {
       const document = await PostModel.findById(id);
-      return document ? this.mapToEntity(document) : null;
+      return document ? PostPersistenceMapper.persistenceToEntity(document) : null;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(`Failed to find post by ID: ${error.message}`);
@@ -39,86 +24,44 @@ export class PostRepositoryImpl implements IPostRepository {
       .sort({ createdAt: -1 }) // Latest first
       .exec();
 
-    return documents.map(
-      (doc) =>
-        new Post(
-          doc._id.toString(),
-          doc.text,
-          doc.createdAt,
-          doc.userId,
-          doc.userName,
-          doc.userRole,
-          doc.communityId,
-          doc.communityName,
-          doc.imageUrl,
-          doc.isEdited,
-          doc.lastEditedAt
-        )
-    );
+    return PostPersistenceMapper.persistenceArrayToEntities(documents);
   }
 
   async create(post: Post): Promise<Post> {
-    const document = new PostModel({
-      text: post.text,
-      imageUrl: post.imageUrl,
-      createdAt: post.createdAt,
-      userId: post.userId,
-      userName: post.userName,
-      userRole: post.userRole,
-      communityId: post.communityId,
-      communityName: post.communityName,
-    });
+    const persistenceData = PostPersistenceMapper.entityToPersistence(post);
 
+    const document = new PostModel(persistenceData);   
     const saved = await document.save();
 
-    return new Post(
-      saved._id,
-      saved.text,
-      saved.createdAt,
-      saved.userId,
-      saved.userName,
-      saved.userRole,
-      saved.communityId,
-      saved.communityName,
-      saved.imageUrl,
-      saved.isEdited,
-      saved.lastEditedAt
-    );
+    return PostPersistenceMapper.persistenceToEntity(saved);
+  
   }
 
   async update(post: Post): Promise<Post> {
+    const updateData = PostPersistenceMapper.updateEntityToPersistence(post);
+
     const updated = await PostModel.findByIdAndUpdate(
-      post._id,
-      {
-        text: post.text,
-        imageUrl: post.imageUrl,
-        isEdited: post.isEdited,
-        lastEditedAt: post.lastEditedAt,
-      },
+      post.id,
+      updateData,
       { new: true }
     ).exec();
 
     if (!updated) {
-      throw new Error(`Post with ID ${post._id} not found`);
+      throw new Error(`Post with ID ${post.id} not found`);
     }
 
-    return new Post(
-      updated._id,
-      updated.text,
-      updated.createdAt,
-      updated.userId,
-      updated.userName,
-      updated.userRole,
-      updated.communityId,
-      updated.communityName,
-      updated.imageUrl,
-      updated.isEdited,
-      updated.lastEditedAt
-    );
+    return PostPersistenceMapper.persistenceToEntity(updated);
+
+   
   }
 
   async delete(id: string): Promise<boolean> {
     const result = await PostModel.findByIdAndDelete(id).exec();
     return !!result;
+  }
+
+  async countByCommunityId(communityId: string): Promise<number> {
+    const count = await PostModel.countDocuments({ communityId }).exec();
+    return count;
   }
 }

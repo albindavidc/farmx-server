@@ -4,7 +4,7 @@ import { CommunityResponseDto } from "@application/dtos/community/community-resp
 import { UpdateCommunityRequestDto } from "@application/dtos/community/update-community.dto";
 
 export class CommunityMapper {
-  //* ========== * To Entity * ========== *//
+  //* ========== To Entity ========== *//
 
   static dtoToEntity(dto: CreateCommunityRequestDto): Community {
     if (!dto) {
@@ -16,9 +16,9 @@ export class CommunityMapper {
       dto.description,
       true,
       dto.createdBy,
-      undefined,
       new Date(),
       1,
+      undefined,
       dto.imageUrl,
       dto.categories
     );
@@ -30,19 +30,19 @@ export class CommunityMapper {
     }
 
     return new Community(
-      dto.name ?? existingEntity.getName(),
-      dto.description ?? existingEntity.getDescription(),
-      existingEntity.getIsActive(),
-      existingEntity.getCreatedBy(),
-      existingEntity.getId(),
-      existingEntity.getCreatedAt(),
-      existingEntity.getMembersCount(),
-      dto.imageUrl ?? existingEntity.getImageUrl(),
-      dto.categories ?? existingEntity.getCategories()
+      dto.name ?? existingEntity.name,
+      dto.description ?? existingEntity.description,
+      existingEntity.isActive,
+      existingEntity.createdBy,
+      existingEntity.createdAt,
+      existingEntity.membersCount,
+      existingEntity.id,
+      dto.imageUrl ?? existingEntity.imageUrl,
+      dto.categories ?? existingEntity.categories
     );
   }
 
-  //* ========== * To DTO * ========== *//
+  //* ========== To DTO ========== *//
 
   static entityToDto(entity: Community): CommunityResponseDto {
     if (!entity) {
@@ -50,15 +50,15 @@ export class CommunityMapper {
     }
 
     return {
-      id: entity.getId(),
-      name: entity.getName(),
-      description: entity.getDescription(),
-      isActive: entity.getIsActive(),
-      createdBy: entity.getCreatedBy(),
-      createdAt: entity.getCreatedAt(),
-      membersCount: entity.getMembersCount(),
-      imageUrl: entity.getImageUrl(),
-      categories: entity.getCategories(),
+      name: entity.name,
+      description: entity.description,
+      isActive: entity.isActive,
+      createdBy: entity.createdBy,
+      createdAt: entity.createdAt,
+      membersCount: entity.membersCount,
+      id: entity.id,
+      imageUrl: entity.imageUrl,
+      categories: entity.categories,
     };
   }
 

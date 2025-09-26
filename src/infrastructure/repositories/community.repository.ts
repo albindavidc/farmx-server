@@ -12,7 +12,7 @@ import {
   CommunityModel,
 } from "@infrastructure/database/schemas/community.schema";
 import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema";
-import { CommunityPersistenceMapper } from "@infrastructure/mappers/community/community.mapper";
+import { CommunityPersistenceMapper } from "@infrastructure/mappers/community/community-persistence.mapper";
 
 @injectable()
 export class CommunityRepositoryImpl implements ICommunityRepository {

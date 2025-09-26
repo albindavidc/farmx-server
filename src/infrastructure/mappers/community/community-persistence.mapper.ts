@@ -2,7 +2,7 @@ import { Community } from "@domain/entities/community/community.entity";
 import { ICommunityDocument } from "@infrastructure/database/schemas/community.schema";
 
 export class CommunityPersistenceMapper {
-  //* ========== * To Entity * ========== *//
+  //* ========== To Entity ========== *//
   static persistenceToEntity(persistence: ICommunityDocument): Community {
     if (!persistence) {
       throw new Error("Persistence cannot be null or undefined");
@@ -21,7 +21,7 @@ export class CommunityPersistenceMapper {
     );
   }
 
-  //* ========== * To Persistence * ========== *//
+  //* ========== To Persistence ========== *//
 
   static entityToPersistence(entity: Community): Partial<Community> {
     if (!entity) {
@@ -82,7 +82,7 @@ export class CommunityPersistenceMapper {
     return updateDate;
   }
 
-  //* ========== * To Dto * ========== *//
+  //* ========== To Dto ========== *//
 
   static persistenceToDto(persistence: ICommunityDocument): Community {
     if (!persistence) {
