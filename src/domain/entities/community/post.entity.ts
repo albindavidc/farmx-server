@@ -1,7 +1,6 @@
 import { UserPostRole } from "@domain/enums/user-role.enum";
 
 export class Post {
-  #id: string;
   #text: string;
   #createdAt: Date;
   #userId: string;
@@ -9,12 +8,12 @@ export class Post {
   #userRole: UserPostRole;
   #communityId: string;
   #communityName: string;
+  #id?: string;
   #imageUrl?: string;
   #isEdited?: boolean;
   #lastEditedAt?: Date;
 
   constructor(
-    id: string,
     text: string,
     createdAt: Date,
     userId: string,
@@ -22,6 +21,7 @@ export class Post {
     userRole: UserPostRole,
     communityId: string,
     communityName: string,
+    id?: string,
     imageUrl?: string,
     isEdited?: boolean,
     lastEditedAt?: Date
@@ -40,7 +40,7 @@ export class Post {
   }
 
   get id(): string {
-    return this.#id;
+    return this.#id || "";
   }
 
   get text(): string {

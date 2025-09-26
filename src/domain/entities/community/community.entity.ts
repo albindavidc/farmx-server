@@ -1,104 +1,106 @@
 export class Community {
-  private id?: string;
-  private name: string;
-  private description: string;
-  private isActive: boolean;
-  private createdBy: string;
-  private createdAt: Date;
-  private membersCount: number;
-  private imageUrl?: string;
-  private categories: string[];
+  #name: string;
+  #description: string;
+  #isActive: boolean;
+  #createdBy: string;
+  #createdAt: Date;
+  #membersCount: number;
+  #id?: string;
+  #imageUrl?: string;
+  #categories?: string[];
 
   constructor(
     name: string,
     description: string,
     isActive: boolean,
     createdBy: string,
-    id?: string,
     createdAt: Date = new Date(),
     membersCount: number = 1,
+    id?: string,
     imageUrl?: string,
     categories: string[] = []
   ) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.isActive = isActive;
-    this.createdBy = createdBy;
-    this.createdAt = createdAt;
-    this.membersCount = membersCount;
-    this.imageUrl = imageUrl;
-    this.categories = categories;
+    this.#id = id;
+    this.#name = name;
+    this.#description = description;
+    this.#isActive = isActive;
+    this.#createdBy = createdBy;
+    this.#createdAt = createdAt;
+    this.#membersCount = membersCount;
+    this.#imageUrl = imageUrl;
+    this.#categories = categories;
   }
 
   // Getters
-  getId(): string {
-    return this.id ?? "";
+  get id(): string {
+    return this.#id || "";
   }
 
-  getName(): string {
-    return this.name;
+  get name(): string {
+    return this.#name;
   }
 
-  getDescription(): string {
-    return this.description;
+  get description(): string {
+    return this.#description;
   }
 
-  getIsActive(): boolean {
-    return this.isActive;
+  get isActive(): boolean {
+    return this.#isActive;
   }
 
-  getCreatedBy(): string {
-    return this.createdBy;
+  get createdBy(): string {
+    return this.#createdBy;
   }
 
-  getCreatedAt(): Date {
-    return this.createdAt;
+  get createdAt(): Date {
+    return this.#createdAt;
   }
 
-  getMembersCount(): number {
-    return this.membersCount;
+  get membersCount(): number {
+    return this.#membersCount;
   }
 
-  getImageUrl(): string | undefined {
-    return this.imageUrl;
+  get imageUrl(): string | undefined {
+    return this.#imageUrl;
   }
 
-  getCategories(): string[] {
-    return [...this.categories];
+  get categories(): string[] | undefined {
+    return this.#categories ? [...this.#categories] : undefined;
   }
 
-  // Setters with validation
-  updateName(name: string): void {
-    if (!name || name.trim().length === 0) {
-      throw new Error("Community name cannot be empty");
-    }
-    this.name = name.trim();
+  set name(name: string) {
+    if (!name || name.trim().length === 0) throw new Error("Invalid name");
+    this.#name = name.trim();
   }
 
-  updateDescription(description: string): void {
-    if (!description || description.trim().length === 0) {
-      throw new Error("Community description cannot be empty");
-    }
-    this.description = description.trim();
+  set description(description: string) {
+    this.#description = description.trim();
   }
 
-  updateImageUrl(imageUrl?: string): void {
-    this.imageUrl = imageUrl;
+  set isActive(isActive: boolean) {
+    this.#isActive = isActive;
   }
 
-  updateCategories(categories: string[]): void {
-    this.categories = [...categories];
+  set membersCount(membersCount: number) {
+    this.#membersCount = membersCount;
   }
 
-  incrementMemberCount(): void {
-    this.membersCount += 1;
+  set imageUrl(imageUrl: string) {
+    this.#imageUrl = imageUrl;
+  }
+
+  set categories(categories: string[]) {
+    this.#categories = [...categories];
   }
 
   decrementMemberCount(): void {
     if (this.membersCount > 0) {
       this.membersCount -= 1;
     }
+  }
+
+  incrementMemberCount(): void {
+    this.membersCount += 1;
   }
 
   // Factory method
@@ -114,9 +116,9 @@ export class Community {
       description,
       true,
       createdBy,
-      undefined,
       new Date(),
       1,
+      undefined,
       imageUrl,
       categories
     );
@@ -131,11 +133,11 @@ export class Community {
     createdAt: Date;
     membersCount: number;
     imageUrl?: string;
-    categories: string[];
+    categories?: string[];
     isActive: boolean;
   } {
     return {
-      id: this.getId(),
+      id: this.id,
       name: this.name,
       description: this.description,
       createdBy: this.createdBy,

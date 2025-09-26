@@ -1,5 +1,6 @@
 import mongoose, { FilterQuery } from "mongoose";
-import { Community } from "../../entities/community/community.entity";
+import {Community} from "@domain/entities/community/community.entity";
+import {CommunityResponseDto} from "@application/dtos/community/community-response.dto";
 
 export interface ICommunityMember {
   userId: mongoose.Types.ObjectId;
@@ -14,8 +15,8 @@ export interface IAddMembershipResult {
 }
 
 export interface ICommunityRepository {
-  create(community: Community): Promise<Community>;
-  findById(id: string): Promise<Community | null>;
+  create(community: Community): Promise<CommunityResponseDto>;
+  findById(id: string): Promise<CommunityResponseDto | null>;
   findByCreatedById(createdById: string): Promise<Community[]>;
   findAll(): Promise<Community[]>;
   update(id: string, community: Partial<Community>): Promise<Community | null>;
@@ -28,7 +29,6 @@ export interface ICommunityRepository {
     filter?: FilterQuery<Community>;
   }): Promise<{ communities: Community[]; total: number }>;
 
-  create(community: Community): Promise<Community>;
   // update(community: Community): Promise<Community>;
   delete(id: string): Promise<boolean>;
   incrementMembersCount(id: string): Promise<boolean>;

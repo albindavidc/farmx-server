@@ -6,58 +6,49 @@ import {
   ICommunityRepository,
 } from "@domain/interfaces/community/community-repository.interface";
 import { Community } from "@domain/entities/community/community.entity";
+
 import {
   ICommunityDocument,
   CommunityModel,
 } from "@infrastructure/database/schemas/community.schema";
 import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema";
+import { CommunityPersistenceMapper } from "@infrastructure/mappers/community/community.mapper";
 
 @injectable()
 export class CommunityRepositoryImpl implements ICommunityRepository {
-  private mapToEntity(doc: ICommunityDocument): Community {
-    return new Community(
-      doc.name,
-      doc.description,
-      doc.isActive,
-      doc.createdBy,
-      doc._id ? doc._id.toString() : undefined,
-      doc.createdAt,
-      doc.membersCount,
-      doc.imageUrl,
-      doc.categories
-    );
-  }
-
   async create(community: Community): Promise<Community> {
+    const persistenceData = CommunityPersistenceMapper.entityToPersistence(community);
     const communityDoc = new CommunityModel({
-      name: community.getName(),
-      description: community.getDescription(),
+      name: persistenceData.name,
+      description: persistenceData.description,
       isActive: true,
-      createdAt: community.getCreatedAt(),
-      createdBy: community.getCreatedBy(),
-      membersCount: community.getMemberCount(),
-      imageUrl: community.getImageUrl(),
-      categories: community.getCategories(),
+      createdAt: persistenceData.createdAt,
+      createdBy: persistenceData.createdBy,
+      membersCount: persistenceData.membersCount,
+      imageUrl: persistenceData.imageUrl,
+      categories: persistenceData.categories,
     });
 
     const savedCommunity = await communityDoc.save();
-    return this.mapToEntity(savedCommunity);
+    return CommunityPersistenceMapper.persistenceToEntity(savedCommunity);
   }
 
   async findById(id: string): Promise<Community | null> {
     const community = await CommunityModel.findById(id);
-    return community ? this.mapToEntity(community) : null;
+    return community ? CommunityPersistenceMapper.persistenceToEntity(community) : null;
   }
 
   async findByCreatedById(createdById: string): Promise<Community[]> {
     const communities = await CommunityModel.find({ createdBy: createdById }).exec();
-    return communities.map((community) => this.mapToEntity(community));
+    return communities.map((community) =>
+      CommunityPersistenceMapper.persistenceToEntity(community)
+    );
   }
 
   async findByName(name: string): Promise<Community | null> {
     try {
       const document = await CommunityModel.findOne({ name }).exec();
-      return document ? this.mapToEntity(document) : null;
+      return document ? CommunityPersistenceMapper.persistenceToEntity(document) : null;
     } catch (error) {
       console.error("Error finding community by name:", error);
       return null;
@@ -66,7 +57,9 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
 
   async findAll(): Promise<Community[]> {
     const communities = await CommunityModel.find();
-    return communities.map((community) => this.mapToEntity(community));
+    return communities.map((community) =>
+      CommunityPersistenceMapper.persistenceToEntity(community)
+    );
   }
 
   async findAllCommunities(options?: {
@@ -87,7 +80,9 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
         CommunityModel.countDocuments(filter).exec(),
       ]);
 
-      const communities = documents.map((doc) => this.mapToEntity(doc));
+      const communities = documents.map((doc) =>
+        CommunityPersistenceMapper.persistenceToEntity(doc)
+      );
       // console.log('this is from the find all communities repository impl', communities)
 
       return { communities, total };
@@ -101,45 +96,30 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
     try {
       const updateData: Partial<ICommunityDocument> = {};
 
-      // Check if the method exists and the value is not undefined before calling
-      if (communityData.getName && typeof communityData.getName === "function") {
-        const name = communityData.getName();
-        if (name) updateData.name = name;
+      // Check if the method exists and the value is not undefined before updating
+      if (communityData.name && typeof communityData.name === "string") {
+        updateData.name = communityData.name;
       }
-
-      if (communityData.getDescription && typeof communityData.getDescription === "function") {
-        const description = communityData.getDescription();
-        if (description) updateData.description = description;
+      if (communityData.description && typeof communityData.description === "string") {
+        updateData.description = communityData.description;
       }
-
-      if (communityData.getCreatedBy && typeof communityData.getCreatedBy === "function") {
-        const createdBy = communityData.getCreatedBy();
-        if (createdBy) updateData.createdBy = createdBy;
+      if (communityData.createdBy && typeof communityData.createdBy === "string") {
+        updateData.createdBy = communityData.createdBy;
       }
-
-      if (communityData.getCreatedAt && typeof communityData.getCreatedAt === "function") {
-        const createdAt = communityData.getCreatedAt();
-        if (createdAt) updateData.createdAt = createdAt;
+      if (communityData.createdAt && typeof communityData.createdAt === "object") {
+        updateData.createdAt = communityData.createdAt;
       }
-
-      if (communityData.getMemberCount && typeof communityData.getMemberCount === "function") {
-        const memberCount = communityData.getMemberCount();
-        if (memberCount !== undefined) updateData.membersCount = memberCount;
+      if (communityData.membersCount && typeof communityData.membersCount === "number") {
+        updateData.membersCount = communityData.membersCount;
       }
-
-      if (communityData.getImageUrl && typeof communityData.getImageUrl === "function") {
-        const imageUrl = communityData.getImageUrl();
-        updateData.imageUrl = imageUrl; // Allow undefined/null values for imageUrl
+      if (communityData.imageUrl && typeof communityData.imageUrl === "string") {
+        updateData.imageUrl = communityData.imageUrl;
       }
-
-      if (communityData.getCategories && typeof communityData.getCategories === "function") {
-        const categories = communityData.getCategories();
-        if (categories) updateData.categories = categories;
+      if (communityData.categories && typeof communityData.categories === "object") {
+        updateData.categories = communityData.categories;
       }
-
-      if (communityData.getIsActive && typeof communityData.getIsActive === "function") {
-        const isActive = communityData.getIsActive();
-        if (isActive !== undefined) updateData.isActive = isActive;
+      if (communityData.isActive && typeof communityData.isActive === "boolean") {
+        updateData.isActive = communityData.isActive;
       }
 
       const updatedCommunity = await CommunityModel.findByIdAndUpdate(
@@ -148,7 +128,9 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
         { new: true, runValidators: true }
       ).exec();
 
-      return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
+      return updatedCommunity
+        ? CommunityPersistenceMapper.persistenceToEntity(updatedCommunity)
+        : null;
     } catch (error) {
       console.error("Error updating community:", error);
       throw error;
@@ -274,7 +256,9 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
           role: newMember.role,
           status: newMember.status,
         },
-        community: updatedCommunity ? this.mapToEntity(updatedCommunity) : null,
+        community: updatedCommunity
+          ? CommunityPersistenceMapper.persistenceToEntity(updatedCommunity)
+          : null,
       };
     } catch (error) {
       await session.abortTransaction();
@@ -320,7 +304,9 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
       await session.commitTransaction();
       session.endSession();
 
-      return updatedCommunity ? this.mapToEntity(updatedCommunity) : null;
+      return updatedCommunity
+        ? CommunityPersistenceMapper.persistenceToEntity(updatedCommunity)
+        : null;
     } catch (error) {
       await session.abortTransaction();
       session.endSession();

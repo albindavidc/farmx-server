@@ -4,7 +4,7 @@ import { UpdatePostDto } from "@application/dtos/community/post.dto";
 import { IPostDocument } from "@infrastructure/database/schemas/post.schema";
 import { PostResponseDto } from "@application/dtos/community/post.dto";
 
-export class postMapper {
+export class PostMapper {
   //* ========== DTO <-> Entity ========== *//
 
   static dtoToEntity(dto: CreatePostDto, communityName: string): Post {
