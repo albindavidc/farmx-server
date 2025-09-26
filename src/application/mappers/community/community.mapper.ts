@@ -5,6 +5,8 @@ import { CommunityResponseDto } from "@application/dtos/community/community-resp
 import { UpdateCommunityRequestDto } from "@application/dtos/community/update-community.dto";
 
 export class CommunityMapper {
+
+  
   /* To Entity */
 
   static dtoToEntity(dto: CreateCommunityRequestDto): Community {
