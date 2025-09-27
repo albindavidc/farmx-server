@@ -16,7 +16,7 @@ export interface IAddMembershipResult {
 
 export interface ICommunityRepository {
   create(community: Community): Promise<CommunityResponseDto>;
-  findById(id: string): Promise<Community>;
+  findById(id: string): Promise<Community | null>;
   findByCreatedById(createdById: string): Promise<Community[]>;
   findAll(): Promise<Community[]>;
   update(id: string, community: Partial<Community>): Promise<Community | null>;
@@ -36,5 +36,5 @@ export interface ICommunityRepository {
   exists(id: string): Promise<boolean>;
 
   addMember(communityId: string, userId: string): Promise<IAddMembershipResult | null>;
-  removeMember(communityId: string, userId: string): Promise<Community >;
+  removeMember(communityId: string, userId: string): Promise<Community | null>;
 }

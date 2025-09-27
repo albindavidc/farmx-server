@@ -11,6 +11,10 @@ export class RedisClient {
     this.#connectionPromise = null;
   }
 
+  get client(): Redis | null {
+    return this.#client;
+  }
+
   async connect() {
     if (this.#connectionPromise) {
       return this.#connectionPromise;
@@ -44,6 +48,7 @@ export class RedisClient {
       this.setupEventListeners();
       await this.#client.connect();
       this.#isConnected = true;
+
     } catch (error) {
       console.error("Error connecting to Redis:", error);
       this.#isConnected = false;

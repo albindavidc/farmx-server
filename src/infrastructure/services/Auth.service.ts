@@ -6,7 +6,7 @@ import {
 } from "@application/utils/token-utility";
 import { User } from "@domain/entities/user.entity";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { Email } from "@domain/value-objects/user/email.vo";
+import { EmailVO } from "@domain/value-objects/user/email.vo";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../presentation/container/types";
 
@@ -15,19 +15,19 @@ export class AuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async verifyOtp(
-    email: Email
+    email: EmailVO
   ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
     const user = await this.userRepository.findByEmail(email);
-    if (!user || !user._id) throw new Error("Invalid or already verified user");
+    if (!user || !user.id) throw new Error("Invalid or already verified user");
 
-    user.isVerified = true;
-    const updatedUser = await this.userRepository.update(user._id, user);
+    user.verifyUser();
+    const updatedUser = await this.userRepository.update(user.id, user);
 
-    if (!updatedUser || !updatedUser._id) {
+    if (!updatedUser || !updatedUser.id) {
       throw new Error("User not found");
     }
     const payload: TokenPayload = {
-      id: updatedUser?._id,
+      id: updatedUser?.id,
       email: updatedUser?.email,
       role: updatedUser?.role[0] as "user" | "farmer" | "admin",
     };

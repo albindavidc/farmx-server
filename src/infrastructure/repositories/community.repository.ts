@@ -85,6 +85,10 @@ export class CommunityRepositoryImpl implements ICommunityRepository {
       );
       // console.log('this is from the find all communities repository impl', communities)
 
+      if (communities === null || communities.length === 0) {
+        throw new Error("No communities found");
+      }
+
       return { communities, total };
     } catch (error) {
       console.error("Error finding all communities:", error);

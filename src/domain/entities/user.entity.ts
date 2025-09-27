@@ -19,33 +19,215 @@ export class FarmerProfile {
 }
 
 export class User {
+  #name: NameVO;
+  #email: EmailVO;
+  #hashedPassword: PasswordVO;
+  #role: RoleVO;
+  #phone: PhoneNumberVO;
+  #isVerified: boolean;
+  #isAdmin: boolean;
+  #isBlocked: boolean;
+  #isFarmer: boolean;
+  #courseCertificate?: IUserCertificate[];
+  #id: UserIdVO;
+  #courseProgress?: ICourseProgress[];
+  #timestamps: { createdAt: Date; updatedAt: Date };
+  #googleId?: string;
+  #farmerProfile?: FarmerProfile;
+  #profilePhoto?: string;
+  #bio?: string;
+  #reason?: string;
+
   constructor(
-    public readonly name: NameVO,
-    public readonly email: EmailVO,
-    public readonly hashedPassword: PasswordVO,
-    public readonly role: RoleVO,
-    public readonly phone: PhoneNumberVO,
-    public readonly isVerified: boolean = false,
-    public readonly isAdmin: boolean = false,
-    public readonly isBlocked: boolean = false,
-    public readonly isFarmer: boolean = false,
-    public readonly courseCertificate: IUserCertificate[] = [],
-    public readonly courseProgress: ICourseProgress[] = [],
-    public readonly timestamps: {
+    name: NameVO,
+    email: EmailVO,
+    hashedPassword: PasswordVO,
+    role: RoleVO,
+    phone: PhoneNumberVO,
+    isVerified: boolean,
+    isAdmin: boolean,
+    isBlocked: boolean,
+    isFarmer: boolean,
+    timestamps: {
       createdAt: Date;
       updatedAt: Date;
     },
-    public readonly id: UserIdVO,
-    public readonly googleId?: string,
-
-    public readonly farmerProfile?: FarmerProfile,
-    public readonly profilePhoto?: string,
-    public readonly bio?: string,
-    public readonly reason?: string
-  ) {}
+    id: UserIdVO,
+    courseCertificate?: IUserCertificate[],
+    courseProgress?: ICourseProgress[],
+    googleId?: string,
+    farmerProfile?: FarmerProfile,
+    profilePhoto?: string,
+    bio?: string,
+    reason?: string
+  ) {
+    this.#name = name;
+    this.#email = email;
+    this.#hashedPassword = hashedPassword;
+    this.#role = role;
+    this.#phone = phone;
+    this.#isVerified = isVerified;
+    this.#isAdmin = isAdmin;
+    this.#isBlocked = isBlocked;
+    this.#isFarmer = isFarmer;
+    this.#timestamps = timestamps;
+    this.#id = id;
+    this.#courseCertificate = courseCertificate;
+    this.#courseProgress = courseProgress;
+    this.#googleId = googleId;
+    this.#farmerProfile = farmerProfile;
+    this.#profilePhoto = profilePhoto;
+    this.#bio = bio;
+    this.#reason = reason;
+  }
 
   public async verifyPassword(plainText: string): Promise<boolean> {
-    return PasswordVO.compare(plainText, this.hashedPassword.getHashedValue());
+    return PasswordVO.compare(plainText, this.#hashedPassword.getHashedValue());
+  }
+
+  //* ========== Getters ========== *//
+  get name(): string {
+    return this.#name.value;
+  }
+
+  get email(): string {
+    return this.#email.value;
+  }
+
+  get role(): string {
+    return this.#role.value;
+  }
+
+  get phone(): string {
+    return this.#phone.value;
+  }
+
+  get id(): string {
+    return this.#id.value;
+  }
+
+  get googleId(): string | undefined {
+    return this.#googleId;
+  }
+
+  get farmerProfile(): FarmerProfile | undefined {
+    return this.#farmerProfile;
+  }
+
+  get profilePhoto(): string | undefined {
+    return this.#profilePhoto;
+  }
+
+  get bio(): string | undefined {
+    return this.#bio;
+  }
+
+  get reason(): string | undefined {
+    return this.#reason;
+  }
+
+  get courseCertificate(): IUserCertificate[] | undefined {
+    return this.#courseCertificate;
+  }
+
+  get courseProgress(): ICourseProgress[] | undefined {
+    return this.#courseProgress;
+  }
+
+  get isFarmer(): boolean {
+    return this.#isFarmer;
+  }
+
+  get isVerified(): boolean {
+    return this.#isVerified;
+  }
+
+  get isBlocked(): boolean {
+    return this.#isBlocked;
+  }
+
+  get isAdmin(): boolean {
+    return this.#isAdmin;
+  }
+
+  get timestamps(): { createdAt: Date; updatedAt: Date } {
+    return this.#timestamps;
+  }
+
+  //* ========== Domain methods ========== *//
+  public verifyUser(): void {
+    this.#isVerified = true;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public unverifyUser(): void {
+    this.#isVerified = false;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public blockUser(reason: string): void {
+    this.#isBlocked = true;
+    this.#reason = reason;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public unblockUser(): void {
+    this.#isBlocked = false;
+    this.#reason = undefined;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public promoteToAdmin(): void {
+    this.#isAdmin = true;
+    this.#role = RoleVO.create(RoleVO.ADMIN);
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public demoteFromAdmin(): void {
+    this.#isAdmin = false;
+    this.#role = RoleVO.create(RoleVO.USER);
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public enableFarmerMode(farmerProfile: FarmerProfile): void {
+    this.#isFarmer = true;
+    this.#farmerProfile = farmerProfile;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  public disableFarmerMode(): void {
+    this.#isFarmer = false;
+    this.#farmerProfile = undefined;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  //* ========== Validations ========== *//
+  public canLogin(): boolean {
+    return this.#isVerified && !this.#isBlocked;
+  }
+
+  public canCreateCourse(): boolean {
+    return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
+  }
+
+  public canUpdateCourse(): boolean {
+    return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
+  }
+
+  public canDeleteCourse(): boolean {
+    return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
+  }
+
+  public canCreateCertificate(): boolean {
+    return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
+  }
+
+  public getAccountStatus(): string {
+    if (this.#isBlocked) return "blocked";
+    if (this.#isVerified) return "verified";
+    if (this.#isAdmin) return "admin";
+    if (this.#isFarmer) return "farmer";
+    return "ACTIVE";
   }
 
   static async create(createProps: {
@@ -75,10 +257,10 @@ export class User {
       false,
       false,
       false,
-      [],
-      [],
       { createdAt: new Date(), updatedAt: new Date() },
       id,
+      [],
+      [],
       createProps.googleId
     );
   }
@@ -93,13 +275,13 @@ export class User {
     isAdmin: boolean;
     isBlocked: boolean;
     isFarmer: boolean;
-    courseCertificate?: IUserCertificate[];
-    courseProgress?: ICourseProgress[];
     timestamps: {
       createdAt: Date;
       updatedAt: Date;
     };
     id: string;
+    courseCertificate?: IUserCertificate[];
+    courseProgress?: ICourseProgress[];
     googleId?: string;
     farmerProfile?: FarmerProfile;
     profilePhoto?: string;
@@ -116,10 +298,10 @@ export class User {
       reconstituteProps.isAdmin,
       reconstituteProps.isBlocked,
       reconstituteProps.isFarmer,
-      reconstituteProps.courseCertificate,
-      reconstituteProps.courseProgress,
       reconstituteProps.timestamps,
       UserIdVO.create(reconstituteProps.id),
+      reconstituteProps.courseCertificate,
+      reconstituteProps.courseProgress,
       reconstituteProps.googleId,
       reconstituteProps.farmerProfile,
       reconstituteProps.profilePhoto,
