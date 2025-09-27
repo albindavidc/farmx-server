@@ -21,7 +21,7 @@ router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));
 router.post("/verify-otp", otpController.verifyOtpHandler.bind(otpController));
 router.post(
   "/login",
-  authMiddleware.rateLimitMiddleware.bind(authMiddleware),
+  authMiddleware.rateLimit.bind(authMiddleware),
   authController.login.bind(authController)
 );
 router.post("/logout", authController.logout.bind(authController));

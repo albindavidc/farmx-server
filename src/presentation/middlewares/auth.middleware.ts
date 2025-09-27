@@ -115,7 +115,7 @@ export class AuthMiddleware {
     };
   }
 
-  async rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
+  async rateLimit(req: Request, res: Response, next: NextFunction) {
     try {
       const clientIP = req.ip || req.connection.remoteAddress || "unknown"; // Get the client's IP address from the request object
       const loginAttempts = await this.redisAuthService.checkLoginAttempts(clientIP);

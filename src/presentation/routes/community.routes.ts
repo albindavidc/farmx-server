@@ -37,6 +37,7 @@ const authMiddleware: AuthMiddleware = container.get<AuthMiddleware>(TYPES.AuthM
 router.post(
   "/create-community",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityController.createCommunity.bind(communityController)
 );
 router.post(
@@ -48,32 +49,47 @@ router.post(
 router.get(
   "/:createdById",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityController.getCommunities.bind(communityController)
 );
 router.get(
   "/:id",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityController.getCommunity.bind(communityController)
 );
 
 router.get(
   "/admin/communities-listing",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["admin"]),
   queryValidationMiddleware(allowedListParams),
   communityController.listCommunities.bind(communityController)
 );
 
-router.put("/:id", communityController.updateCommunity.bind(communityController));
-router.delete("/:id", communityController.deleteCommunity.bind(communityController));
+router.put(
+  "/:id",
+  authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
+  communityController.updateCommunity.bind(communityController)
+);
+router.delete(
+  "/:id",
+  authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
+  communityController.deleteCommunity.bind(communityController)
+);
 
 router.post(
   "/:id/members",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityController.joinCommunity.bind(communityController)
 );
 router.delete(
   "/:id/members",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityController.leaveCommunity.bind(communityController)
 );
 
@@ -81,33 +97,39 @@ router.delete(
 router.get(
   "/posts/:id",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   postController.getCommunityPosts.bind(postController)
 );
 router.post(
   "/create-post",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   postController.createPost.bind(postController)
 );
 router.delete(
   "/posts/:id",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   postController.deletePost.bind(postController)
 );
 
 router.post(
   "/post-upload-image/:id",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityImageUploadMiddleware.handle(),
   postController.uploadImage.bind(postController)
 );
 router.put(
   "/posts/:id",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   postController.updatePost.bind(postController)
 );
 router.get(
   "/community-post/:id",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   postController.getPost.bind(postController)
 );
 
@@ -115,6 +137,7 @@ router.get(
 router.get(
   "/user/get-all-community",
   authMiddleware.authenticate,
+  authMiddleware.authorize(["user", "farmer", "admin"]),
   communityController.listAllCommunities.bind(communityController)
 );
 
