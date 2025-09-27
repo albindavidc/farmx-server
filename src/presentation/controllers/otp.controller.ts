@@ -15,7 +15,7 @@ export class OtpController {
   constructor(
     @inject(TYPES.GenerateOtpHandler) private generateOtp: GenerateOtpHandler,
     @inject(TYPES.VerifyOtpHandler) private verifyOtp: VerifyOtpHandler,
-    @inject(TYPES.EmailRepository) private EmailRepository: IEmailRepository,
+    @inject(TYPES.IEmailRepository) private EmailRepository: IEmailRepository,
     @inject(TYPES.AuthService) private authService: AuthService
   ) {}
 
@@ -82,7 +82,7 @@ export class OtpController {
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: process.env.NODE_ENV === "production",
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        maxAge: parseInt(process.env.REFRESH_TOKEN_MAX_AGE_DAYS as string),
         path: "/",
       });
 
@@ -90,7 +90,7 @@ export class OtpController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 60 * 60 * 1000,
+        maxAge: parseInt(process.env.ACCESS_TOKEN_MAX_AGE_DAYS as string),
         path: "/",
       });
 

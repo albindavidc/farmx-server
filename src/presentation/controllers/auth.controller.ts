@@ -111,7 +111,7 @@ export default class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        maxAge: parseInt(process.env.REFRESH_TOKEN_MAX_AGE_DAYS as string),
         path: "/",
       });
 
@@ -119,7 +119,7 @@ export default class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 60 * 60 * 1000,
+        maxAge: parseInt(process.env.ACCESS_TOKEN_MAX_AGE_DAYS as string),
         path: "/",
       });
 
@@ -145,7 +145,7 @@ export default class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 60 * 60 * 1000,
+        maxAge: parseInt(process.env.ACCESS_TOKEN_MAX_AGE_DAYS as string),
         path: "/",
       });
 
