@@ -18,6 +18,7 @@ interface AuthRequest extends Request {
 @injectable()
 export class AuthMiddleware {
   constructor(@inject(TYPES.RedisAuthService) private redisAuthService: RedisAuthService) {}
+
   async authenticate(req: AuthRequest, res: Response, next: NextFunction) {
     console.log("Cookies recieved", req.cookies);
 
@@ -97,7 +98,7 @@ export class AuthMiddleware {
     }
   }
 
-   authorize(roles: string[]) {
+  authorize(roles: string[]) {
     return (req: Request, res: Response, next: NextFunction) => {
       console.log("printing roles", req.user, req.user?.role);
 
