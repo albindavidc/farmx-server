@@ -97,7 +97,7 @@ export class AuthMiddleware {
     }
   }
 
-  async authorize(roles: string[]) {
+   authorize(roles: string[]) {
     return (req: Request, res: Response, next: NextFunction) => {
       console.log("printing roles", req.user, req.user?.role);
 

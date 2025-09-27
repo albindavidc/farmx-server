@@ -2,10 +2,11 @@ import express from "express";
 import { container } from "../container/inversify.config";
 import { UserController } from "../controllers/user.controller";
 import { TYPES } from "../container/types";
-import { authenticate } from "../middlewares/auth.middleware";
+import { AuthMiddleware } from "@presentation/middlewares/auth.middleware";
 
 const router = express.Router();
 const userController: UserController = container.get<UserController>(TYPES.UserController);
+const { authenticate } = container.get<AuthMiddleware>(TYPES.AuthMiddleware);
 
 router.get("/admin/get-users", authenticate, userController.getUsers.bind(userController));
 router.put("/admin/:id", authenticate, userController.updateUser.bind(userController));

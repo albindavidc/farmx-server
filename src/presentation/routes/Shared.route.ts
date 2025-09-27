@@ -3,13 +3,14 @@ import { container } from "../container/inversify.config";
 import { UserController } from "../controllers/user.controller";
 import { TYPES } from "../container/types";
 import { uploadProfilePhoto } from "../middlewares/multer";
-import { authenticate, authorize } from "../middlewares/auth.middleware";
+import { AuthMiddleware } from "@presentation/middlewares/auth.middleware";
 import OtpController from "../controllers/otp.controller";
 
 const router = express.Router();
 
 const userController: UserController = container.get<UserController>(TYPES.UserController);
 const otpController: OtpController = container.get<OtpController>(TYPES.OtpController);
+const { authenticate, authorize } = container.get<AuthMiddleware>(TYPES.AuthMiddleware);
 
 router.post(
   "/settings/profile-photo-upload",

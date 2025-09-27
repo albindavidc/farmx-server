@@ -22,9 +22,9 @@ import { LoadCommunitiesHandler } from "@application/handlers/query/community/lo
 import { LoadCommunityHandler } from "@application/handlers/query/community/load-community.handler";
 import { GetCommunityPostsQueryHandler } from "@application/handlers/query/community/post/get-community-post.handler";
 import { GetCommunityPostQueryHandler } from "@application/handlers/query/community/post/get-post.handler";
-import { CommunityRepository } from "@domain/repositories/community/community.repository";
-import { PostRepository } from "@domain/repositories/community/post.repository";
-import { EmailRepository } from "@domain/repositories/email.repository";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
+import {IPostRepository} from "@domain/interfaces/community/post-repository.interface";
+import {IEmailRepository} from "@domain/interfaces/email-repository.interface";
 import { CommunityRepositoryImpl } from "@infrastructure/repositories/community.repository";
 import { OtpRepositoryImpl } from "@infrastructure/repositories/otp.repository";
 import { PostRepositoryImpl } from "@infrastructure/repositories/post.repository";
@@ -55,7 +55,7 @@ container.bind<CreateUserHandler>(TYPES.CreateUserHandler).to(CreateUserHandler)
 container.bind<AuthController>(TYPES.AuthController).to(AuthController).inSingletonScope();
 container.bind<OtpController>(TYPES.OtpController).to(OtpController).inSingletonScope();
 
-container.bind<EmailRepository>(TYPES.EmailRepository).to(EmailServiceImpl).inSingletonScope();
+container.bind<IEmailRepository>(TYPES.IEmailRepository).to(EmailServiceImpl).inSingletonScope();
 container.bind<OtpRepositoryImpl>(TYPES.OtpRepository).to(OtpRepositoryImpl).inSingletonScope();
 container.bind<UserRepositoryImpl>(TYPES.UserRepository).to(UserRepositoryImpl).inSingletonScope();
 
@@ -82,7 +82,7 @@ container.bind<CreateUserHandler>(TYPES.CreateUserHandler).to(CreateUserHandler)
 container.bind<BlockUserHandler>(TYPES.BlockUserHandler).to(BlockUserHandler).inSingletonScope();
 
 /* Community */
-container.bind<CommunityRepository>(TYPES.CommunityRepository).to(CommunityRepositoryImpl);
+container.bind<ICommunityRepository>(TYPES.ICommunityRepository).to(CommunityRepositoryImpl);
 container.bind<ImageUploadService>(TYPES.ImageuploadService).to(ImageUploadService);
 container.bind<CreateCommunityHandler>(TYPES.CreateCommunityHandler).to(CreateCommunityHandler);
 container.bind<CommunityController>(TYPES.CommunityController).to(CommunityController);
@@ -101,7 +101,7 @@ container
   .to(DeleteCommunityCommandHandler);
 
 /* Community Post */
-container.bind<PostRepository>(TYPES.PostRepository).to(PostRepositoryImpl);
+container.bind<IPostRepository>(TYPES.IPostRepository).to(PostRepositoryImpl);
 container
   .bind<CreateCommunityPostHandler>(TYPES.CreateCommunityPostHandler)
   .to(CreateCommunityPostHandler);

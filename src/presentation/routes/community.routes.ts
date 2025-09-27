@@ -2,11 +2,11 @@ import express from "express";
 import { CommunityController } from "../controllers/community.controller";
 import { container } from "../container/inversify.config";
 import { TYPES } from "../container/types";
-import { authenticate } from "../middlewares/auth.middleware";
 import { UploadMiddleware } from "../middlewares/upload-middleware";
 import { PostController } from "../controllers/post.controller";
 import { CommunityImageUploadMiddleware } from "../middlewares/community-image-upload.middleware";
 import { queryValidationMiddleware } from "../middlewares/validation.middleware";
+import { AuthMiddleware } from "@presentation/middlewares/auth.middleware";
 
 const router = express.Router();
 
@@ -28,15 +28,15 @@ const communityController: CommunityController = container.get<CommunityControll
   TYPES.CommunityController
 );
 const postController: PostController = container.get<PostController>(TYPES.PostController);
-
 const uploadMiddleware: UploadMiddleware = container.get<UploadMiddleware>(TYPES.UploadMiddleware);
 const communityImageUploadMiddleware: CommunityImageUploadMiddleware =
   container.get<CommunityImageUploadMiddleware>(TYPES.CommunityImageUploadMiddleware);
+const authMiddleware: AuthMiddleware = container.get<AuthMiddleware>(TYPES.AuthMiddleware);
 
 /* Routes */
 router.post(
   "/create-community",
-  authenticate,
+  authMiddleware.authenticate,
   communityController.createCommunity.bind(communityController)
 );
 router.post(
@@ -47,14 +47,18 @@ router.post(
 
 router.get(
   "/:createdById",
-  authenticate,
+  authMiddleware.authenticate,
   communityController.getCommunities.bind(communityController)
 );
-router.get("/:id", authenticate, communityController.getCommunity.bind(communityController));
+router.get(
+  "/:id",
+  authMiddleware.authenticate,
+  communityController.getCommunity.bind(communityController)
+);
 
 router.get(
   "/admin/communities-listing",
-  authenticate,
+  authMiddleware.authenticate,
   queryValidationMiddleware(allowedListParams),
   communityController.listCommunities.bind(communityController)
 );
@@ -64,33 +68,53 @@ router.delete("/:id", communityController.deleteCommunity.bind(communityControll
 
 router.post(
   "/:id/members",
-  authenticate,
+  authMiddleware.authenticate,
   communityController.joinCommunity.bind(communityController)
 );
 router.delete(
   "/:id/members",
-  authenticate,
+  authMiddleware.authenticate,
   communityController.leaveCommunity.bind(communityController)
 );
 
 /* Community Post */
-router.get("/posts/:id", authenticate, postController.getCommunityPosts.bind(postController));
-router.post("/create-post", authenticate, postController.createPost.bind(postController));
-router.delete("/posts/:id", authenticate, postController.deletePost.bind(postController));
+router.get(
+  "/posts/:id",
+  authMiddleware.authenticate,
+  postController.getCommunityPosts.bind(postController)
+);
+router.post(
+  "/create-post",
+  authMiddleware.authenticate,
+  postController.createPost.bind(postController)
+);
+router.delete(
+  "/posts/:id",
+  authMiddleware.authenticate,
+  postController.deletePost.bind(postController)
+);
 
 router.post(
   "/post-upload-image/:id",
-  authenticate,
+  authMiddleware.authenticate,
   communityImageUploadMiddleware.handle(),
   postController.uploadImage.bind(postController)
 );
-router.put("/posts/:id", authenticate, postController.updatePost.bind(postController));
-router.get("/community-post/:id", authenticate, postController.getPost.bind(postController));
+router.put(
+  "/posts/:id",
+  authMiddleware.authenticate,
+  postController.updatePost.bind(postController)
+);
+router.get(
+  "/community-post/:id",
+  authMiddleware.authenticate,
+  postController.getPost.bind(postController)
+);
 
 /* User side Community */
 router.get(
   "/user/get-all-community",
-  authenticate,
+  authMiddleware.authenticate,
   communityController.listAllCommunities.bind(communityController)
 );
 

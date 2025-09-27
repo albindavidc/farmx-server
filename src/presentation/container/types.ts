@@ -7,7 +7,7 @@ export const TYPES = {
   AuthController: Symbol.for("AuthController"),
 
   OtpRepository: Symbol.for("OtpRepository"),
-  EmailRepository: Symbol.for("EmailRepository"),
+  IEmailRepository: Symbol.for("IEmailRepository"),
   UserRepository: Symbol.for("UserRepository"),
 
   AuthService: Symbol.for("AuthService"),
@@ -25,7 +25,7 @@ export const TYPES = {
   BlockUserHandler: Symbol.for("BlockUserHandler"),
 
   /* Community */
-  CommunityRepository: Symbol.for("CommunityRepository"),
+  ICommunityRepository: Symbol.for("ICommunityRepository"),
   ImageuploadService: Symbol.for("ImageUploadService"),
   CreateCommunityHandler: Symbol.for("CreateCommunityHandler"),
   CommunityController: Symbol.for("CommunityController"),
@@ -39,7 +39,7 @@ export const TYPES = {
   UpdateCommunityHandler: Symbol.for("UpdateCommunityHandler"),
   DeleteCommunityHandler: Symbol.for("DeleteCommunityHandler"),
 
-  PostRepository: Symbol.for("PostRepository"),
+  IPostRepository: Symbol.for("IPostRepository"),
   FileUploadService: Symbol.for("FileUploadService"),
   CreateCommunityPostHandler: Symbol.for("CreateCommunityPostHandler"),
   UpdateCommunityPostHandler: Symbol.for("UpdateCommunityPostHandler"),
@@ -54,6 +54,9 @@ export const TYPES = {
   CommunityMapper: Symbol.for("CommunityMapper"),
   PostMapper: Symbol.for("PostMapper"),
 
-  //* ========== Middleware ========== *//
+  //* ========== Redis ========== *//
   RedisAuthService: Symbol.for("RedisAuthService"),
+
+  //* ========== Middlewares ========== *//
+  AuthMiddleware: Symbol.for("AuthMiddleware"),
 };
