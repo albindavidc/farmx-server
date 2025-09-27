@@ -1,28 +1,35 @@
 import { Container } from "inversify";
 import { TYPES } from "./types";
 
+import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-otp.handler";
+import { SettingsHandler } from "@application/handlers/command/auth/settings.handler";
+import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler";
+import { ChangePasswordHandler } from "@application/handlers/command/change-password.handler";
 import { CreateCommunityHandler } from "@application/handlers/command/community/create-community.handler";
 import { DeleteCommunityCommandHandler } from "@application/handlers/command/community/delete-community.handler";
 import { JoinCommunityHandler } from "@application/handlers/command/community/join-community.handler";
 import { LeaveCommunityHandler } from "@application/handlers/command/community/leave-community.handler";
-import { ListCommunitiesHandler } from "@application/handlers/query/community/list-communities.handler";
-import { LoadCommunitiesHandler } from "@application/handlers/query/community/load-communities.handler";
-import { LoadCommunityHandler } from "@application/handlers/query/community/load-community.handler";
 import { CreateCommunityPostHandler } from "@application/handlers/command/community/post/create-post.handler";
 import { DeleteCommunityPostHandler } from "@application/handlers/command/community/post/delete-post.handler";
-import { GetCommunityPostsQueryHandler } from "@application/handlers/query/community/post/get-community-post.handler";
-import { GetCommunityPostQueryHandler } from "@application/handlers/query/community/post/get-post.handler";
 import { UpdateCommunityPostHandler } from "@application/handlers/command/community/post/update-post.handler";
 import { UpdateCommunityCommandHandler } from "@application/handlers/command/community/update-community.handler";
 import { LoginChangePasswordHandler } from "@application/handlers/command/login-change-password.handler";
 import { BlockUserHandler } from "@application/handlers/command/user/block-user.handler";
+import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
+import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler";
+import { ListCommunitiesHandler } from "@application/handlers/query/community/list-communities.handler";
+import { LoadCommunitiesHandler } from "@application/handlers/query/community/load-communities.handler";
+import { LoadCommunityHandler } from "@application/handlers/query/community/load-community.handler";
+import { GetCommunityPostsQueryHandler } from "@application/handlers/query/community/post/get-community-post.handler";
+import { GetCommunityPostQueryHandler } from "@application/handlers/query/community/post/get-post.handler";
 import { CommunityRepository } from "@domain/repositories/community/community.repository";
 import { PostRepository } from "@domain/repositories/community/post.repository";
+import { EmailRepository } from "@domain/repositories/email.repository";
 import { CommunityRepositoryImpl } from "@infrastructure/repositories/community.repository";
 import { OtpRepositoryImpl } from "@infrastructure/repositories/otp.repository";
 import { PostRepositoryImpl } from "@infrastructure/repositories/post.repository";
 import { UserRepositoryImpl } from "@infrastructure/repositories/user.repository";
-import { AuthService } from "@infrastructure/services/auth.service";
+import { AuthService } from "@infrastructure/services/auth/auth.service";
 import { ImageUploadService } from "@infrastructure/services/image-upload.service";
 import { LoginService } from "@infrastructure/services/login.service";
 import { EmailServiceImpl } from "@infrastructure/services/otp.service";
@@ -33,13 +40,6 @@ import { PostController } from "@presentation/controllers/post.controller";
 import { UserController } from "@presentation/controllers/user.controller";
 import { CommunityImageUploadMiddleware } from "@presentation/middlewares/community-image-upload.middleware";
 import { UploadMiddleware } from "@presentation/middlewares/upload-middleware";
-import { ChangePasswordHandler } from "@application/handlers/command/change-password.handler";
-import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
-import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler";
-import { EmailRepository } from "@domain/repositories/email.repository";
-import { SettingsHandler } from "@application/handlers/command/auth/settings.handler";
-import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler";
-import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-otp.handler";
 
 const container = new Container();
 
@@ -123,3 +123,4 @@ container
   .to(CommunityImageUploadMiddleware)
   .inSingletonScope();
 export { container };
+

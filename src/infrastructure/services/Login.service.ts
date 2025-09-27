@@ -5,7 +5,7 @@ import {
   TokenPayload,
 } from "@application/utils/token-utility";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { Email } from "@domain/value-objects/user/email.vo";
+import { EmailVO } from "@domain/value-objects/user/email.vo";
 import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
 
@@ -14,18 +14,18 @@ export class LoginService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   async login(request: LoginRequest): Promise<LoginResponse> {
-    const email = Email.create(request.email);
+    const email = EmailVO.create(request.email);
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new Error("Invalid email or password");
     }
 
-    if (!user.isVerified || !user._id) {
+    if (!user.isVerified || !user.id) {
       throw new Error("Account not verified");
     }
 
-    const payload: TokenPayload = { id: user._id, email: user.email, role: user.role };
+    const payload: TokenPayload = { id: user.id, email: user.email, role: user.role };
     const accessToken = generateAcessToken(payload);
     const refreshToken = generateRefreshToken(payload);
 

@@ -2,11 +2,15 @@ import { RedisClient } from "@infrastructure/database/redis/redisClient";
 
 export interface ISessionData {
   userId: string;
+  email?: string;
+  name?: string;
+  role?: string;
+  isVerified?: boolean;
+  
   userAgent?: string;
   ipAddress?: string;
   createdAt: string;
   lastActivity: string;
-  [key: string]: string | number | boolean | undefined;
 }
 
 export interface IRefreshTokenData {
@@ -55,7 +59,8 @@ export class RedisAuthService {
     this.#MAX_LOGIN_ATTEMPTS = MAX_LOGIN_ATTEMPTS || 5;
   }
 
-  async storeSession(userId: string, sessionData: Partial<ISessionData>): Promise<void> {
+  //* ========== Session Management ========== *//
+  async createSession(userId: string, sessionData: Partial<ISessionData>): Promise<void> {
     const redisClient = new RedisClient();
     const redis = redisClient.client;
 
@@ -75,7 +80,7 @@ export class RedisAuthService {
     await redis.setex(key, this.#SESSION_TTL, JSON.stringify(dataToStore));
   }
 
-  async getSession(userId: string): Promise<ISessionData | null> {
+  async getSession(userId: string | undefined): Promise<ISessionData | null> {
     const redisClient = new RedisClient();
     const redis = redisClient.client;
 
@@ -111,7 +116,7 @@ export class RedisAuthService {
     await redis.del(`${this.#SESSION_PREFIX}${userId}`);
   }
 
-  async extendSession(userId: string): Promise<boolean> {
+  async extendSession(userId: string | undefined): Promise<boolean> {
     const redisClient = new RedisClient();
     const redis = redisClient.client;
 
@@ -128,5 +133,184 @@ export class RedisAuthService {
     await redis.expire(`${this.#SESSION_PREFIX}${userId}`, this.#SESSION_TTL);
 
     return true;
+  }
+
+  //* ========== Refresh Token Management ========== *//
+  async storeRefreshToken(
+    tokenId: string,
+    refreshTokenData: Omit<IRefreshTokenData, "createdAt">
+  ): Promise<boolean> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const key = `${this.#REFRESH_PREFIX}${tokenId}`;
+
+    const dataToStore: IRefreshTokenData = {
+      ...refreshTokenData,
+      createdAt: new Date().toISOString(),
+    };
+
+    await redis.setex(key, this.#REFRESH_TTL, JSON.stringify(dataToStore));
+
+    return true;
+  }
+
+  async getRefreshToken(tokenId: string): Promise<IRefreshTokenData | null> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const refreshTokenData = await redis.get(`${this.#REFRESH_PREFIX}${tokenId}`);
+
+    if (!refreshTokenData) {
+      return null;
+    }
+
+    return JSON.parse(refreshTokenData);
+  }
+
+  async deleteRefreshToken(tokenId: string): Promise<boolean> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    await redis.del(`${this.#REFRESH_PREFIX}${tokenId}`);
+
+    return true;
+  }
+
+  async deleteAllUserRefreshTokens(userId: string): Promise<number> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const keys = await redis.keys(`${this.#REFRESH_PREFIX}*`); // Get all keys starting with the prefix
+
+    let deleteCount = 0;
+    for (const key of keys) {
+      const refreshTokenData = await redis.get(key);
+
+      if (refreshTokenData) {
+        const data = JSON.parse(refreshTokenData);
+        if (data.userId === userId) {
+          await redis.del(key);
+          deleteCount++;
+        }
+      }
+    }
+
+    return deleteCount;
+  }
+
+  //* ========== Rate Limiting ========== *//
+  async checkLoginAttempts(identifier: string): Promise<ILoginAttempts> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const key = `${this.#RATE_LIMIT_PREFIX}${identifier}`;
+    const attempts = await redis.get(key);
+    const attemptCount = attempts ? parseInt(attempts, 10) : 0;
+
+    return { attempts: attemptCount, isBlocked: attemptCount >= this.#MAX_LOGIN_ATTEMPTS };
+  }
+
+  async incrementLoginAttempts(identifier: string): Promise<IRateLimitResult> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const key = `${this.#RATE_LIMIT_PREFIX}${identifier}`;
+    const current = await redis.incr(key);
+    if (current === 1) {
+      await redis.expire(key, this.#RATE_LIMIT_TTL);
+    }
+    const ttl = await redis.ttl(key);
+
+    return { attempts: current, isBlocked: current >= this.#MAX_LOGIN_ATTEMPTS, ttl };
+  }
+
+  async resetLoginAttempts(identifier: string): Promise<boolean> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const key = `${this.#RATE_LIMIT_PREFIX}${identifier}`;
+    await redis.del(key);
+
+    return true;
+  }
+
+  //* ========== Utility Methods ========== *//
+  async getAllActiveSessions(): Promise<ISessionData[]> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const keys = await redis.keys(`${this.#SESSION_PREFIX}*`);
+
+    const sessions: ISessionData[] = [];
+
+    for (const key of keys) {
+      const sessionData = await redis.get(key);
+      if (sessionData) {
+        const userId = key.replace(this.#SESSION_PREFIX, "");
+        sessions.push({ userId, ...JSON.parse(sessionData) });
+      }
+    }
+
+    return sessions;
+  }
+
+  async getUserSessions(userId: string): Promise<ISessionData[]> {
+    const session = await this.getAllActiveSessions();
+
+    return session.filter((s) => s.userId === userId);
+  }
+
+  async cleanupExpiredTokens(): Promise<number> {
+    const redisClient = new RedisClient();
+    const redis = redisClient.client;
+
+    if (!redis) {
+      throw new Error("Redis client is not initialized");
+    }
+
+    const keys = await redis.keys(`${this.#REFRESH_PREFIX}*`);
+
+    let clearnedCount = 0;
+    for (const key of keys) {
+      const ttl = await redis.ttl(key);
+      if (ttl === -1) {
+        await redis.del(key);
+        clearnedCount++;
+      }
+    }
+
+    return clearnedCount;
   }
 }

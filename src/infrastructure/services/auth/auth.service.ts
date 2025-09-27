@@ -8,7 +8,7 @@ import { User } from "@domain/entities/user.entity";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface";
 import { EmailVO } from "@domain/value-objects/user/email.vo";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../presentation/container/types";
+import {TYPES} from "@presentation/container/types";
 
 @injectable()
 export class AuthService {

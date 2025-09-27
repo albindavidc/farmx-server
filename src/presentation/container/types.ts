@@ -53,4 +53,7 @@ export const TYPES = {
   UserMapper: Symbol.for("UserMapper"),
   CommunityMapper: Symbol.for("CommunityMapper"),
   PostMapper: Symbol.for("PostMapper"),
+
+  //* ========== Middleware ========== *//
+  RedisAuthService: Symbol.for("RedisAuthService"),
 };

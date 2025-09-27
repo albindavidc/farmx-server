@@ -1,23 +1,24 @@
+import { LoginRequest, LoginResponse } from "@application/dtos/login.dto";
+import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { LoginRequest, LoginResponse } from "@application/dtos/login.dto";
-import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
-
+import { CreateUserCommand } from "@application/commands/user/create-user.command";
+import { UserDto } from "@application/dtos/user.dto";
 import sendResponseJson from "@application/utils/message";
-import { AuthService } from "@infrastructure/services/auth.service";
+import { AuthService } from "@infrastructure/services/auth/auth.service";
 import { LoginService } from "@infrastructure/services/login.service";
 import { TYPES } from "@presentation/container/types";
-import { CreateUserCommand } from "@application/commands/user/create-user.command";
-import { UserMapper } from "@application/mappers/user.mapper";
-import { UserDto } from "@application/dtos/user.dto";
+import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service";
+import jwt from "jsonwebtoken";
 
 @injectable()
 export default class AuthController {
   constructor(
     @inject(TYPES.CreateUserHandler) private createUserHander: CreateUserHandler,
     @inject(TYPES.AuthService) private authService: AuthService,
-    @inject(TYPES.LoginService) private loginService: LoginService
+    @inject(TYPES.LoginService) private loginService: LoginService,
+    @inject(TYPES.RedisAuthService) private redisAuthService: RedisAuthService
   ) {}
 
   public async signup(req: Request, res: Response): Promise<void> {
@@ -30,9 +31,8 @@ export default class AuthController {
       }
 
       const dto: Partial<UserDto> = { name, email, password, role, phone };
-      const userEntity = UserMapper.toEntity(dto);
 
-      const command = new CreateUserCommand(userEntity);
+      const command = new CreateUserCommand(dto);
 
       if (command.dto.role === "farmer") {
         command.dto.isFarmer = true;
@@ -61,9 +61,52 @@ export default class AuthController {
 
   public async login(req: Request, res: Response): Promise<void> {
     try {
+      const clientIP = req.ip || req.connection.remoteAddress || "unknown";
+
+      const loginAttempts = await this.redisAuthService.checkLoginAttempts(clientIP);
+      if (loginAttempts.isBlocked) {
+        sendResponseJson(res, StatusCodes.TOO_MANY_REQUESTS, "Too many login attempts", false);
+        return;
+      }
+
       const request: LoginRequest = req.body;
       const response: LoginResponse = await this.loginService.login(request);
 
+      await this.redisAuthService.resetLoginAttempts(clientIP);
+
+      /* Create session */
+      const sessionData = {
+        userId: response.user.id.toString(),
+        email: response.user.email,
+        name: response.user.name,
+        role: response.user.role,
+        isVerified: response.user.isVerified,
+
+        userAgent: req.headers["user-agent"] as string,
+        ipAddress: clientIP,
+        createdAt: Date.now().toString(),
+        lastActivity: Date.now().toString(),
+      };
+      await this.redisAuthService.createSession(response.user.id.toString(), sessionData);
+
+      /* Store Refresh Token */
+      if (response.refreshToken) {
+        const decoded = jwt.verify(response.refreshToken, process.env.JWT_SECRET as string) as {
+          tokenId: string;
+        };
+        const refreshTokenData = {
+          userId: response.user.id.toString(),
+          tokenId: decoded.tokenId,
+          ipAddress: clientIP,
+          userAgent: req.headers["user-agent"] as string,
+          createdAt: Date.now().toString(),
+          lastActivity: Date.now().toString(),
+        };
+
+        await this.redisAuthService.storeRefreshToken(decoded.tokenId, refreshTokenData);
+      }
+
+      /* Set cookies */
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
