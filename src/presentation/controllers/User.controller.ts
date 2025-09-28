@@ -3,34 +3,36 @@ import fs from "fs";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import path from "path";
-import { ChangePasswordCommand } from "@application/commands/change-password.command";
-import { LoginChangePasswordCommand } from "@application/commands/login-change-password.command";
-import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-photo.command";
-import { BlockUserCommand } from "@application/commands/user/block-user.command";
-import { CreateUserCommand } from "@application/commands/user/create-user.command";
-import { UpdateUserCommand } from "@application/commands/user/update-user.command";
-import { UserDto } from "@application/dtos/user.dto";
-import { ChangePasswordHandler } from "@application/handlers/command/change-password.handler";
-import { LoginChangePasswordHandler } from "@application/handlers/command/login-change-password.handler";
-import { BlockUserHandler } from "@application/handlers/command/user/block-user.handler";
-import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
-import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { TYPES } from "@presentation/container/types";
-import sendResponseJson from "@application/utils/message";
-import { SettingsHandler } from "@application/handlers/command/auth/settings.handler";
+
+import { TYPES } from "@presentation/container/types.js";
+import { ChangePasswordCommand } from "@application/commands/change-password.command.js";
+import { LoginChangePasswordCommand } from "@application/commands/login-change-password.command.js";
+import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-photo.command.js";
+import { BlockUserCommand } from "@application/commands/user/block-user.command.js";
+import { CreateUserCommand } from "@application/commands/user/create-user.command.js";
+import { UpdateUserCommand } from "@application/commands/user/update-user.command.js";
+import { UserDto } from "@application/dtos/user.dto.js";
+import { SettingsHandler } from "@application/handlers/command/auth/settings.handler.js";
+import { LoginChangePasswordHandler } from "@application/handlers/command/login-change-password.handler.js";
+import { BlockUserHandler } from "@application/handlers/command/user/block-user.handler.js";
+import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler.js";
+import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler.js";
+import sendResponseJson from "@application/utils/message.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
+import { AuthChangePasswordHandler } from "@application/handlers/command/auth/auth-change-password.handler.js";
 
 @injectable()
 export class UserController {
   constructor(
     @inject(TYPES.SettingsHandler) private readonly settingsUseCase: SettingsHandler,
     @inject(TYPES.UserRepository) private readonly userRepo: IUserRepository,
-    @inject(TYPES.ChangePasswordHandler) private changePasswordHandler: ChangePasswordHandler,
     @inject(TYPES.LoginChangePasswordHandler)
     private loginChangePasswordHandler: LoginChangePasswordHandler,
     @inject(TYPES.CreateUserHandler) private createUserHandler: CreateUserHandler,
     @inject(TYPES.UpdateUserHandler) private updateUserHandler: UpdateUserHandler,
-    @inject(TYPES.BlockUserHandler) private blockUserHandler: BlockUserHandler
+    @inject(TYPES.BlockUserHandler) private blockUserHandler: BlockUserHandler,
+    @inject(TYPES.AuthChangePasswordHandler)
+    private authChangePasswordHandler: AuthChangePasswordHandler
   ) {}
 
   async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
@@ -164,7 +166,12 @@ export class UserController {
       const { newPassword, confirmPassword } = req.body;
       const userId = req.user?.id;
       const command = new ChangePasswordCommand(userId, newPassword, confirmPassword);
-      await this.changePasswordHandler.execute(command);
+      await this.authChangePasswordHandler.changePassword(
+        command.userId,
+        command.newPassword,
+        command.confirmPassword
+      );
+
       sendResponseJson(res, StatusCodes.OK, "Password changed successfully", true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Internal Server Error";

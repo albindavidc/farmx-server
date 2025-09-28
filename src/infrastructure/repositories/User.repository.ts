@@ -1,11 +1,14 @@
-import { UserDto } from "@application/dtos/user.dto";
-import { User } from "@domain/entities/user.entity";
-import { EmailVO } from "@domain/value-objects/user/email.vo";
-import UserSchema from "@infrastructure/database/schemas/user.schema";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { UserMapper } from "@application/mappers/user.mapper";
-import { PasswordVO } from "../../domain/value-objects/user/password.vo";
+import { injectable } from "inversify";
 
+import { UserDto } from "@application/dtos/user.dto.js";
+import { UserMapper } from "@application/mappers/user.mapper.js";
+import { User } from "@domain/entities/user.entity.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
+import { EmailVO } from "@domain/value-objects/user/email.vo.js";
+import UserSchema from "@infrastructure/database/schemas/user.schema.js";
+import { PasswordVO } from "@domain/value-objects/user/password.vo.js";
+
+@injectable()
 export class UserRepositoryImpl implements IUserRepository {
   async create(user: User): Promise<User> {
     const userDoc = new UserSchema(user);

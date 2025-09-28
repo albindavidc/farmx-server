@@ -1,4 +1,4 @@
-import { OtpRequestDto } from "@application/dto/otp.dto";
+import { OtpRequestDto } from "@application/dtos/otp.dto.js";
 
 export class OtpValidator {
   public static validate(dto: OtpRequestDto): void {

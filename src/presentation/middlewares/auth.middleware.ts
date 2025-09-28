@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import sendResponseJson from "@application/utils/message";
+import { inject, injectable } from "inversify";
+
+import { TYPES } from "@presentation/container/types.js";
+import sendResponseJson from "@application/utils/message.js";
 import {
-  generateAcessToken,
-  verifyAccessToken,
-  verifyRefreshToken,
-} from "@application/utils/token-utility";
-import UserSchema, { IUserDocument } from "@infrastructure/database/schemas/user.schema";
-import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service";
-import { injectable, inject } from "inversify";
-import { TYPES } from "@presentation/container/types";
+    generateAcessToken,
+    verifyAccessToken,
+    verifyRefreshToken,
+} from "@application/utils/token-utility.js";
+import UserSchema, { IUserDocument } from "@infrastructure/database/schemas/user.schema.js";
+import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service.js";
 
 interface AuthRequest extends Request {
   user?: IUserDocument;

@@ -1,8 +1,9 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "@presentation/container/types";
-import { PostResponseDto, UpdatePostDto } from "@application/dtos/community/post.dto";
-import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
-import { IUpdateCommunityPost } from "@application/interfaces/command/community/post/update-post.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { PostResponseDto, UpdatePostDto } from "@application/dtos/community/post.dto.js";
+import { IUpdateCommunityPost } from "@application/interfaces/command/community/post/update-post.interface.js";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface.js";
 
 @injectable()
 export class UpdateCommunityPostHandler implements IUpdateCommunityPost {
@@ -19,7 +20,9 @@ export class UpdateCommunityPostHandler implements IUpdateCommunityPost {
       throw new Error("Not authorized to edit this post");
     }
 
-    post.update(dto.text, dto.imageUrl);
+    post.text = dto.text;
+    post.imageUrl = dto.imageUrl;
+
     const updated = await this.postRepository.update(post);
     return PostResponseDto.fromEntity(updated);
   }

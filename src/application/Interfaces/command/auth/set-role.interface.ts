@@ -1,4 +1,4 @@
-import { RoleUpdateDto, RoleResponseDto } from "@application/dto/role.dto";
+import { RoleResponseDto, RoleUpdateDto } from "@application/dtos/role.dto.js";
 export interface ISetRole {
   execute(dto: RoleUpdateDto): Promise<RoleResponseDto>;
 }

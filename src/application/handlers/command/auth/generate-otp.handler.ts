@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
-import { IEmailRepository } from "@domain/interfaces/email-repository.interface";
-import { IOTPRepository } from "@domain/interfaces/otp-repository.interface";
-import { TYPES } from "@presentation/container/types";
-import { OtpRequestDto, OtpResponseDto } from "@application/dtos/otp.dto";
-import { GenerateNewOtp } from "@application/utils/generate-otp";
-import { IGenerateOtp } from "@application/interfaces/command/auth/generate-otp.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { OtpRequestDto, OtpResponseDto } from "@application/dtos/otp.dto.js";
+import { IGenerateOtp } from "@application/interfaces/command/auth/generate-otp.interface.js";
+import { GenerateNewOtp } from "@application/utils/generate-otp.js";
+import { IEmailRepository } from "@domain/interfaces/email-repository.interface.js";
+import { IOTPRepository } from "@domain/interfaces/otp-repository.interface.js";
 
 @injectable()
 export class GenerateOtpHandler implements IGenerateOtp {

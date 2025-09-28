@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { ImageUploadService } from "../../infrastructure/services/image-upload.service";
-import { TYPES } from "../container/types";
+
+import { TYPES } from "@presentation/container/types.js";
+import { ImageUploadService } from "@infrastructure/services/image-upload.service.js";
 
 @injectable()
 export class UploadMiddleware {
-  constructor(@inject(TYPES.ImageuploadService) private imageUploadService: ImageUploadService) {}
+  constructor(@inject(TYPES.ImageUploadService) private imageUploadService: ImageUploadService) {}
 
   handle() {
     return (req: Request, res: Response, next: NextFunction) => {

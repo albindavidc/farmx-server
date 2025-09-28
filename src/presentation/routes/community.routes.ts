@@ -1,12 +1,13 @@
 import express from "express";
-import { CommunityController } from "../controllers/community.controller";
-import { container } from "../container/inversify.config";
-import { TYPES } from "../container/types";
-import { UploadMiddleware } from "../middlewares/upload-middleware";
-import { PostController } from "../controllers/post.controller";
-import { CommunityImageUploadMiddleware } from "../middlewares/community-image-upload.middleware";
-import { queryValidationMiddleware } from "../middlewares/validation.middleware";
-import { AuthMiddleware } from "@presentation/middlewares/auth.middleware";
+
+import { TYPES } from "@presentation/container/types.js";
+import { AuthMiddleware } from "@presentation/middlewares/auth.middleware.js";
+import { container } from "@presentation/container/inversify.config.js";
+import { CommunityController } from "@presentation/controllers/community.controller.js";
+import { PostController } from "@presentation/controllers/post.controller.js";
+import { CommunityImageUploadMiddleware } from "@presentation/middlewares/community-image-upload.middleware.js";
+import { UploadMiddleware } from "@presentation/middlewares/upload-middleware.js";
+import { queryValidationMiddleware } from "@presentation/middlewares/validation.middleware.js";
 
 const router = express.Router();
 

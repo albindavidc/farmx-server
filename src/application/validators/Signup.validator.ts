@@ -1,4 +1,4 @@
-import { SignupRequestDto } from "@application/dto/user.dto";
+import { SignupRequestDto } from "@application/dtos/user.dto.js";
 
 export class SignupValidator {
   public static validate(dto: SignupRequestDto): void {

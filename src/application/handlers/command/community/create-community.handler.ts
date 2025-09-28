@@ -1,9 +1,10 @@
 import { inject, injectable } from "inversify";
-import { Community } from "@domain/entities/community/community.entity";
-import { TYPES } from "@presentation/container/types";
-import { CreateCommunityCommand } from "@application/commands/community/create-community.command";
-import { ICreateCommunity } from "@application/interfaces/command/community/create-community.interface";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { CreateCommunityCommand } from "@application/commands/community/create-community.command.js";
+import { ICreateCommunity } from "@application/interfaces/command/community/create-community.interface.js";
+import { Community } from "@domain/entities/community/community.entity.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
 
 @injectable()
 export class CreateCommunityHandler implements ICreateCommunity {
@@ -16,9 +17,9 @@ export class CreateCommunityHandler implements ICreateCommunity {
       command.description,
       true,
       command.createdBy,
-      "",
       new Date(),
       1,
+      "",
       command.imageUrl,
       command.categories
     );

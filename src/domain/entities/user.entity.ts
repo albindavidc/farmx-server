@@ -1,11 +1,11 @@
-import { ICourseProgress, IUserCertificate } from "@infrastructure/database/schemas/user.schema";
-import { FarmerStatus } from "../enums/farmer-status.enum";
-import { EmailVO } from "@domain/value-objects/user/email.vo";
-import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo";
-import { NameVO } from "@domain/value-objects/user/name.vo";
-import { PasswordVO } from "@domain/value-objects/user/password.vo";
-import { RoleVO } from "@domain/value-objects/user/role.vo";
-import { UserIdVO } from "@domain/value-objects/user/user-id.vo";
+import { EmailVO } from "@domain/value-objects/user/email.vo.js";
+import { NameVO } from "@domain/value-objects/user/name.vo.js";
+import { PasswordVO } from "@domain/value-objects/user/password.vo.js";
+import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo.js";
+import { RoleVO } from "@domain/value-objects/user/role.vo.js";
+import { UserIdVO } from "@domain/value-objects/user/user-id.vo.js";
+import { ICourseProgress, IUserCertificate } from "@infrastructure/database/schemas/user.schema.js";
+import { FarmerStatus } from "@domain/enums/farmer-status.enum";
 
 export class FarmerProfile {
   constructor(
@@ -24,14 +24,14 @@ export class User {
   #hashedPassword: PasswordVO;
   #role: RoleVO;
   #phone: PhoneNumberVO;
-  #isVerified: boolean;
-  #isAdmin: boolean;
-  #isBlocked: boolean;
-  #isFarmer: boolean;
-  #courseCertificate?: IUserCertificate[];
-  #id: UserIdVO;
-  #courseProgress?: ICourseProgress[];
   #timestamps: { createdAt: Date; updatedAt: Date };
+  #id?: UserIdVO;
+  #isVerified?: boolean;
+  #isAdmin?: boolean;
+  #isBlocked?: boolean;
+  #isFarmer?: boolean;
+  #courseCertificate?: IUserCertificate[];
+  #courseProgress?: ICourseProgress[];
   #googleId?: string;
   #farmerProfile?: FarmerProfile;
   #profilePhoto?: string;
@@ -44,15 +44,15 @@ export class User {
     hashedPassword: PasswordVO,
     role: RoleVO,
     phone: PhoneNumberVO,
-    isVerified: boolean,
-    isAdmin: boolean,
-    isBlocked: boolean,
-    isFarmer: boolean,
     timestamps: {
       createdAt: Date;
       updatedAt: Date;
     },
-    id: UserIdVO,
+    id?: UserIdVO,
+    isVerified?: boolean,
+    isAdmin?: boolean,
+    isBlocked?: boolean,
+    isFarmer?: boolean,
     courseCertificate?: IUserCertificate[],
     courseProgress?: ICourseProgress[],
     googleId?: string,
@@ -85,6 +85,26 @@ export class User {
     return PasswordVO.compare(plainText, this.#hashedPassword.getHashedValue());
   }
 
+  set hashedPassword(newHashedPassword: string) {
+    this.#hashedPassword = PasswordVO.create(newHashedPassword);
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  set profilePhoto(newProfilePhoto: string) {
+    this.#profilePhoto = newProfilePhoto;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  set isVerified(newIsVerified: boolean) {
+    this.#isVerified = newIsVerified;
+    this.#timestamps.updatedAt = new Date();
+  }
+
+  set isFarmer(newIsFarmer: boolean) {
+    this.#isFarmer = newIsFarmer;
+    this.#timestamps.updatedAt = new Date();
+  }
+
   //* ========== Getters ========== *//
   get name(): string {
     return this.#name.value;
@@ -102,8 +122,8 @@ export class User {
     return this.#phone.value;
   }
 
-  get id(): string {
-    return this.#id.value;
+  get id(): string | undefined {
+    return this.#id?.value;
   }
 
   get googleId(): string | undefined {
@@ -134,19 +154,19 @@ export class User {
     return this.#courseProgress;
   }
 
-  get isFarmer(): boolean {
+  get isFarmer(): boolean | undefined {
     return this.#isFarmer;
   }
 
-  get isVerified(): boolean {
+  get isVerified(): boolean | undefined {
     return this.#isVerified;
   }
 
-  get isBlocked(): boolean {
+  get isBlocked(): boolean | undefined {
     return this.#isBlocked;
   }
 
-  get isAdmin(): boolean {
+  get isAdmin(): boolean | undefined {
     return this.#isAdmin;
   }
 
@@ -202,23 +222,23 @@ export class User {
   }
 
   //* ========== Validations ========== *//
-  public canLogin(): boolean {
+  public canLogin(): boolean | undefined {
     return this.#isVerified && !this.#isBlocked;
   }
 
-  public canCreateCourse(): boolean {
+  public canCreateCourse(): boolean | undefined {
     return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
   }
 
-  public canUpdateCourse(): boolean {
+  public canUpdateCourse(): boolean | undefined {
     return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
   }
 
-  public canDeleteCourse(): boolean {
+  public canDeleteCourse(): boolean | undefined {
     return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
   }
 
-  public canCreateCertificate(): boolean {
+  public canCreateCertificate(): boolean | undefined {
     return this.#isVerified && !this.#isBlocked && (this.#isAdmin || this.#isFarmer);
   }
 
@@ -253,12 +273,12 @@ export class User {
       hashedPassword,
       role,
       phone,
-      false,
-      false,
-      false,
-      false,
       { createdAt: new Date(), updatedAt: new Date() },
       id,
+      false,
+      false,
+      false,
+      false,
       [],
       [],
       createProps.googleId
@@ -271,15 +291,15 @@ export class User {
     hashedPassword: string;
     role: string;
     phone: string;
-    isVerified: boolean;
-    isAdmin: boolean;
-    isBlocked: boolean;
-    isFarmer: boolean;
     timestamps: {
       createdAt: Date;
       updatedAt: Date;
     };
-    id: string;
+    id?: string;
+    isVerified?: boolean;
+    isAdmin?: boolean;
+    isBlocked?: boolean;
+    isFarmer?: boolean;
     courseCertificate?: IUserCertificate[];
     courseProgress?: ICourseProgress[];
     googleId?: string;
@@ -294,12 +314,12 @@ export class User {
       PasswordVO.create(reconstituteProps.hashedPassword),
       RoleVO.create(reconstituteProps.role),
       PhoneNumberVO.create(reconstituteProps.phone),
+      reconstituteProps.timestamps,
+      UserIdVO.create(reconstituteProps.id),
       reconstituteProps.isVerified,
       reconstituteProps.isAdmin,
       reconstituteProps.isBlocked,
       reconstituteProps.isFarmer,
-      reconstituteProps.timestamps,
-      UserIdVO.create(reconstituteProps.id),
       reconstituteProps.courseCertificate,
       reconstituteProps.courseProgress,
       reconstituteProps.googleId,

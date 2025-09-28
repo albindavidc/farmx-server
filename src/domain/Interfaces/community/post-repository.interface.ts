@@ -1,4 +1,4 @@
-import { Post } from "../../entities/community/post.entity";
+import { Post } from "@domain/entities/community/post.entity";
 
 export interface IPostRepository {
   findById(id: string): Promise<Post | null>;

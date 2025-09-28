@@ -1,4 +1,4 @@
-import { UpdatePostDto, PostResponseDto } from "@application/dto/community/post.dto";
+import { PostResponseDto, UpdatePostDto } from "@application/dtos/community/post.dto.js";
 
 export interface IUpdateCommunityPost {
   execute(dto: UpdatePostDto, userId: string, isAdmin: boolean): Promise<PostResponseDto>;

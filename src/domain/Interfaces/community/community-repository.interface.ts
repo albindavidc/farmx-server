@@ -1,6 +1,6 @@
 import mongoose, { FilterQuery } from "mongoose";
-import { Community } from "@domain/entities/community/community.entity";
-import { CommunityResponseDto } from "@application/dtos/community/community-response.dto";
+
+import { Community } from "@domain/entities/community/community.entity.js";
 
 export interface ICommunityMember {
   userId: mongoose.Types.ObjectId;
@@ -15,7 +15,7 @@ export interface IAddMembershipResult {
 }
 
 export interface ICommunityRepository {
-  create(community: Community): Promise<CommunityResponseDto>;
+  create(community: Community): Promise<Community>;
   findById(id: string): Promise<Community | null>;
   findByCreatedById(createdById: string): Promise<Community[]>;
   findAll(): Promise<Community[]>;

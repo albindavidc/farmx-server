@@ -1,14 +1,15 @@
+import { inject, injectable } from "inversify";
+
+import { TYPES } from "@presentation/container/types.js";
 import {
   generateAcessToken,
   generateRefreshToken,
   TokenPayload,
   verifyRefreshToken,
-} from "@application/utils/token-utility";
-import { User } from "@domain/entities/user.entity";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { EmailVO } from "@domain/value-objects/user/email.vo";
-import { inject, injectable } from "inversify";
-import {TYPES} from "@presentation/container/types";
+} from "@application/utils/token-utility.js";
+import { User } from "@domain/entities/user.entity.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
+import { EmailVO } from "@domain/value-objects/user/email.vo.js";
 
 @injectable()
 export class AuthService {

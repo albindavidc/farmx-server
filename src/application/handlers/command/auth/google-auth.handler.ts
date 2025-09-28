@@ -1,12 +1,13 @@
 import * as admin from "firebase-admin";
 import { inject, injectable } from "inversify";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { TYPES } from "@presentation/container/types";
-import { GoogleAuthResponseDto } from "@application/dtos/auth.dto";
-import { AuthException } from "@application/exceptions/auth.exception";
-import { UserMapper } from "@application/mappers/user.mapper";
-import { generateAcessToken, generateRefreshToken } from "@application/utils/token-utility";
-import { IGoogleAuth } from "@application/interfaces/command/auth/google-auth.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { GoogleAuthResponseDto } from "@application/dtos/auth.dto.js";
+import { AuthException } from "@application/exceptions/auth.exception.js";
+import { IGoogleAuth } from "@application/interfaces/command/auth/google-auth.interface.js";
+import { UserMapper } from "@application/mappers/user.mapper.js";
+import { generateAcessToken, generateRefreshToken } from "@application/utils/token-utility.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
 
 @injectable()
 export class GoogleAuthHandler implements IGoogleAuth {
@@ -21,19 +22,21 @@ export class GoogleAuthHandler implements IGoogleAuth {
     }
 
     const userData = {
-      email: email as string,
-      name: name as string,
+      name: name,
+      email: email,
       googleId: uid as string,
       isVerified: true,
       profile: picture as string | undefined,
     };
 
-    const res = await this.userRepository.googleAuthLogin(userData);
+    const userEntity = await UserMapper.toEntity(userData);
+
+    const res = await this.userRepository.googleAuthLogin(userEntity);
     const userDto = UserMapper.toDto(res.user);
 
     if (!res.isNewUser) {
       const payload = {
-        id: res.user._id || "",
+        id: res.user.id || "",
         email: res.user.email,
         role: res.user.role,
       };

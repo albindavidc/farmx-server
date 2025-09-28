@@ -1,10 +1,11 @@
 import express from "express";
-import AuthController from "../controllers/auth.controller";
-import OtpController from "../controllers/otp.controller";
-import { container } from "../container/inversify.config";
-import { TYPES } from "../container/types";
-import { AuthMiddleware } from "../middlewares/auth.middleware";
-import { UserController } from "../controllers/user.controller";
+
+import { TYPES } from "@presentation/container/types.js";
+import { container } from "@presentation/container/inversify.config.js";
+import AuthController from "@presentation/controllers/auth.controller.js";
+import OtpController from "@presentation/controllers/otp.controller.js";
+import { UserController } from "@presentation/controllers/user.controller.js";
+import { AuthMiddleware } from "@presentation/middlewares/auth.middleware.js";
 
 const router = express.Router();
 

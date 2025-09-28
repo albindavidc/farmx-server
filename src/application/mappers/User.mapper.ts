@@ -1,45 +1,47 @@
-import { UserDto } from "@application/dtos/user.dto";
-import { User } from "@domain/entities/user.entity";
-import { NameVO } from "@domain/value-objects/user/name.vo";
-import { EmailVO } from "@domain/value-objects/user/email.vo";
-import { RoleVO } from "@domain/value-objects/user/role.vo";
-import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo";
-import { FarmerProfile } from "@domain/entities/user.entity";
-import { ICourseProgress, IUserDocument } from "@infrastructure/database/schemas/user.schema";
-import { IUserCertificate } from "@infrastructure/database/schemas/user.schema";
-import { FarmerStatus } from "@domain/enums/farmer-status.enum";
+import { UserDto } from "@application/dtos/user.dto.js";
+import { FarmerProfile, User } from "@domain/entities/user.entity.js";
+import { FarmerStatus } from "@domain/enums/farmer-status.enum.js";
+import { EmailVO } from "@domain/value-objects/user/email.vo.js";
+import { NameVO } from "@domain/value-objects/user/name.vo.js";
+import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo.js";
+import { RoleVO } from "@domain/value-objects/user/role.vo.js";
+import {
+  ICourseProgress,
+  IUserCertificate,
+  IUserDocument,
+} from "@infrastructure/database/schemas/user.schema.js";
 
 export interface IPersistenceData {
-  _id: string;
   name: string;
   email: string;
   hashedPassword: string;
   role: string;
   phone: string;
-  isVerified: boolean;
-  isAdmin: boolean;
-  isBlocked: boolean;
+  timestamps: { createdAt: Date; updatedAt: Date };
+  _id?: string;
+  isVerified?: boolean;
+  isAdmin?: boolean;
+  isBlocked?: boolean;
   googleId?: string;
 
-  isFarmer: boolean;
+  isFarmer?: boolean;
   farmerProfile?: FarmerProfile;
   profilePhoto?: string;
   bio?: string;
-  courseProgress: ICourseProgress[];
-  courseCertificate: IUserCertificate[];
+  courseProgress?: ICourseProgress[];
+  courseCertificate?: IUserCertificate[];
   reason?: string;
-  timestamps: { createdAt: Date; updatedAt: Date };
 }
 
 export class UserMapper {
   static toDto(user: User): Partial<UserDto> {
     return {
-      _id: user.id?.value,
-      name: user.name.value,
-      email: user.email.value,
+      name: user.name,
+      email: user.email,
       // password: user.password, // Exclude password for security reasons
-      role: user.role.value,
-      phone: user.phone.value,
+      role: user.role,
+      phone: user.phone,
+      _id: user.id,
       isVerified: user.isVerified,
       isAdmin: user.isAdmin,
       isBlocked: user.isBlocked,
@@ -166,12 +168,12 @@ export class UserMapper {
     if (dto.googleId !== undefined) updates.googleId = dto.googleId;
 
     return User.reconstitute({
-      id: entity.id?.value,
-      name: updates.name ?? entity.name.value,
-      email: updates.email ?? entity.email.value,
-      hashedPassword: entity.hashedPassword.hashedPassword,
-      role: updates.role ?? entity.role.value,
-      phone: updates.phone ?? entity.phone.value,
+      id: entity.id,
+      name: updates.name ?? entity.name,
+      email: updates.email ?? entity.email,
+      hashedPassword: entity.hashedPassword,
+      role: updates.role ?? entity.role,
+      phone: updates.phone ?? entity.phone,
       isVerified: updates.isVerified ?? entity.isVerified,
       isAdmin: updates.isAdmin ?? entity.isAdmin,
       isBlocked: updates.isBlocked ?? entity.isBlocked,
@@ -188,12 +190,12 @@ export class UserMapper {
 
   static fromPersistence(persistence: IUserDocument): User {
     return User.reconstitute({
-      id: persistence._id.toString(),
       name: persistence.name,
       email: persistence.email,
       hashedPassword: persistence.hashedPassword,
       role: persistence.role,
       phone: persistence.phone,
+      id: persistence._id.toString(),
       isVerified: persistence.isVerified,
       isAdmin: persistence.isAdmin,
       isBlocked: persistence.isBlocked,
@@ -223,12 +225,16 @@ export class UserMapper {
 
   static toPersistence(user: User): IPersistenceData {
     return {
-      _id: user.id.value,
-      name: user.name.value,
-      email: user.email.value,
-      hashedPassword: user.hashedPassword.hashedPassword,
-      role: user.role.value,
-      phone: user.phone.value,
+      name: user.name,
+      email: user.email,
+      hashedPassword: user.hashedPassword,
+      role: user.role,
+      phone: user.phone,
+      timestamps: {
+        createdAt: user.timestamps.createdAt,
+        updatedAt: user.timestamps.updatedAt,
+      },
+      _id: user.id,
       isVerified: user.isVerified,
       isAdmin: user.isAdmin,
       isBlocked: user.isBlocked,
@@ -236,13 +242,9 @@ export class UserMapper {
       farmerProfile: user.farmerProfile,
       profilePhoto: user.profilePhoto,
       bio: user.bio,
-      courseProgress: user.courseProgress,
+      courseProgress: user.courseProgress || [],
       reason: user.reason,
-      courseCertificate: user.courseCertificate,
-      timestamps: {
-        createdAt: user.timestamps.createdAt,
-        updatedAt: user.timestamps.updatedAt,
-      },
+      courseCertificate: user.courseCertificate || [],
       googleId: user.googleId,
     };
   }

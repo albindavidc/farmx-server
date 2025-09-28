@@ -1,7 +1,7 @@
-import { Community } from "@domain/entities/community/community.entity";
-import { CreateCommunityRequestDto } from "@application/dtos/community/community-request.dto";
-import { CommunityResponseDto } from "@application/dtos/community/community-response.dto";
-import { UpdateCommunityRequestDto } from "@application/dtos/community/update-community.dto";
+import { CreateCommunityRequestDto } from "@application/dtos/community/community-request.dto.js";
+import { CommunityResponseDto } from "@application/dtos/community/community-response.dto.js";
+import { UpdateCommunityRequestDto } from "@application/dtos/community/update-community.dto.js";
+import { Community } from "@domain/entities/community/community.entity.js";
 
 export class CommunityMapper {
   //* ========== To Entity ========== *//
@@ -44,7 +44,7 @@ export class CommunityMapper {
 
   //* ========== To DTO ========== *//
 
-  static entityToDto(entity: Community): CommunityResponseDto {
+  static entityToDto(entity: Community | null): CommunityResponseDto {
     if (!entity) {
       throw new Error("Entity cannot be null or undefined");
     }

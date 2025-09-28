@@ -1,4 +1,4 @@
-import {UserRole} from "@domain/enums/user-role.enum"
+import { UserRole } from "@domain/enums/user-role.enum.js";
 
 export const RoutePermissions: Record<string, UserRole[]> = {
   "/admin": [UserRole.ADMIN],

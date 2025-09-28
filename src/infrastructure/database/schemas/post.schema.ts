@@ -1,5 +1,5 @@
+import { UserPostRole } from "@domain/enums/user-role.enum.js";
 import mongoose, { Schema } from "mongoose";
-import { UserPostRole } from "@domain/enums/user-role.enum";
 
 export interface IPostDocument extends Document {
   _id: string;

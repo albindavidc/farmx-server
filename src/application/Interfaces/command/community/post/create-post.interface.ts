@@ -1,4 +1,4 @@
-import { CreatePostDto, PostResponseDto } from "@application/dto/community/post.dto";
+import { CreatePostDto, PostResponseDto } from "@application/dtos/community/post.dto.js";
 
 export interface ICreateCommunityPost {
   execute(dto: CreatePostDto): Promise<PostResponseDto>;

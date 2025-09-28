@@ -1,13 +1,14 @@
-import { LoginRequest, LoginResponse } from "@application/dtos/login.dto";
+import { inject, injectable } from "inversify";
+
+import { TYPES } from "@presentation/container/types.js";
+import { LoginRequest, LoginResponse } from "@application/dtos/login.dto.js";
 import {
   generateAcessToken,
   generateRefreshToken,
   TokenPayload,
-} from "@application/utils/token-utility";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { EmailVO } from "@domain/value-objects/user/email.vo";
-import { TYPES } from "@presentation/container/types";
-import { inject, injectable } from "inversify";
+} from "@application/utils/token-utility.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
+import { EmailVO } from "@domain/value-objects/user/email.vo.js";
 
 @injectable()
 export class LoginService {

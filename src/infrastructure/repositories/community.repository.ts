@@ -1,18 +1,17 @@
 import { injectable } from "inversify";
 import mongoose, { FilterQuery, Types } from "mongoose";
 
+import { Community } from "@domain/entities/community/community.entity.js";
 import {
-  IAddMembershipResult,
-  ICommunityRepository,
-} from "@domain/interfaces/community/community-repository.interface";
-import { Community } from "@domain/entities/community/community.entity";
-
+    IAddMembershipResult,
+    ICommunityRepository,
+} from "@domain/interfaces/community/community-repository.interface.js";
+import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema.js";
 import {
-  ICommunityDocument,
-  CommunityModel,
-} from "@infrastructure/database/schemas/community.schema";
-import { CommunityMemberModel } from "@infrastructure/database/schemas/community-members.schema";
-import { CommunityPersistenceMapper } from "@infrastructure/mappers/community/community-persistence.mapper";
+    CommunityModel,
+    ICommunityDocument,
+} from "@infrastructure/database/schemas/community.schema.js";
+import { CommunityPersistenceMapper } from "@infrastructure/mappers/community/community-persistence.mapper.js";
 
 @injectable()
 export class CommunityRepositoryImpl implements ICommunityRepository {

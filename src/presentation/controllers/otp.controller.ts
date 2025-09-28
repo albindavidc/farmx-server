@@ -1,21 +1,22 @@
-import { OtpRequestDto, OtpResponseDto } from "@application/dtos/otp.dto";
-import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-otp.handler";
-import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler";
-import sendResponseJson from "@application/utils/message";
-import { IEmailRepository } from "@domain/interfaces/email-repository.interface";
-import { EmailVO } from "@domain/value-objects/user/email.vo";
-import { AuthService } from "@infrastructure/services/auth/auth.service";
-import { TYPES } from "@presentation/container/types";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
+
+import { TYPES } from "@presentation/container/types.js";
+import { OtpRequestDto, OtpResponseDto } from "@application/dtos/otp.dto.js";
+import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-otp.handler.js";
+import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler.js";
+import sendResponseJson from "@application/utils/message.js";
+import { IEmailRepository } from "@domain/interfaces/email-repository.interface.js";
+import { EmailVO } from "@domain/value-objects/user/email.vo.js";
+import { AuthService } from "@infrastructure/services/auth/auth.service.js";
 
 @injectable()
 export class OtpController {
   constructor(
     @inject(TYPES.GenerateOtpHandler) private generateOtp: GenerateOtpHandler,
     @inject(TYPES.VerifyOtpHandler) private verifyOtp: VerifyOtpHandler,
-    @inject(TYPES.IEmailRepository) private EmailRepository: IEmailRepository,
+    @inject(TYPES.EmailRepository) private EmailRepository: IEmailRepository,
     @inject(TYPES.AuthService) private authService: AuthService
   ) {}
 

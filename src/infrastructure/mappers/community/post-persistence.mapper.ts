@@ -1,5 +1,5 @@
-import { Post } from "@domain/entities/community/post.entity";
-import { IPostDocument } from "@infrastructure/database/schemas/post.schema";
+import { Post } from "@domain/entities/community/post.entity.js";
+import { IPostDocument } from "@infrastructure/database/schemas/post.schema.js";
 
 export class PostPersistenceMapper {
   //* ========== Persistence <-> Entity ========== *//

@@ -1,4 +1,4 @@
-import { RoleUpdateDto } from "@application/dto/role.dto";
+import { RoleUpdateDto } from "@application/dtos/role.dto.js";
 
 export class RoleValidator {
   public static validate(dto: RoleUpdateDto): void {

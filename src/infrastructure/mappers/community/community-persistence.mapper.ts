@@ -1,5 +1,5 @@
-import { Community } from "@domain/entities/community/community.entity";
-import { ICommunityDocument } from "@infrastructure/database/schemas/community.schema";
+import { Community } from "@domain/entities/community/community.entity.js";
+import { ICommunityDocument } from "@infrastructure/database/schemas/community.schema.js";
 
 export class CommunityPersistenceMapper {
   //* ========== To Entity ========== *//

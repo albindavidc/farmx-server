@@ -1,4 +1,4 @@
-import { UserPostRole } from "@domain/enums/user-role.enum";
+import { UserPostRole } from "@domain/enums/user-role.enum.js";
 
 export class Post {
   #text: string;
@@ -53,8 +53,12 @@ export class Post {
     this.#isEdited = true;
     this.#lastEditedAt = new Date();
   }
-  set imageUrl(imageUrl: string) {
-    this.#imageUrl = imageUrl;
+  set imageUrl(imageUrl: string | undefined) {
+    if(imageUrl){
+      this.#isEdited = true;
+      this.#lastEditedAt = new Date();
+      this.#imageUrl = imageUrl;
+    }
   }
 
   get imageUrl(): string | undefined {

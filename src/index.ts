@@ -4,23 +4,26 @@ import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import fs from "fs";
 import { createServer, Server as HttpServer } from "http";
-import logger from "morgan";
+import morgan from "morgan";
 import path from "path";
 import "reflect-metadata";
 import * as rfs from "rotating-file-stream";
-import { configFrontend } from "./infrastructure/config/config-setup";
-import connectToDatabase from "./infrastructure/database/mongoose-connection";
+import { fileURLToPath } from "url";
 
-import morgan from "morgan";
-import authRoute from "./presentation/routes/auth.route";
-import communityRoute from "./presentation/routes/community.routes";
-import sharedRoute from "./presentation/routes/shared.route";
-import userRoute from "./presentation/routes/user.route";
-
-import 'tsconfig-paths/register';
-
+import { configFrontend } from "@infrastructure/config/config-setup.js";
+import connectToDatabase from "@infrastructure/database/mongoose-connection.js";
+import { container } from "@presentation/container/inversify.config.js";
+import { RedisClient } from "@infrastructure/database/redis/redisClient.js";
+import { TYPES } from "@presentation/container/types.js";
+import authRoute from "@presentation/routes/auth.route.js";
+import communityRoute from "@presentation/routes/community.routes.js";
+import sharedRoute from "@presentation/routes/shared.route.js";
+import userRoute from "@presentation/routes/user.route.js";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const allowOrigins = [
   configFrontend.frontendUrl,
@@ -34,8 +37,8 @@ const corsOptions = {
     if (!origin || allowOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log(`CORS rejected origin: ${origin}`);
-      callback(new Error("Not allowed by the CORS"), false);
+      console.error(`CORS rejected origin: ${origin}`);
+      callback(new Error("Not allowed by CORS"), false);
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -44,58 +47,114 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-/* Start the server */
-const startServer = async (app: express.Express, server: HttpServer, port: string | number) => {
-  try {
-    await connectToDatabase();
-    server.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`);
-    });
-  } catch (error) {
-    console.error("Failed to bootstrap application: ", error);
-    process.exit(1);
-  }
-};
+/* Setup logging */
+function setupLogging(app: express.Express): void {
+  const logDirectory = path.join(__dirname, "logs");
 
-async function bootstrap(): Promise<void> {
-  /* Initialize Express & HTTP app */
-  const app = express();
-  const server = createServer(app);
-  const PORT = process.env.APP_PORT || 5000;
-
-  /* Logging setup */
-  const logDirectory = path.join(__dirname, `logs`);
   if (!fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory);
+    fs.mkdirSync(logDirectory, { recursive: true });
   }
+
   const errorLogStream = rfs.createStream("error.log", {
     interval: "1d",
     path: logDirectory,
     maxFiles: 7,
   });
 
-  /* Middleware */
-  app.use(cors(corsOptions));
-  app.use(cookieParser());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
   app.use(morgan("dev"));
   app.use(
-    logger("combined", {
+    morgan("combined", {
       stream: errorLogStream,
       skip: (req: Request, res: Response) => res.statusCode < 400,
     })
   );
-  app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+}
 
-  /* Routes */
+/* Setup middleware */
+function setupMiddleware(app: express.Express): void {
+  app.use(cors(corsOptions));
+  app.use(cookieParser());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  setupLogging(app);
+  app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+}
+
+/* Setup routes */
+function setupRoutes(app: express.Express): void {
   app.use("/auth", authRoute);
   app.use("/", sharedRoute);
   app.use("/api", userRoute);
   app.use("/community", communityRoute);
-
-  /* Start server */
-  startServer(app, server, PORT);
 }
 
-bootstrap().catch(console.error);
+/* Start the server */
+async function startServer(
+  app: express.Express,
+  server: HttpServer,
+  port: string | number
+): Promise<void> {
+  try {
+    // Connect to MongoDB
+    await connectToDatabase();
+
+    // Connect to Redis
+    const redisClient = container.get<RedisClient>(TYPES.RedisClient);
+    await redisClient.connect();
+
+    server.listen(port, () => {
+      console.log(`🚀 Server running on http://localhost:${port}`);
+      console.log(`📦 Environment: ${process.env.NODE_ENV || "development"}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to bootstrap application:", error);
+    process.exit(1);
+  }
+}
+
+/* Graceful shutdown */
+function setupGracefulShutdown(server: HttpServer): void {
+  const shutdown = async (signal: string) => {
+    console.log(`\n${signal} received. Starting graceful shutdown...`);
+
+    server.close(async () => {
+      console.log("HTTP server closed");
+
+      try {
+        const redisClient = container.get<RedisClient>(TYPES.RedisClient);
+        await redisClient.disconnect();
+        console.log("Redis disconnected");
+        process.exit(0);
+      } catch (error) {
+        console.error("Error during shutdown:", error);
+        process.exit(1);
+      }
+    });
+
+    // Force shutdown after 10 seconds
+    setTimeout(() => {
+      console.error("Forced shutdown after timeout");
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
+}
+
+async function bootstrap(): Promise<void> {
+  const app = express();
+  const server = createServer(app);
+  const PORT = process.env.APP_PORT || 5000;
+
+  setupMiddleware(app);
+  setupRoutes(app);
+  setupGracefulShutdown(server);
+
+  await startServer(app, server, PORT);
+}
+
+bootstrap().catch((error) => {
+  console.error("Fatal error during bootstrap:", error);
+  process.exit(1);
+});

@@ -7,7 +7,7 @@ export const TYPES = {
   AuthController: Symbol.for("AuthController"),
 
   OtpRepository: Symbol.for("OtpRepository"),
-  IEmailRepository: Symbol.for("IEmailRepository"),
+  EmailRepository: Symbol.for("EmailRepository"),
   UserRepository: Symbol.for("UserRepository"),
 
   AuthService: Symbol.for("AuthService"),
@@ -16,8 +16,8 @@ export const TYPES = {
   /* User */
   SettingsHandler: Symbol.for("SettingsHandler"),
   UserController: Symbol.for("UserController"),
-  ChangePasswordUseCase: Symbol.for("ChangePasswordUseCase"),
-  ChangePasswordHandler: Symbol.for("ChangePasswordHandler"),
+  // ChangePasswordHandler: Symbol.for("ChangePasswordHandler"),
+  AuthChangePasswordHandler: Symbol.for("AuthChangePasswordHandler"),
   GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
   GetUserProfileHandler: Symbol.for("GetUserProfileHandler"),
   LoginChangePasswordHandler: Symbol.for("LoginChangePasswordHandler"),
@@ -25,8 +25,8 @@ export const TYPES = {
   BlockUserHandler: Symbol.for("BlockUserHandler"),
 
   /* Community */
-  ICommunityRepository: Symbol.for("ICommunityRepository"),
-  ImageuploadService: Symbol.for("ImageUploadService"),
+  CommunityRepository: Symbol.for("CommunityRepository"),
+  ImageUploadService: Symbol.for("ImageUploadService"),
   CreateCommunityHandler: Symbol.for("CreateCommunityHandler"),
   CommunityController: Symbol.for("CommunityController"),
   UploadMiddleware: Symbol.for("UploadMiddleware"),
@@ -39,7 +39,7 @@ export const TYPES = {
   UpdateCommunityHandler: Symbol.for("UpdateCommunityHandler"),
   DeleteCommunityHandler: Symbol.for("DeleteCommunityHandler"),
 
-  IPostRepository: Symbol.for("IPostRepository"),
+  PostRepository: Symbol.for("PostRepository"),
   FileUploadService: Symbol.for("FileUploadService"),
   CreateCommunityPostHandler: Symbol.for("CreateCommunityPostHandler"),
   UpdateCommunityPostHandler: Symbol.for("UpdateCommunityPostHandler"),
@@ -49,14 +49,14 @@ export const TYPES = {
   PostController: Symbol.for("PostController"),
   CommunityImageUploadMiddleware: Symbol.for("CommunityImageUploadMiddleware"),
 
-  //* ========== Mappers ========== *//
-  UserMapper: Symbol.for("UserMapper"),
-  CommunityMapper: Symbol.for("CommunityMapper"),
-  PostMapper: Symbol.for("PostMapper"),
-
   //* ========== Redis ========== *//
+  RedisClient: Symbol.for("RedisClient"),
   RedisAuthService: Symbol.for("RedisAuthService"),
+  RedisAuthConfig: Symbol.for("RedisAuthConfig"),
 
   //* ========== Middlewares ========== *//
   AuthMiddleware: Symbol.for("AuthMiddleware"),
+
+  EmailConfig: Symbol.for('EmailConfig'),
+  Logger: Symbol.for('Logger'),
 };

@@ -1,5 +1,5 @@
-import { Post } from "@domain/entities/community/post.entity";
-import { UserPostRole } from "@domain/enums/user-role.enum";
+import { Post } from "@domain/entities/community/post.entity.js";
+import { UserPostRole } from "@domain/enums/user-role.enum.js";
 
 export class CreatePostDto {
   text!: string;

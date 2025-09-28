@@ -1,5 +1,5 @@
-import { IUserDocument } from "@infrastructure/database/schemas/user.schema";
-import { ILoginAttempts } from "@infrastructure/services/auth/redis-auth.service";
+import { IUserDocument } from "@infrastructure/database/schemas/user.schema.js";
+import { ILoginAttempts } from "@infrastructure/services/auth/redis-auth.service.js";
 
 declare global {
   namespace Express {
@@ -14,4 +14,5 @@ declare global {
   }
 }
 
-export {};
+export { };
+

@@ -1,11 +1,11 @@
-import { injectable, inject } from "inversify";
-import { TYPES } from "@presentation/container/types";
-import { UpdateCommunityCommand } from "@application/commands/community/update-community.command";
-import { IUpdateCommunity } from "@application/interfaces/command/community/update-community.interface";
-import { CommunityResponseDto } from "@application/dtos/community/community-response.dto";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
+import { inject, injectable } from "inversify";
 
-import { CommunityMapper } from "@application/mappers/community/community.mapper";
+import { TYPES } from "@presentation/container/types.js";
+import { UpdateCommunityCommand } from "@application/commands/community/update-community.command.js";
+import { CommunityResponseDto } from "@application/dtos/community/community-response.dto.js";
+import { IUpdateCommunity } from "@application/interfaces/command/community/update-community.interface.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
+import { CommunityMapper } from "@application/mappers/community/community.mapper.js";
 
 @injectable()
 export class UpdateCommunityCommandHandler implements IUpdateCommunity {

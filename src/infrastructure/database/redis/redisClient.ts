@@ -1,11 +1,16 @@
+import { inject, injectable } from "inversify";
 import Redis from "ioredis";
 
+import { TYPES } from "@presentation/container/types.js";
+import { Logger } from "winston";
+
+@injectable()
 export class RedisClient {
   #client: Redis | null;
   #isConnected: boolean;
   #connectionPromise: Promise<void> | null;
 
-  constructor() {
+  constructor(@inject(TYPES.Logger) private readonly logger: Logger) {
     this.#client = null;
     this.#isConnected = false;
     this.#connectionPromise = null;
@@ -38,7 +43,7 @@ export class RedisClient {
 
         connectTimeout: 10000,
         commandTimeout: 5000,
-        lazyConnect: false,
+        lazyConnect: true,
 
         retryStrategy: (times: number) => {
           return Math.min(times * 50, 2000);
@@ -48,10 +53,11 @@ export class RedisClient {
       this.setupEventListeners();
       await this.#client.connect();
       this.#isConnected = true;
-
+      this.logger.info("Redis connection established");
     } catch (error) {
-      console.error("Error connecting to Redis:", error);
+      this.logger.error("Error connecting to Redis:", error);
       this.#isConnected = false;
+      throw error;
     } finally {
       this.#connectionPromise = null;
     }
@@ -127,7 +133,7 @@ export class RedisClient {
     return this.#client;
   }
 
-  getisConnected(): boolean {
+  getIsConnected(): boolean {
     return this.#isConnected;
   }
 }

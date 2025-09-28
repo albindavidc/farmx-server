@@ -1,16 +1,17 @@
-import { LoginRequest, LoginResponse } from "@application/dtos/login.dto";
-import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { CreateUserCommand } from "@application/commands/user/create-user.command";
-import { UserDto } from "@application/dtos/user.dto";
-import sendResponseJson from "@application/utils/message";
-import { AuthService } from "@infrastructure/services/auth/auth.service";
-import { LoginService } from "@infrastructure/services/login.service";
-import { TYPES } from "@presentation/container/types";
-import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service";
 import jwt from "jsonwebtoken";
+
+import { TYPES } from "@presentation/container/types.js";
+import { CreateUserCommand } from "@application/commands/user/create-user.command.js";
+import { LoginRequest, LoginResponse } from "@application/dtos/login.dto.js";
+import { UserDto } from "@application/dtos/user.dto.js";
+import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler.js";
+import sendResponseJson from "@application/utils/message.js";
+import { AuthService } from "@infrastructure/services/auth/auth.service.js";
+import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service.js";
+import { LoginService } from "@infrastructure/services/login.service.js";
 
 @injectable()
 export default class AuthController {
@@ -76,7 +77,7 @@ export default class AuthController {
 
       /* Create session */
       const sessionData = {
-        userId: response.user.id.toString(),
+        userId: response.user.id,
         email: response.user.email,
         name: response.user.name,
         role: response.user.role,
@@ -87,7 +88,10 @@ export default class AuthController {
         createdAt: Date.now().toString(),
         lastActivity: Date.now().toString(),
       };
-      await this.redisAuthService.createSession(response.user.id.toString(), sessionData);
+
+      if (response.user.id) {
+        await this.redisAuthService.createSession(response.user.id, sessionData);
+      }
 
       /* Store Refresh Token */
       if (response.refreshToken) {
@@ -95,7 +99,7 @@ export default class AuthController {
           tokenId: string;
         };
         const refreshTokenData = {
-          userId: response.user.id.toString(),
+          userId: response.user.id,
           tokenId: decoded.tokenId,
           ipAddress: clientIP,
           userAgent: req.headers["user-agent"] as string,

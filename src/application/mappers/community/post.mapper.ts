@@ -1,7 +1,5 @@
-import { CreatePostDto } from "@application/dtos/community/post.dto";
-import { Post } from "@domain/entities/community/post.entity";
-import { UpdatePostDto } from "@application/dtos/community/post.dto";
-import { PostResponseDto } from "@application/dtos/community/post.dto";
+import { CreatePostDto, PostResponseDto, UpdatePostDto } from "@application/dtos/community/post.dto.js";
+import { Post } from "@domain/entities/community/post.entity.js";
 
 export class PostMapper {
   //* ========== DTO <-> Entity ========== *//

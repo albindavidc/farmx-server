@@ -1,7 +1,8 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "@presentation/container/types";
-import { IDeleteCommunityPost } from "@application/interfaces/command/community/post/delete-post.interface";
-import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { IDeleteCommunityPost } from "@application/interfaces/command/community/post/delete-post.interface.js";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface.js";
 
 @injectable()
 export class DeleteCommunityPostHandler implements IDeleteCommunityPost {

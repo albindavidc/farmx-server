@@ -1,8 +1,9 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "@presentation/container/types";
-import { Community } from "@domain/entities/community/community.entity";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
-import { ILoadCommunities } from "@application/interfaces/query/community/load-communities.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { ILoadCommunities } from "@application/interfaces/query/community/load-communities.interface.js";
+import { Community } from "@domain/entities/community/community.entity.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
 
 @injectable()
 export class LoadCommunitiesHandler implements ILoadCommunities {

@@ -1,4 +1,4 @@
-import { UserDto } from "./user.dto";
+import { UserDto } from "@application/dtos/user.dto.js";
 
 export interface RoleUpdateDto {
   userId: string;
@@ -6,7 +6,7 @@ export interface RoleUpdateDto {
 }
 
 export interface RoleResponseDto {
-  user: UserDto;
+  user: Partial<UserDto>;
   accessToken: string;
   refreshToken: string;
 }

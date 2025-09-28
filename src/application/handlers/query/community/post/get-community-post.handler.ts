@@ -1,9 +1,10 @@
-import { PostResponseDto } from "@application/dtos/community/post.dto";
-import { IGetCommunityPosts } from "@application/interfaces/query/community/post/get-community-post.interface";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
-import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
-import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
+
+import { TYPES } from "@presentation/container/types.js";
+import { PostResponseDto } from "@application/dtos/community/post.dto.js";
+import { IGetCommunityPosts } from "@application/interfaces/query/community/post/get-community-post.interface.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface.js";
 
 @injectable()
 export class GetCommunityPostsQueryHandler implements IGetCommunityPosts {

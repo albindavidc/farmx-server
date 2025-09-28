@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
-import { CreatePostDto, UpdatePostDto } from "@application/dtos/community/post.dto";
-import { TYPES } from "@presentation/container/types";
-import { CreateCommunityPostHandler } from "@application/handlers/command/community/post/create-post.handler";
-import { UpdateCommunityPostHandler } from "@application/handlers/command/community/post/update-post.handler";
-import { DeleteCommunityPostHandler } from "@application/handlers/command/community/post/delete-post.handler";
-import { GetCommunityPostsQueryHandler } from "@application/handlers/query/community/post/get-community-post.handler";
-import { GetCommunityPostQueryHandler } from "@application/handlers/query/community/post/get-post.handler";
-import { ImageUploadService } from "@infrastructure/services/image-upload.service";
-import sendResponseJson from "@application/utils/message";
-import { UserPostRole, UserRole } from "@domain/enums/user-role.enum";
+
+import { CreatePostDto, UpdatePostDto } from "@application/dtos/community/post.dto.js";
+import { CreateCommunityPostHandler } from "@application/handlers/command/community/post/create-post.handler.js";
+import { DeleteCommunityPostHandler } from "@application/handlers/command/community/post/delete-post.handler.js";
+import { UpdateCommunityPostHandler } from "@application/handlers/command/community/post/update-post.handler.js";
+import { GetCommunityPostsQueryHandler } from "@application/handlers/query/community/post/get-community-post.handler.js";
+import { GetCommunityPostQueryHandler } from "@application/handlers/query/community/post/get-post.handler.js";
+import sendResponseJson from "@application/utils/message.js";
+import { UserPostRole, UserRole } from "@domain/enums/user-role.enum.js";
+import { ImageUploadService } from "@infrastructure/services/image-upload.service.js";
+import { TYPES } from "@presentation/container/types.js";
 
 @injectable()
 export class PostController {
@@ -22,7 +23,7 @@ export class PostController {
     private getCommunityPostQuery: GetCommunityPostQueryHandler,
     @inject(TYPES.GetCommunityPostsQueryHandler)
     private getCommunityPostsQuery: GetCommunityPostsQueryHandler,
-    @inject(TYPES.ImageuploadService) private imageUploadService: ImageUploadService
+    @inject(TYPES.ImageUploadService) private imageUploadService: ImageUploadService
   ) {}
 
   async createPost(req: Request, res: Response): Promise<void> {

@@ -1,7 +1,10 @@
-import { Otp } from "@domain/entities/otp.entity";
-import { IOTPRepository } from "@domain/interfaces/otp-repository.interface";
-import { OtpModel } from "@infrastructure/database/schemas/otp.schema";
+import { injectable } from "inversify";
 
+import { Otp } from "@domain/entities/otp.entity.js";
+import { IOTPRepository } from "@domain/interfaces/otp-repository.interface.js";
+import { OtpModel } from "@infrastructure/database/schemas/otp.schema.js";
+
+@injectable()
 export class OtpRepositoryImpl implements IOTPRepository {
   async create(otp: { email: string; otp: string; expiresAt: Date }): Promise<Otp> {
     const createdOtp = OtpModel.create(otp);

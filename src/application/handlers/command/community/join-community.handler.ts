@@ -1,9 +1,10 @@
 import { inject, injectable } from "inversify";
-import { TYPES } from "@presentation/container/types";
-import { Community } from "@domain/entities/community/community.entity";
-import { JoinCommunityCommand } from "@application/commands/community/join-community-command";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
-import { IJoinCommunity } from "@application/interfaces/command/community/join-community.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { JoinCommunityCommand } from "@application/commands/community/join-community-command.js";
+import { IJoinCommunity } from "@application/interfaces/command/community/join-community.interface.js";
+import { Community } from "@domain/entities/community/community.entity.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
 
 @injectable()
 export class JoinCommunityHandler implements IJoinCommunity {

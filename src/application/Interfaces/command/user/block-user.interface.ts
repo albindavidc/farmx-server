@@ -1,6 +1,6 @@
-import { BlockUserCommand } from "@application/commands/user/block-user.command";
-import { UserDto } from "@application/dtos/user.dto";
+import { BlockUserCommand } from "@application/commands/user/block-user.command.js";
+import { User } from "@domain/entities/user.entity.js";
 
 export interface IBlockUser {
-  execute(command: BlockUserCommand): Promise<UserDto | null>;
+  execute(command: BlockUserCommand): Promise<User | null>;
 }

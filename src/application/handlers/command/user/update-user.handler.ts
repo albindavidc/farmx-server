@@ -1,9 +1,10 @@
-import { UpdateUserCommand } from "@application/commands/user/update-user.command";
-import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { UserDto } from "@application/dtos/user.dto";
-import { IUpdateUser } from "@application/interfaces/command/user/update-user.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { UpdateUserCommand } from "@application/commands/user/update-user.command.js";
+import { UserDto } from "@application/dtos/user.dto.js";
+import { IUpdateUser } from "@application/interfaces/command/user/update-user.interface.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
 
 @injectable()
 export class UpdateUserHandler implements IUpdateUser {
@@ -26,13 +27,7 @@ export class UpdateUserHandler implements IUpdateUser {
     if (dto.googleId !== undefined) update.googleId = dto.googleId;
 
     if (dto.isFarmer !== undefined) update.isFarmer = dto.isFarmer;
-    if (dto.farmerStatus !== undefined) update.farmerStatus = dto.farmerStatus;
-    if (dto.farmerRegId !== undefined) update.farmerRegId = dto.farmerRegId;
-    if (dto.experience !== undefined) update.experience = dto.experience;
-    if (dto.qualification !== undefined) update.qualification = dto.qualification;
-    if (dto.expertise !== undefined) update.expertise = dto.expertise;
-    if (dto.awards !== undefined) update.awards = dto.awards;
-
+    if (dto.farmerProfile !== undefined) update.farmerProfile = dto.farmerProfile;
     if (dto.profilePhoto !== undefined) update.profilePhoto = dto.profilePhoto;
     if (dto.bio !== undefined) update.bio = dto.bio;
     if (dto.courseProgress !== undefined) update.courseProgress = dto.courseProgress;
@@ -45,10 +40,10 @@ export class UpdateUserHandler implements IUpdateUser {
     }
 
     return {
-      _id: updatedUser._id,
+      _id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
-      password: updatedUser.password,
+      password: updatedUser.hashedPassword,
       role: updatedUser.role,
       phone: updatedUser.phone,
       isVerified: updatedUser.isVerified,
@@ -57,17 +52,13 @@ export class UpdateUserHandler implements IUpdateUser {
       googleId: updatedUser.googleId,
 
       isFarmer: updatedUser.isFarmer,
-      farmerStatus: updatedUser.farmerStatus,
-      farmerRegId: updatedUser.farmerRegId,
-      experience: updatedUser.experience,
-      qualification: updatedUser.qualification,
-      expertise: updatedUser.expertise,
-      awards: updatedUser.awards,
+      farmerProfile: updatedUser.farmerProfile,
       profilePhoto: updatedUser.profilePhoto,
       bio: updatedUser.bio,
       courseProgress: updatedUser.courseProgress,
       reason: updatedUser.reason,
       courseCertificate: updatedUser.courseCertificate,
+      timestamps: updatedUser.timestamps,
     };
   }
 }

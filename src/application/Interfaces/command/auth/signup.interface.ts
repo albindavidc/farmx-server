@@ -1,5 +1,4 @@
-import { UserDto } from "@application/dto/user.dto";
-import { SignupRequestDto } from "@application/dto/user.dto";
+import { SignupRequestDto, UserDto } from "@application/dtos/user.dto.js";
 
 export interface ISignUp {
   execute(dto: SignupRequestDto): Promise<UserDto>;

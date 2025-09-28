@@ -1,8 +1,9 @@
-import { TYPES } from "@presentation/container/types";
 import { inject, injectable } from "inversify";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface";
-import { ILoginChangePassword } from "@application/interfaces/command/login-change-password.interface";
-import { User } from "@domain/entities/user.entity";
+
+import { TYPES } from "@presentation/container/types.js";
+import { ILoginChangePassword } from "@application/interfaces/command/login-change-password.interface.js";
+import { User } from "@domain/entities/user.entity.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
 
 @injectable()
 export class LoginChangePasswordHandler implements ILoginChangePassword {
@@ -22,11 +23,11 @@ export class LoginChangePasswordHandler implements ILoginChangePassword {
     if (command.newPassword !== command.confirmPassword)
       throw new Error("The password do not match");
 
-    user.password = command.newPassword;
+    user.hashedPassword = command.newPassword;
 
-    if (!user._id) {
+    if (!user.id) {
       throw new Error("The user is not found");
     }
-    return this.userRepository.update(user._id, user);
+    return this.userRepository.update(user.id, user);
   }
 }

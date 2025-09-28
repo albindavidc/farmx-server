@@ -1,15 +1,11 @@
-import { FarmerStatus } from "../../domain/enums/farmer-status.enum";
-import {
-  ICourseProgress,
-  IUserCertificate,
-} from "../../infrastructure/database/schemas/user.schema";
-import { PasswordVO } from "@domain/value-objects/user/password.vo";
+import { FarmerStatus } from "@domain/enums/farmer-status.enum.js";
+import { ICourseProgress, IUserCertificate } from "@infrastructure/database/schemas/user.schema.js";
 
 export interface UserDto {
   _id?: string;
   name: string;
   email: string;
-  password: string | PasswordVO;
+  password: string;
   role: string;
   phone: string;
   isVerified?: boolean;

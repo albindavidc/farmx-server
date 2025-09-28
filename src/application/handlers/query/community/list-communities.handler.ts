@@ -1,12 +1,10 @@
+import { Types } from "mongoose";
 import { inject, injectable } from "inversify";
 
-import { TYPES } from "@presentation/container/types";
-import { Types } from "mongoose";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
-import {
-  CommunitiesListResponseDto,
-} from "@application/dtos/community/community-response.dto";
-import { IListCommunities } from "@application/interfaces/query/community/list-communities.interface";
+import { TYPES } from "@presentation/container/types.js";
+import { CommunitiesListResponseDto } from "@application/dtos/community/community-response.dto.js";
+import { IListCommunities } from "@application/interfaces/query/community/list-communities.interface.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
 
 export interface ICommunityFilter {
   name?: { $regex: string; $options: string };

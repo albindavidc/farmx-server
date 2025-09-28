@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
-import { Post } from "@domain/entities/community/post.entity";
-import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface";
-import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
-import { TYPES } from "@presentation/container/types";
-import { CreatePostDto, PostResponseDto } from "@application/dtos/community/post.dto";
-import { ICreateCommunityPost } from "@application/interfaces/command/community/post/create-post.interface";
+
+import { TYPES } from "@presentation/container/types.js";
+import { CreatePostDto, PostResponseDto } from "@application/dtos/community/post.dto.js";
+import { ICreateCommunityPost } from "@application/interfaces/command/community/post/create-post.interface.js";
+import { Post } from "@domain/entities/community/post.entity.js";
+import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface.js";
 
 @injectable()
 export class CreateCommunityPostHandler implements ICreateCommunityPost {
@@ -21,13 +22,13 @@ export class CreateCommunityPostHandler implements ICreateCommunityPost {
 
     const post = new Post(
       "",
-      dto.text,
       new Date(),
+      dto.text,
       dto.userId,
-      dto.userName,
       dto.userRole,
+      dto.userName,
       dto.communityId,
-      community.getName(),
+      community.name,
       dto.imageUrl || "",
       false,
       undefined

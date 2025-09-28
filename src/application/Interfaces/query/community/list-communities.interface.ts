@@ -1,4 +1,4 @@
-import { CommunitiesListResponseDto } from "@application/dtos/community/community-response.dto";
+import { CommunitiesListResponseDto } from "@application/dtos/community/community-response.dto.js";
 
 export interface IListCommunities {
   execute(options?: {

@@ -1,4 +1,4 @@
-import { Community } from "@domain/entities/community/community.entity";
+import { Community } from "@domain/entities/community/community.entity.js";
 
 // Community Response DTO
 export class CommunityResponseDto {

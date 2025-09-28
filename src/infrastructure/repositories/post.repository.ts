@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 
-import { Post } from "@domain/entities/community/post.entity";
-import { IPostRepository } from "@domain/interfaces/community/post-repository.interface";
-import { PostModel } from "@infrastructure/database/schemas/post.schema";
-import { PostPersistenceMapper } from "@infrastructure/mappers/community/post-persistence.mapper";
+import { Post } from "@domain/entities/community/post.entity.js";
+import { IPostRepository } from "@domain/interfaces/community/post-repository.interface.js";
+import { PostModel } from "@infrastructure/database/schemas/post.schema.js";
+import { PostPersistenceMapper } from "@infrastructure/mappers/community/post-persistence.mapper.js";
 
 @injectable()
 export class PostRepositoryImpl implements IPostRepository {
