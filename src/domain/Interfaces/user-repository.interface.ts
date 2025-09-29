@@ -5,10 +5,10 @@ export interface IFindUsersOptions {
   skip?: number; //users to skip in the previous pages
   take?: number; //users to limit for the next page
 
-  where?: Record<string, unknown>; //filter - narrow down using custom conditions (eg: {role: 'admin'})
-  order?: { [key: string]: "ASC" | "DESC" }; //sorting
+  where?: Record<string, unknown>; //filter(search) - narrow down using custom conditions (eg: {role: 'admin'})
+  order?: Record<string, "ASC" | "DESC">; //sorting
 
-  search?: string; //search term
+  // search?: string; //search term
 }
 
 export interface IUserRepository {
