@@ -35,3 +35,13 @@ export interface UserDto {
 
 export type SignupRequestDto = Pick<UserDto, "name" | "email" | "password" | "role" | "phone">;
 export type UpdateUserDto = Partial<UserDto>;
+
+export interface IPaginatedUsersResult {
+  items: UserDto[];
+
+  totalItems: number;
+  totalPages: number;
+
+  currentPage: number;
+  pageSize: number; // number of items per page
+}
