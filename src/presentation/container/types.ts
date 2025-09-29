@@ -57,6 +57,7 @@ export const TYPES = {
   //* ========== Middlewares ========== *//
   AuthMiddleware: Symbol.for("AuthMiddleware"),
 
-  EmailConfig: Symbol.for('EmailConfig'),
-  Logger: Symbol.for('Logger'),
+  EmailConfig: Symbol.for("EmailConfig"),
+  Logger: Symbol.for("Logger"),
+  GetUserQueryHandler: Symbol.for("GetUserQueryHandler"),
 };
