@@ -45,7 +45,7 @@ import { AuthChangePasswordHandler } from "@application/handlers/command/auth/au
 import winston from "winston";
 import { configBrevo } from "@infrastructure/config/config-setup.js";
 import { IRedisAuthConfig } from "@infrastructure/services/auth/redis-auth.service.js";
-import { GetUserQueryHandler } from "@application/handlers/query/user/get-user.handler.js";
+import { GetUsersQueryHandler } from "@application/handlers/query/user/get-users-query.handler.js";
 
 const container = new Container();
 
@@ -220,6 +220,6 @@ const redisAuthConfig: IRedisAuthConfig = {
 
 container.bind(TYPES.RedisAuthConfig).toConstantValue(redisAuthConfig);
 
-container.bind<GetUserQueryHandler>(TYPES.GetUserQueryHandler).to(GetUserQueryHandler);
+container.bind<GetUsersQueryHandler>(TYPES.GetUsersQueryHandler).to(GetUsersQueryHandler);
 
 export { container };

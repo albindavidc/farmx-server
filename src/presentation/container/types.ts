@@ -59,5 +59,5 @@ export const TYPES = {
 
   EmailConfig: Symbol.for("EmailConfig"),
   Logger: Symbol.for("Logger"),
-  GetUserQueryHandler: Symbol.for("GetUserQueryHandler"),
+  GetUsersQueryHandler: Symbol.for("GetUsersQueryHandler"),
 };

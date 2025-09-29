@@ -20,6 +20,8 @@ import { UpdateUserHandler } from "@application/handlers/command/user/update-use
 import sendResponseJson from "@application/utils/message.js";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
 import { AuthChangePasswordHandler } from "@application/handlers/command/auth/auth-change-password.handler.js";
+import { GetUsersQueryHandler } from "@application/handlers/query/user/get-users-query.handler.js";
+import { GetUsersQuery } from "@application/queries/user/get-users.query.js";
 
 @injectable()
 export class UserController {
@@ -32,8 +34,28 @@ export class UserController {
     @inject(TYPES.UpdateUserHandler) private updateUserHandler: UpdateUserHandler,
     @inject(TYPES.BlockUserHandler) private blockUserHandler: BlockUserHandler,
     @inject(TYPES.AuthChangePasswordHandler)
-    private authChangePasswordHandler: AuthChangePasswordHandler
+    private authChangePasswordHandler: AuthChangePasswordHandler,
+    @inject(TYPES.GetUsersQueryHandler) private getUserQueryHandler: GetUsersQueryHandler
   ) {}
+
+  async getUsers(req: Request, res: Response): Promise<void> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const sortBy = (req.query.sortBy as string) || "createdAt";
+      const sortDirection = (req.query.sortDirection as "asc" | "desc") || "asc";
+      const search = (req.query.search as string) || "";
+
+      const query = new GetUsersQuery(page, limit, sortBy, sortDirection, search);
+
+      const result = await this.getUserQueryHandler.execute(query);
+
+      sendResponseJson(res, StatusCodes.OK, "Users fetched successfully", true, result);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Internal server error";
+      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+    }
+  }
 
   async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
     try {
@@ -191,38 +213,38 @@ export class UserController {
     }
   }
 
-  async getUsers(req: Request, res: Response): Promise<void> {
-    try {
-      const users = await this.userRepo.findAll();
+  // async getUsers(req: Request, res: Response): Promise<void> {
+  //   try {
+  //     const users = await this.userRepo.findAll();
 
-      const transformedUsers = users.map((user) => {
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          phone: user.phone,
-          isVerified: user.isVerified,
-          isAdmin: user.isAdmin,
-          isBlocked: user.isBlocked,
-          googleId: user.googleId,
+  //     const transformedUsers = users.map((user) => {
+  //       return {
+  //         id: user.id,
+  //         name: user.name,
+  //         email: user.email,
+  //         role: user.role,
+  //         phone: user.phone,
+  //         isVerified: user.isVerified,
+  //         isAdmin: user.isAdmin,
+  //         isBlocked: user.isBlocked,
+  //         googleId: user.googleId,
 
-          isFarmer: user.isFarmer,
-          farmerProfile: user.farmerProfile,
-          profilePhoto: user.profilePhoto,
-          bio: user.bio,
-          courseProgress: user.courseProgress,
-          reason: user.reason,
-          courseCertificate: user.courseCertificate,
-        };
-      });
+  //         isFarmer: user.isFarmer,
+  //         farmerProfile: user.farmerProfile,
+  //         profilePhoto: user.profilePhoto,
+  //         bio: user.bio,
+  //         courseProgress: user.courseProgress,
+  //         reason: user.reason,
+  //         courseCertificate: user.courseCertificate,
+  //       };
+  //     });
 
-      sendResponseJson(res, StatusCodes.OK, "Successfully got all users", true, transformedUsers);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-      sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
-    }
-  }
+  //     sendResponseJson(res, StatusCodes.OK, "Successfully got all users", true, transformedUsers);
+  //   } catch (error) {
+  //     const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+  //     sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
+  //   }
+  // }
 
   async createUser(req: Request, res: Response): Promise<void> {
     try {
