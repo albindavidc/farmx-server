@@ -3,13 +3,33 @@ import { injectable } from "inversify";
 import { UserDto } from "@application/dtos/user.dto.js";
 import { UserMapper } from "@application/mappers/user.mapper.js";
 import { User } from "@domain/entities/user.entity.js";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
+import {
+  IFindUsersOptions,
+  IUserRepository,
+} from "@domain/interfaces/user-repository.interface.js";
 import { EmailVO } from "@domain/value-objects/user/email.vo.js";
 import UserSchema from "@infrastructure/database/schemas/user.schema.js";
 import { PasswordVO } from "@domain/value-objects/user/password.vo.js";
 
 @injectable()
 export class UserRepositoryImpl implements IUserRepository {
+  async findAndCount(options: IFindUsersOptions): Promise<[User[], number]> {
+    const { where = {}, skip = 0, take = 10, order = {} } = options;
+
+    const sort: Record<string, 1 | -1> = {};
+    for (const [key, value] of Object.entries(order)) {
+      sort[key] = value.toLowerCase() === "asc" ? 1 : -1;
+    }
+
+    const [userDocs, count] = await Promise.all([
+      UserSchema.find(where).sort(sort).skip(skip).limit(take).lean().exec(),
+      UserSchema.countDocuments(where).exec(),
+    ]);
+
+    const users = userDocs.map((userDoc) => UserMapper.fromPersistence(userDoc));
+    return [users, count];
+  }
+
   async create(user: User): Promise<User> {
     const userDoc = new UserSchema(user);
     await userDoc.save();
