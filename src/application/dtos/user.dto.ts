@@ -7,7 +7,7 @@ export interface UserDto {
   password: string;
   role: string;
   phone: string;
-  _id?: string;
+  id?: string;
   isVerified?: boolean;
   isAdmin?: boolean;
   isBlocked?: boolean;
@@ -27,10 +27,8 @@ export interface UserDto {
   courseProgress?: ICourseProgress[];
   reason?: string;
   courseCertificate?: IUserCertificate[];
-  timestamps?: {
-    createdAt?: Date;
-    updatedAt?: Date;
-  };
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type SignupRequestDto = Pick<UserDto, "name" | "email" | "password" | "role" | "phone">;

@@ -34,6 +34,8 @@ export class User {
   #profilePhoto?: string;
   #bio?: string;
   #reason?: string;
+  #createdAt?: Date;
+  #updatedAt?: Date;
 
   constructor(
     name: NameVO,
@@ -52,7 +54,9 @@ export class User {
     farmerProfile?: FarmerProfile,
     profilePhoto?: string,
     bio?: string,
-    reason?: string
+    reason?: string,
+    createdAt?: Date,
+    updatedAt?: Date
   ) {
     this.#name = name;
     this.#email = email;
@@ -71,6 +75,8 @@ export class User {
     this.#profilePhoto = profilePhoto;
     this.#bio = bio;
     this.#reason = reason;
+    this.#createdAt = createdAt;
+    this.#updatedAt = updatedAt;
   }
 
   set hashedPassword(newHashedPassword: string) {
@@ -157,6 +163,14 @@ export class User {
     return this.#hashedPassword;
   }
 
+  get createdAt(): Date | undefined {
+    return this.#createdAt;
+  }
+
+  get updatedAt(): Date | undefined {
+    return this.#updatedAt;
+  }
+
   //* ========== Domain methods ========== *//
   public verifyUser(): void {
     this.#isVerified = true;
@@ -231,7 +245,7 @@ export class User {
     hashedPassword: string;
     role: string;
     phone: string;
-    _id?: string;
+    id?: string;
     isVerified?: boolean;
     isAdmin?: boolean;
     isBlocked?: boolean;
@@ -244,7 +258,7 @@ export class User {
     bio?: string;
     reason?: string;
   }): Promise<User> {
-    const id = createProps._id;
+    const id = createProps.id;
     const name = NameVO.create(createProps.name);
     const email = EmailVO.create(createProps.email);
     const role = RoleVO.create(createProps.role || RoleVO.USER);
@@ -277,7 +291,7 @@ export class User {
     hashedPassword: string;
     role: string;
     phone: string;
-    _id?: string;
+    id?: string;
     isVerified?: boolean;
     isAdmin?: boolean;
     isBlocked?: boolean;
@@ -289,6 +303,8 @@ export class User {
     profilePhoto?: string;
     bio?: string;
     reason?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
   }): User {
     return new User(
       NameVO.create(reconstituteProps.name),
@@ -296,7 +312,7 @@ export class User {
       reconstituteProps.hashedPassword,
       RoleVO.create(reconstituteProps.role),
       PhoneNumberVO.create(reconstituteProps.phone),
-      reconstituteProps._id,
+      reconstituteProps.id,
       reconstituteProps.isVerified,
       reconstituteProps.isAdmin,
       reconstituteProps.isBlocked,
@@ -307,7 +323,9 @@ export class User {
       reconstituteProps.farmerProfile,
       reconstituteProps.profilePhoto,
       reconstituteProps.bio,
-      reconstituteProps.reason
+      reconstituteProps.reason,
+      reconstituteProps.createdAt,
+      reconstituteProps.updatedAt
     );
   }
 }

@@ -4,7 +4,6 @@ import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import path from "path";
 
-import { TYPES } from "@presentation/container/types.js";
 import { ChangePasswordCommand } from "@application/commands/change-password.command.js";
 import { LoginChangePasswordCommand } from "@application/commands/login-change-password.command.js";
 import { UploadProfilePhotoCommand } from "@application/commands/upload-profile-photo.command.js";
@@ -12,16 +11,18 @@ import { BlockUserCommand } from "@application/commands/user/block-user.command.
 import { CreateUserCommand } from "@application/commands/user/create-user.command.js";
 import { UpdateUserCommand } from "@application/commands/user/update-user.command.js";
 import { UserDto } from "@application/dtos/user.dto.js";
+import { AuthChangePasswordHandler } from "@application/handlers/command/auth/auth-change-password.handler.js";
 import { SettingsHandler } from "@application/handlers/command/auth/settings.handler.js";
 import { LoginChangePasswordHandler } from "@application/handlers/command/login-change-password.handler.js";
 import { BlockUserHandler } from "@application/handlers/command/user/block-user.handler.js";
 import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler.js";
 import { UpdateUserHandler } from "@application/handlers/command/user/update-user.handler.js";
-import sendResponseJson from "@application/utils/message.js";
-import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
-import { AuthChangePasswordHandler } from "@application/handlers/command/auth/auth-change-password.handler.js";
 import { GetUsersQueryHandler } from "@application/handlers/query/user/get-users-query.handler.js";
 import { GetUsersQuery } from "@application/queries/user/get-users.query.js";
+import sendResponseJson from "@application/utils/message.js";
+import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
+import logger from "@infrastructure/config/logger.config.js";
+import { TYPES } from "@presentation/container/types.js";
 
 @injectable()
 export class UserController {
@@ -49,6 +50,10 @@ export class UserController {
       const query = new GetUsersQuery(page, limit, sortBy, sortDirection, search);
 
       const result = await this.getUserQueryHandler.execute(query);
+
+      logger.info("Users fetched successfully", result);
+
+      console.log("this is what getUsers have to offer");
 
       sendResponseJson(res, StatusCodes.OK, "Users fetched successfully", true, result);
     } catch (error) {
@@ -268,7 +273,7 @@ export class UserController {
       const userDetails = await this.updateUserHandler.execute(command);
 
       const transformedUser = {
-        id: userDetails._id,
+        id: userDetails.id,
         name: userDetails.name,
         email: userDetails.email,
         password: userDetails.password,

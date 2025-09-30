@@ -46,6 +46,8 @@ export interface IUserDocument extends Document {
   courseProgress?: ICourseProgress[];
   reason?: string;
   courseCertificate?: IUserCertificate[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const UserSchema: Schema = new Schema(

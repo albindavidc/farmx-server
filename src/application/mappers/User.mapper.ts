@@ -41,7 +41,7 @@ export class UserMapper {
       password: user.hashedPassword, // Exclude password for security reasons
       role: user.role,
       phone: user.phone,
-      _id: user.id,
+      id: user.id,
       isVerified: user.isVerified,
       isAdmin: user.isAdmin,
       isBlocked: user.isBlocked,
@@ -53,6 +53,8 @@ export class UserMapper {
       bio: user.bio,
       courseProgress: user.courseProgress,
       reason: user.reason,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 
@@ -81,14 +83,14 @@ export class UserMapper {
       );
     }
 
-    if (dto._id) {
+    if (dto.id) {
       return User.reconstitute({
         name: name.value,
         email: email.value,
         hashedPassword: password,
         role: role.value,
         phone: phone.value,
-        _id: dto._id,
+        id: dto.id,
         isVerified: dto.isVerified,
         isAdmin: dto.isAdmin,
         isBlocked: dto.isBlocked,
@@ -169,7 +171,7 @@ export class UserMapper {
     if (dto.googleId !== undefined) updates.googleId = dto.googleId;
 
     return User.reconstitute({
-      _id: entity.id,
+      id: entity.id,
       name: updates.name ?? entity.name,
       hashedPassword: entity.hashedPassword,
       email: updates.email ?? entity.email,
@@ -195,7 +197,7 @@ export class UserMapper {
       hashedPassword: persistence.hashedPassword,
       role: persistence.role,
       phone: persistence.phone,
-      _id: persistence._id.toString(),
+      id: persistence._id.toString(),
       isVerified: persistence.isVerified,
       isAdmin: persistence.isAdmin,
       isBlocked: persistence.isBlocked,
@@ -217,6 +219,8 @@ export class UserMapper {
       courseCertificate: persistence.courseCertificate,
 
       googleId: persistence.googleId,
+      createdAt: persistence.createdAt,
+      updatedAt: persistence.updatedAt,
     });
   }
 

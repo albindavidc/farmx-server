@@ -89,7 +89,7 @@ export default class AuthController {
 
       /* Create session */
       const sessionData = {
-        userId: response.user._id,
+        userId: response.user.id,
         email: response.user.email,
         name: response.user.name,
         role: response.user.role,
@@ -101,8 +101,8 @@ export default class AuthController {
         lastActivity: Date.now().toString(),
       };
 
-      if (response.user._id) {
-        await this.redisAuthService.createSession(response.user._id, sessionData);
+      if (response.user.id) {
+        await this.redisAuthService.createSession(response.user.id, sessionData);
       }
 
       /* Store Refresh Token */
@@ -111,7 +111,7 @@ export default class AuthController {
           tokenId: string;
         };
         const refreshTokenData = {
-          userId: response.user._id,
+          userId: response.user.id,
           tokenId: decoded.tokenId,
           ipAddress: clientIP,
           userAgent: req.headers["user-agent"] as string,
