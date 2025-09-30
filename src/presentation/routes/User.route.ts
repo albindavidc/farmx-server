@@ -10,13 +10,12 @@ const router = express.Router();
 const userController = container.get<UserController>(TYPES.UserController);
 const authMiddleware = container.get<AuthMiddleware>(TYPES.AuthMiddleware);
 
-// Common admin middleware
+/* Common admin middleware */
 const adminAuth = [authMiddleware.authenticate, authMiddleware.authorize(["admin"])];
 
+/* Routes */
 router.get("/admin/get-users", ...adminAuth, userController.getUsers.bind(userController));
-
 router.put("/admin/:id", ...adminAuth, userController.updateUser.bind(userController));
-
 router.post(
   "/admin/create-user",
   ...adminAuth,

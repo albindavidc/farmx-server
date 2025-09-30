@@ -11,7 +11,8 @@ export const TYPES = {
   UserRepository: Symbol.for("UserRepository"),
 
   AuthService: Symbol.for("AuthService"),
-  LoginService: Symbol.for("LoginService"),
+  LoginHandler: Symbol.for("LoginHandler"),
+  SignupHandler: Symbol.for("SignupHandler"),
 
   /* User */
   SettingsHandler: Symbol.for("SettingsHandler"),

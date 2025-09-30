@@ -1,9 +1,7 @@
 import { EmailVO } from "@domain/value-objects/user/email.vo.js";
 import { NameVO } from "@domain/value-objects/user/name.vo.js";
-import { PasswordVO } from "@domain/value-objects/user/password.vo.js";
 import { PhoneNumberVO } from "@domain/value-objects/user/phone-number.vo.js";
 import { RoleVO } from "@domain/value-objects/user/role.vo.js";
-import { UserIdVO } from "@domain/value-objects/user/user-id.vo.js";
 import { ICourseProgress, IUserCertificate } from "@infrastructure/database/schemas/user.schema.js";
 import { FarmerStatus } from "@domain/enums/farmer-status.enum";
 
@@ -21,11 +19,10 @@ export class FarmerProfile {
 export class User {
   #name: NameVO;
   #email: EmailVO;
-  #hashedPassword: PasswordVO;
+  #hashedPassword: string;
   #role: RoleVO;
   #phone: PhoneNumberVO;
-  #timestamps: { createdAt: Date; updatedAt: Date };
-  #id?: UserIdVO;
+  #id?: string;
   #isVerified?: boolean;
   #isAdmin?: boolean;
   #isBlocked?: boolean;
@@ -41,14 +38,10 @@ export class User {
   constructor(
     name: NameVO,
     email: EmailVO,
-    hashedPassword: PasswordVO,
+    hashedPassword: string,
     role: RoleVO,
     phone: PhoneNumberVO,
-    timestamps: {
-      createdAt: Date;
-      updatedAt: Date;
-    },
-    id?: UserIdVO,
+    id?: string,
     isVerified?: boolean,
     isAdmin?: boolean,
     isBlocked?: boolean,
@@ -66,12 +59,11 @@ export class User {
     this.#hashedPassword = hashedPassword;
     this.#role = role;
     this.#phone = phone;
+    this.#id = id;
     this.#isVerified = isVerified;
     this.#isAdmin = isAdmin;
     this.#isBlocked = isBlocked;
     this.#isFarmer = isFarmer;
-    this.#timestamps = timestamps;
-    this.#id = id;
     this.#courseCertificate = courseCertificate;
     this.#courseProgress = courseProgress;
     this.#googleId = googleId;
@@ -81,28 +73,19 @@ export class User {
     this.#reason = reason;
   }
 
-  public async verifyPassword(plainText: string): Promise<boolean> {
-    return PasswordVO.compare(plainText, this.#hashedPassword.getHashedValue());
-  }
-
   set hashedPassword(newHashedPassword: string) {
-    this.#hashedPassword = PasswordVO.create(newHashedPassword);
-    this.#timestamps.updatedAt = new Date();
+    this.#hashedPassword = newHashedPassword;
   }
-
   set profilePhoto(newProfilePhoto: string) {
     this.#profilePhoto = newProfilePhoto;
-    this.#timestamps.updatedAt = new Date();
   }
 
   set isVerified(newIsVerified: boolean) {
     this.#isVerified = newIsVerified;
-    this.#timestamps.updatedAt = new Date();
   }
 
   set isFarmer(newIsFarmer: boolean) {
     this.#isFarmer = newIsFarmer;
-    this.#timestamps.updatedAt = new Date();
   }
 
   //* ========== Getters ========== *//
@@ -123,7 +106,7 @@ export class User {
   }
 
   get id(): string | undefined {
-    return this.#id?.value;
+    return this.#id;
   }
 
   get googleId(): string | undefined {
@@ -170,55 +153,47 @@ export class User {
     return this.#isAdmin;
   }
 
-  get timestamps(): { createdAt: Date; updatedAt: Date } {
-    return this.#timestamps;
+  get hashedPassword(): string {
+    return this.#hashedPassword;
   }
 
   //* ========== Domain methods ========== *//
   public verifyUser(): void {
     this.#isVerified = true;
-    this.#timestamps.updatedAt = new Date();
   }
 
   public unverifyUser(): void {
     this.#isVerified = false;
-    this.#timestamps.updatedAt = new Date();
   }
 
   public blockUser(reason: string): void {
     this.#isBlocked = true;
     this.#reason = reason;
-    this.#timestamps.updatedAt = new Date();
   }
 
   public unblockUser(): void {
     this.#isBlocked = false;
     this.#reason = undefined;
-    this.#timestamps.updatedAt = new Date();
   }
 
   public promoteToAdmin(): void {
     this.#isAdmin = true;
     this.#role = RoleVO.create(RoleVO.ADMIN);
-    this.#timestamps.updatedAt = new Date();
   }
 
   public demoteFromAdmin(): void {
     this.#isAdmin = false;
     this.#role = RoleVO.create(RoleVO.USER);
-    this.#timestamps.updatedAt = new Date();
   }
 
   public enableFarmerMode(farmerProfile: FarmerProfile): void {
     this.#isFarmer = true;
     this.#farmerProfile = farmerProfile;
-    this.#timestamps.updatedAt = new Date();
   }
 
   public disableFarmerMode(): void {
     this.#isFarmer = false;
     this.#farmerProfile = undefined;
-    this.#timestamps.updatedAt = new Date();
   }
 
   //* ========== Validations ========== *//
@@ -253,27 +228,34 @@ export class User {
   static async create(createProps: {
     name: string;
     email: string;
-    password: string;
-    role?: string;
-    phone?: string;
+    hashedPassword: string;
+    role: string;
+    phone: string;
+    _id?: string;
+    isVerified?: boolean;
+    isAdmin?: boolean;
+    isBlocked?: boolean;
+    isFarmer?: boolean;
+    courseCertificate?: IUserCertificate[];
+    courseProgress?: ICourseProgress[];
     googleId?: string;
     farmerProfile?: FarmerProfile;
-    isFarmer?: boolean;
+    profilePhoto?: string;
+    bio?: string;
+    reason?: string;
   }): Promise<User> {
-    const id = UserIdVO.create();
+    const id = createProps._id;
     const name = NameVO.create(createProps.name);
     const email = EmailVO.create(createProps.email);
     const role = RoleVO.create(createProps.role || RoleVO.USER);
     const phone = PhoneNumberVO.create(createProps.phone || "");
-    const hashedPassword = await PasswordVO.hash(createProps.password);
 
     return new User(
       name,
       email,
-      hashedPassword,
+      createProps.hashedPassword,
       role,
       phone,
-      { createdAt: new Date(), updatedAt: new Date() },
       id,
       false,
       false,
@@ -281,7 +263,11 @@ export class User {
       false,
       [],
       [],
-      createProps.googleId
+      createProps.googleId,
+      createProps.farmerProfile,
+      undefined,
+      undefined,
+      undefined
     );
   }
 
@@ -291,11 +277,7 @@ export class User {
     hashedPassword: string;
     role: string;
     phone: string;
-    timestamps: {
-      createdAt: Date;
-      updatedAt: Date;
-    };
-    id?: string;
+    _id?: string;
     isVerified?: boolean;
     isAdmin?: boolean;
     isBlocked?: boolean;
@@ -311,11 +293,10 @@ export class User {
     return new User(
       NameVO.create(reconstituteProps.name),
       EmailVO.create(reconstituteProps.email),
-      PasswordVO.create(reconstituteProps.hashedPassword),
+      reconstituteProps.hashedPassword,
       RoleVO.create(reconstituteProps.role),
       PhoneNumberVO.create(reconstituteProps.phone),
-      reconstituteProps.timestamps,
-      UserIdVO.create(reconstituteProps.id),
+      reconstituteProps._id,
       reconstituteProps.isVerified,
       reconstituteProps.isAdmin,
       reconstituteProps.isBlocked,

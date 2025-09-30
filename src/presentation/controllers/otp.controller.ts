@@ -8,8 +8,8 @@ import { GenerateOtpHandler } from "@application/handlers/command/auth/generate-
 import { VerifyOtpHandler } from "@application/handlers/command/auth/verify-otp.handler.js";
 import sendResponseJson from "@application/utils/message.js";
 import { IEmailRepository } from "@domain/interfaces/email-repository.interface.js";
-import { EmailVO } from "@domain/value-objects/user/email.vo.js";
 import { AuthService } from "@infrastructure/services/auth/auth.service.js";
+import { VerifyOtpCommand } from "@application/commands/auth/verify-otp.command.js";
 
 @injectable()
 export class OtpController {
@@ -72,12 +72,14 @@ export class OtpController {
     }
 
     try {
-      const otpRequest: OtpRequestDto = { email, otp };
-      const isValid = await this.verifyOtp.execute(otpRequest);
+      const dto: Partial<OtpRequestDto> = { email, otp };
+      const verifyOtpComand = new VerifyOtpCommand(dto);
+      const { user, accessToken, refreshToken } = await this.verifyOtp.execute(verifyOtpComand);
 
+      // const otpRequest: OtpRequestDto = { email, otp };
       // Issue tokens upon signup
-      const newEmail = EmailVO.create(email);
-      const { user, accessToken, refreshToken } = await this.authService.verifyOtp(newEmail);
+      // const newEmail = EmailVO.create(email);
+      // const { user, accessToken, refreshToken } = await this.authService.verifyOtp(newEmail);
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -97,9 +99,7 @@ export class OtpController {
 
       res.setHeader("Authorization", `Bearer ${accessToken}`);
 
-      if (isValid) {
-        res.status(200).json({ user, accessToken, refreshToken });
-      }
+      res.status(200).json({ user, accessToken, refreshToken });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error verifying OTP";
       sendResponseJson(res, StatusCodes.INTERNAL_SERVER_ERROR, errorMessage, false);
@@ -112,8 +112,12 @@ export class OtpController {
       sendResponseJson(res, StatusCodes.BAD_REQUEST, "Email or Otp is invalid", false);
     }
     try {
-      const otpRequest: OtpRequestDto = { email, otp };
-      const isValid = await this.verifyOtp.execute(otpRequest);
+      const dto: Partial<OtpRequestDto> = { email, otp };
+      const verifyOtpComand = new VerifyOtpCommand(dto);
+      const isValid = await this.verifyOtp.execute(verifyOtpComand);
+
+      // const otpRequest: OtpRequestDto = { email, otp };
+      // const isValid = await this.verifyOtp.execute(otpRequest);
 
       if (!isValid) {
         sendResponseJson(res, StatusCodes.BAD_REQUEST, "Entered a wrong otp", false);

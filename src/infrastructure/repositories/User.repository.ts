@@ -31,7 +31,7 @@ export class UserRepositoryImpl implements IUserRepository {
   }
 
   async create(user: User): Promise<User> {
-    const userDoc = new UserSchema(user);
+    const userDoc = new UserSchema(UserMapper.toPersistence(user));
     await userDoc.save();
     return UserMapper.fromPersistence(userDoc);
   }
@@ -51,11 +51,15 @@ export class UserRepositoryImpl implements IUserRepository {
     return userDoc ? UserMapper.fromPersistence(userDoc) : null;
   }
 
-  async update(id: string, user: Partial<User>): Promise<User | null> {
-    const userDoc = await UserSchema.findByIdAndUpdate(id, user, {
+  async update(id: string, user: Partial<User>): Promise<User> {
+    const persistenceData = UserMapper.toPersistence(user as User);
+    const userDoc = await UserSchema.findByIdAndUpdate(id, persistenceData, {
       new: true,
     }).exec();
-    return userDoc ? UserMapper.fromPersistence(userDoc) : null;
+
+    if (!userDoc) throw new Error("User not found");
+
+    return UserMapper.fromPersistence(userDoc);
   }
 
   async setRole(userId: string, role: string): Promise<User | null> {
@@ -105,6 +109,7 @@ export class UserRepositoryImpl implements IUserRepository {
   async validatePassword(id: string, oldPassword: string): Promise<boolean> {
     const user = await this.findById(id);
     if (!user) return false;
-    return user.verifyPassword(oldPassword);
+    const verified = await PasswordVO.compare(oldPassword, user.hashedPassword);
+    return verified;
   }
 }

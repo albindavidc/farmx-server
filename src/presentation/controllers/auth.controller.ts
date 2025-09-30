@@ -4,22 +4,25 @@ import { inject, injectable } from "inversify";
 import jwt from "jsonwebtoken";
 
 import { TYPES } from "@presentation/container/types.js";
-import { CreateUserCommand } from "@application/commands/user/create-user.command.js";
+import { SignupUserCommand } from "@application/commands/auth/signup-user.command.js";
 import { LoginRequest, LoginResponse } from "@application/dtos/login.dto.js";
 import { UserDto } from "@application/dtos/user.dto.js";
+import { SignupHandler } from "@application/handlers/command/auth/signup.handler.js";
 import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler.js";
 import sendResponseJson from "@application/utils/message.js";
+import logger from "@infrastructure/config/logger.config.js";
 import { AuthService } from "@infrastructure/services/auth/auth.service.js";
 import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service.js";
-import { LoginService } from "@infrastructure/services/login.service.js";
-
+import { LoginHandler } from "@application/handlers/command/auth/login.handler.js";
+import { LoginUserCommand } from "@application/commands/auth/login-user.command.js";
 @injectable()
 export default class AuthController {
   constructor(
     @inject(TYPES.CreateUserHandler) private createUserHander: CreateUserHandler,
     @inject(TYPES.AuthService) private authService: AuthService,
-    @inject(TYPES.LoginService) private loginService: LoginService,
-    @inject(TYPES.RedisAuthService) private redisAuthService: RedisAuthService
+    @inject(TYPES.SignupHandler) private signupHandler: SignupHandler,
+    @inject(TYPES.RedisAuthService) private redisAuthService: RedisAuthService,
+    @inject(TYPES.LoginHandler) private loginHandler: LoginHandler
   ) {}
 
   public async signup(req: Request, res: Response): Promise<void> {
@@ -33,15 +36,15 @@ export default class AuthController {
 
       const dto: Partial<UserDto> = { name, email, password, role, phone };
 
-      const command = new CreateUserCommand(dto);
+      const command = new SignupUserCommand(dto);
 
       if (command.dto.role === "farmer") {
         command.dto.isFarmer = true;
       }
 
-      console.log(command, "this is from the backend - to validate");
+      console.log(command, "this is from the backend - to validate before executing");
 
-      const response: UserDto = await this.createUserHander.execute(command);
+      const response: UserDto = await this.signupHandler.execute(command);
 
       console.log(response, "this is from the backend - to validate");
 
@@ -64,6 +67,7 @@ export default class AuthController {
     try {
       const clientIP = req.ip || req.connection.remoteAddress || "unknown";
 
+      console.log("entered to the login");
       const loginAttempts = await this.redisAuthService.checkLoginAttempts(clientIP);
       if (loginAttempts.isBlocked) {
         sendResponseJson(res, StatusCodes.TOO_MANY_REQUESTS, "Too many login attempts", false);
@@ -71,13 +75,21 @@ export default class AuthController {
       }
 
       const request: LoginRequest = req.body;
-      const response: LoginResponse = await this.loginService.login(request);
 
+      logger.info(`Login attempt for email: ${request.email} from IP: ${clientIP}`);
+
+      // const response: LoginResponse = await this.loginService.login(request);
+
+      const command = new LoginUserCommand(request);
+      const response: LoginResponse = await this.loginHandler.execute(command);
+
+      logger.info(`Login successful for email: ${request.email} from IP: ${clientIP}`);
+      console.log(response, "this is from the backend - to validate");
       await this.redisAuthService.resetLoginAttempts(clientIP);
 
       /* Create session */
       const sessionData = {
-        userId: response.user.id,
+        userId: response.user._id,
         email: response.user.email,
         name: response.user.name,
         role: response.user.role,
@@ -89,17 +101,17 @@ export default class AuthController {
         lastActivity: Date.now().toString(),
       };
 
-      if (response.user.id) {
-        await this.redisAuthService.createSession(response.user.id, sessionData);
+      if (response.user._id) {
+        await this.redisAuthService.createSession(response.user._id, sessionData);
       }
 
       /* Store Refresh Token */
       if (response.refreshToken) {
-        const decoded = jwt.verify(response.refreshToken, process.env.JWT_SECRET as string) as {
+        const decoded = jwt.verify(response.refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as {
           tokenId: string;
         };
         const refreshTokenData = {
-          userId: response.user.id,
+          userId: response.user._id,
           tokenId: decoded.tokenId,
           ipAddress: clientIP,
           userAgent: req.headers["user-agent"] as string,

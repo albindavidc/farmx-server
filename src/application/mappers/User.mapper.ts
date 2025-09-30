@@ -10,6 +10,7 @@ import {
   IUserCertificate,
   IUserDocument,
 } from "@infrastructure/database/schemas/user.schema.js";
+import { PasswordVO } from "@domain/value-objects/user/password.vo.js";
 
 export interface IPersistenceData {
   name: string;
@@ -17,7 +18,6 @@ export interface IPersistenceData {
   hashedPassword: string;
   role: string;
   phone: string;
-  timestamps: { createdAt: Date; updatedAt: Date };
   _id?: string;
   isVerified?: boolean;
   isAdmin?: boolean;
@@ -38,7 +38,7 @@ export class UserMapper {
     return {
       name: user.name,
       email: user.email,
-      // password: user.password, // Exclude password for security reasons
+      password: user.hashedPassword, // Exclude password for security reasons
       role: user.role,
       phone: user.phone,
       _id: user.id,
@@ -53,7 +53,6 @@ export class UserMapper {
       bio: user.bio,
       courseProgress: user.courseProgress,
       reason: user.reason,
-      timestamps: user.timestamps,
     };
   }
 
@@ -68,6 +67,7 @@ export class UserMapper {
     const email = EmailVO.create(dto.email);
     const role = RoleVO.create(dto.role);
     const phone = PhoneNumberVO.create(dto.phone);
+    const password = (await PasswordVO.hash(dto.password)).getHashedValue();
 
     let farmerProfile: FarmerProfile | undefined;
     if (dto.isFarmer || dto.farmerProfile) {
@@ -83,22 +83,21 @@ export class UserMapper {
 
     if (dto._id) {
       return User.reconstitute({
-        id: dto._id,
         name: name.value,
         email: email.value,
-        hashedPassword: dto.password as string,
+        hashedPassword: password,
         role: role.value,
         phone: phone.value,
-        isVerified: dto.isVerified ?? false,
-        isAdmin: dto.isAdmin ?? false,
-        isBlocked: dto.isBlocked ?? false,
-        isFarmer: dto.isFarmer ?? false,
+        _id: dto._id,
+        isVerified: dto.isVerified,
+        isAdmin: dto.isAdmin,
+        isBlocked: dto.isBlocked,
+        isFarmer: dto.isFarmer,
         farmerProfile: farmerProfile,
         profilePhoto: dto.profilePhoto,
         bio: dto.bio,
         courseProgress: dto.courseProgress,
         reason: dto.reason,
-        timestamps: { createdAt: new Date(), updatedAt: new Date() },
       });
     } else {
       if (!dto.password) {
@@ -108,9 +107,10 @@ export class UserMapper {
       return User.create({
         name: name.value,
         email: email.value,
-        password: dto.password as string,
+        hashedPassword: password,
         role: role.value,
         phone: phone.value,
+
         isFarmer: dto.isFarmer ?? false,
         farmerProfile: farmerProfile,
       });
@@ -121,6 +121,7 @@ export class UserMapper {
     const updates: {
       name?: string;
       email?: string;
+      hashedPassword?: string;
       phone?: string;
       role?: string;
       farmerProfile?: FarmerProfile;
@@ -135,8 +136,8 @@ export class UserMapper {
       courseProgress?: ICourseProgress[];
       courseCertificate?: IUserCertificate[];
       reason?: string;
-      timestamps?: { createdAt: Date; updatedAt: Date };
       id?: string;
+      timestamps?: { createdAt?: Date; updatedAt?: Date };
     } = {};
 
     if (dto.name) updates.name = NameVO.create(dto.name).value;
@@ -168,10 +169,10 @@ export class UserMapper {
     if (dto.googleId !== undefined) updates.googleId = dto.googleId;
 
     return User.reconstitute({
-      id: entity.id,
+      _id: entity.id,
       name: updates.name ?? entity.name,
-      email: updates.email ?? entity.email,
       hashedPassword: entity.hashedPassword,
+      email: updates.email ?? entity.email,
       role: updates.role ?? entity.role,
       phone: updates.phone ?? entity.phone,
       isVerified: updates.isVerified ?? entity.isVerified,
@@ -184,7 +185,6 @@ export class UserMapper {
       courseProgress: updates.courseProgress ?? entity.courseProgress,
       reason: updates.reason ?? entity.reason,
       courseCertificate: updates.courseCertificate ?? entity.courseCertificate,
-      timestamps: { createdAt: entity.timestamps.createdAt, updatedAt: new Date() },
     });
   }
 
@@ -195,7 +195,7 @@ export class UserMapper {
       hashedPassword: persistence.hashedPassword,
       role: persistence.role,
       phone: persistence.phone,
-      id: persistence._id.toString(),
+      _id: persistence._id.toString(),
       isVerified: persistence.isVerified,
       isAdmin: persistence.isAdmin,
       isBlocked: persistence.isBlocked,
@@ -215,10 +215,7 @@ export class UserMapper {
       courseProgress: persistence.courseProgress,
       reason: persistence.reason,
       courseCertificate: persistence.courseCertificate,
-      timestamps: {
-        createdAt: persistence.timestamps.createdAt,
-        updatedAt: persistence.timestamps.updatedAt,
-      },
+
       googleId: persistence.googleId,
     });
   }
@@ -230,10 +227,7 @@ export class UserMapper {
       hashedPassword: user.hashedPassword,
       role: user.role,
       phone: user.phone,
-      timestamps: {
-        createdAt: user.timestamps.createdAt,
-        updatedAt: user.timestamps.updatedAt,
-      },
+
       _id: user.id,
       isVerified: user.isVerified,
       isAdmin: user.isAdmin,

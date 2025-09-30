@@ -3,3 +3,4 @@ E:\Desktop\Full Stack Workout\BroCamp\Projects\Main\farmx\back-end\src\logs\2025
 E:\Desktop\Full Stack Workout\BroCamp\Projects\Main\farmx\back-end\src\logs\20250421-0000-01-error.log
 E:\Desktop\Full Stack Workout\BroCamp\Projects\Main\farmx\back-end\src\logs\20250428-0000-01-error.log
 E:\Desktop\Full Stack Workout\BroCamp\Projects\Main\farmx\back-end\src\logs\20250519-0000-01-error.log
+E:\Desktop\Full Stack Workout\BroCamp\Projects\Main\farmx\back-end\src\logs\20250930-0000-01-error.log

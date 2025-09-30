@@ -3,45 +3,45 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "@presentation/container/types.js";
 import {
   generateAcessToken,
-  generateRefreshToken,
+  
   TokenPayload,
   verifyRefreshToken,
 } from "@application/utils/token-utility.js";
-import { User } from "@domain/entities/user.entity.js";
+// import { User } from "@domain/entities/user.entity.js";
 import { IUserRepository } from "@domain/interfaces/user-repository.interface.js";
-import { EmailVO } from "@domain/value-objects/user/email.vo.js";
+// import { EmailVO } from "@domain/value-objects/user/email.vo.js";
 
 @injectable()
 export class AuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
-  async verifyOtp(
-    email: EmailVO
-  ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
-    const user = await this.userRepository.findByEmail(email);
-    if (!user || !user.id) throw new Error("Invalid or already verified user");
+  // async verifyOtp(
+  //   email: EmailVO
+  // ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
+  //   const user = await this.userRepository.findByEmail(email);
+  //   if (!user || !user.id) throw new Error("Invalid or already verified user");
 
-    user.verifyUser();
-    const updatedUser = await this.userRepository.update(user.id, user);
+  //   user.verifyUser();
+  //   const updatedUser = await this.userRepository.update(user.id, user);
 
-    if (!updatedUser || !updatedUser.id) {
-      throw new Error("User not found");
-    }
-    const payload: TokenPayload = {
-      id: updatedUser?.id,
-      email: updatedUser?.email,
-      role: updatedUser?.role[0] as "user" | "farmer" | "admin",
-    };
+  //   if (!updatedUser || !updatedUser.id) {
+  //     throw new Error("User not found");
+  //   }
+  //   const payload: TokenPayload = {
+  //     id: updatedUser?.id,
+  //     email: updatedUser?.email,
+  //     role: updatedUser?.role[0] as "user" | "farmer" | "admin",
+  //   };
 
-    if (!updatedUser) {
-      throw new Error("Failed to update user verification status");
-    }
+  //   if (!updatedUser) {
+  //     throw new Error("Failed to update user verification status");
+  //   }
 
-    const accessToken = generateAcessToken(payload);
-    const refreshToken = generateRefreshToken(payload);
+  //   const accessToken = generateAcessToken(payload);
+  //   const refreshToken = generateRefreshToken(payload);
 
-    return { user: updatedUser, accessToken, refreshToken };
-  }
+  //   return { user: updatedUser, accessToken, refreshToken };
+  // }
 
   static async refreshToken(refreshToken: string): Promise<string> {
     const payload = verifyRefreshToken(refreshToken);

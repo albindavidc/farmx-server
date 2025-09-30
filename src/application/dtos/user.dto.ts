@@ -2,12 +2,12 @@ import { FarmerStatus } from "@domain/enums/farmer-status.enum.js";
 import { ICourseProgress, IUserCertificate } from "@infrastructure/database/schemas/user.schema.js";
 
 export interface UserDto {
-  _id?: string;
   name: string;
   email: string;
   password: string;
   role: string;
   phone: string;
+  _id?: string;
   isVerified?: boolean;
   isAdmin?: boolean;
   isBlocked?: boolean;
@@ -27,9 +27,9 @@ export interface UserDto {
   courseProgress?: ICourseProgress[];
   reason?: string;
   courseCertificate?: IUserCertificate[];
-  timestamps: {
-    createdAt: Date;
-    updatedAt: Date;
+  timestamps?: {
+    createdAt?: Date;
+    updatedAt?: Date;
   };
 }
 

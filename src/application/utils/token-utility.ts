@@ -1,4 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 
 export interface TokenPayload {
   id: string;
@@ -14,7 +15,7 @@ export function generateAcessToken(payload: TokenPayload): string {
 }
 
 export function generateRefreshToken(payload: TokenPayload): string {
-  return jwt.sign(payload, refreshTokenSecret, { expiresIn: "30d" });
+  return jwt.sign({ ...payload, tokenId: uuidv4() }, refreshTokenSecret, { expiresIn: "30d" });
 }
 
 class TokenVerificationError extends Error {

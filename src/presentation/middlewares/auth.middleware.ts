@@ -2,15 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
-import { TYPES } from "@presentation/container/types.js";
 import sendResponseJson from "@application/utils/message.js";
 import {
-    generateAcessToken,
-    verifyAccessToken,
-    verifyRefreshToken,
+  generateAcessToken,
+  verifyAccessToken,
+  verifyRefreshToken,
 } from "@application/utils/token-utility.js";
 import UserSchema, { IUserDocument } from "@infrastructure/database/schemas/user.schema.js";
 import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service.js";
+import { TYPES } from "@presentation/container/types.js";
 
 interface AuthRequest extends Request {
   user?: IUserDocument;
@@ -18,7 +18,11 @@ interface AuthRequest extends Request {
 
 @injectable()
 export class AuthMiddleware {
-  constructor(@inject(TYPES.RedisAuthService) private redisAuthService: RedisAuthService) {}
+  constructor(@inject(TYPES.RedisAuthService) private redisAuthService: RedisAuthService) {
+    this.authenticate = this.authenticate.bind(this);
+    this.rateLimit = this.rateLimit.bind(this);
+    this.authorize = this.authorize.bind(this);
+  }
 
   async authenticate(req: AuthRequest, res: Response, next: NextFunction) {
     console.log("Cookies recieved", req.cookies);
@@ -34,12 +38,12 @@ export class AuthMiddleware {
       const user = await UserSchema.findById(decoded?.id);
 
       //* ========== Validate Session ========== *//
-      const sessionData = await this.redisAuthService.getSession(decoded?.id);
-      if (!sessionData) {
-        sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Session expired or invalid", false);
-        return;
-      }
-      await this.redisAuthService.extendSession(decoded?.id);
+      // const sessionData = await this.redisAuthService.getSession(decoded?.id);
+      // if (!sessionData) {
+      //   sendResponseJson(res, StatusCodes.UNAUTHORIZED, "Session expired or invalid", false);
+      //   return;
+      // }
+      // await this.redisAuthService.extendSession(decoded?.id);
 
       if (!user) {
         sendResponseJson(res, StatusCodes.UNAUTHORIZED, "User not found", false);

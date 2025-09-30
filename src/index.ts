@@ -19,6 +19,7 @@ import authRoute from "@presentation/routes/auth.route.js";
 import communityRoute from "@presentation/routes/community.routes.js";
 import sharedRoute from "@presentation/routes/shared.route.js";
 import userRoute from "@presentation/routes/user.route.js";
+import winston from "winston";
 
 dotenv.config();
 
@@ -47,6 +48,19 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logs/error.log", level: "error" }),
+    new winston.transports.File({ filename: "logs/combined.log" }),
+  ],
+});
+
 /* Setup logging */
 function setupLogging(app: express.Express): void {
   const logDirectory = path.join(__dirname, "logs");
@@ -66,6 +80,15 @@ function setupLogging(app: express.Express): void {
     morgan("combined", {
       stream: errorLogStream,
       skip: (req: Request, res: Response) => res.statusCode < 400,
+    })
+  );
+
+  app.use(
+    morgan("combined", {
+      skip: (req: Request, res: Response) => res.statusCode < 400,
+      stream: {
+        write: (message: string) => logger.error(message.trim()),
+      },
     })
   );
 }

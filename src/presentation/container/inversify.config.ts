@@ -31,7 +31,6 @@ import { UserRepositoryImpl } from "@infrastructure/repositories/user.repository
 import { AuthService } from "@infrastructure/services/auth/auth.service.js";
 import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service.js";
 import { ImageUploadService } from "@infrastructure/services/image-upload.service.js";
-import { LoginService } from "@infrastructure/services/login.service.js";
 import { EmailServiceImpl } from "@infrastructure/services/otp.service.js";
 import AuthController from "@presentation/controllers/auth.controller.js";
 import { CommunityController } from "@presentation/controllers/community.controller.js";
@@ -46,6 +45,8 @@ import winston from "winston";
 import { configBrevo } from "@infrastructure/config/config-setup.js";
 import { IRedisAuthConfig } from "@infrastructure/services/auth/redis-auth.service.js";
 import { GetUsersQueryHandler } from "@application/handlers/query/user/get-users-query.handler.js";
+import { SignupHandler } from "@application/handlers/command/auth/signup.handler.js";
+import { LoginHandler } from "@application/handlers/command/auth/login.handler.js";
 
 const container = new Container();
 
@@ -90,7 +91,8 @@ container.bind<PostRepositoryImpl>(TYPES.PostRepository).to(PostRepositoryImpl).
 
 // Register services
 container.bind<AuthService>(TYPES.AuthService).to(AuthService).inSingletonScope();
-container.bind<LoginService>(TYPES.LoginService).to(LoginService).inSingletonScope();
+container.bind<LoginHandler>(TYPES.LoginHandler).to(LoginHandler).inSingletonScope();
+container.bind<SignupHandler>(TYPES.SignupHandler).to(SignupHandler).inSingletonScope();
 container
   .bind<ImageUploadService>(TYPES.ImageUploadService)
   .to(ImageUploadService)
@@ -175,7 +177,7 @@ container
   .bind<CommunityImageUploadMiddleware>(TYPES.CommunityImageUploadMiddleware)
   .to(CommunityImageUploadMiddleware)
   .inSingletonScope();
-container.bind<AuthMiddleware>(TYPES.AuthMiddleware).to(AuthMiddleware).inSingletonScope();
+container.bind<AuthMiddleware>(TYPES.AuthMiddleware).to(AuthMiddleware);
 
 /* Logger */
 const logger = winston.createLogger({

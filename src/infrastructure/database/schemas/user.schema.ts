@@ -46,7 +46,6 @@ export interface IUserDocument extends Document {
   courseProgress?: ICourseProgress[];
   reason?: string;
   courseCertificate?: IUserCertificate[];
-  timestamps: { createdAt: Date; updatedAt: Date };
 }
 
 const UserSchema: Schema = new Schema(
@@ -54,7 +53,7 @@ const UserSchema: Schema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
-    password: { type: String },
+    hashedPassword: { type: String },
     role: { type: String, default: "user", enum: ["user", "farmer", "admin"] },
     isVerified: { type: Boolean, default: false },
     isAdmin: { type: Boolean, default: false },

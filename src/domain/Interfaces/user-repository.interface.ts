@@ -18,7 +18,7 @@ export interface IUserRepository {
   findAll(): Promise<User[]>;
   findByEmail(email: EmailVO | string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
-  update(id: string, user: Partial<User>): Promise<User | null>;
+  update(id: string, user: Partial<User>): Promise<User>;
 
   googleAuthLogin(userData: User): Promise<{ user: User; isNewUser: boolean }>;
   setRole(userId: string, role: string): Promise<User | null>;

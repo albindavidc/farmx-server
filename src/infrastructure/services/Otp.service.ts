@@ -1,8 +1,8 @@
+import { IEmailRepository } from "@domain/interfaces/email-repository.interface.js";
+import { TYPES } from "@presentation/container/types.js";
 import { inject, injectable } from "inversify";
 import nodemailer, { Transporter } from "nodemailer";
 import { Logger } from "winston";
-import { IEmailRepository } from "@domain/interfaces/email-repository.interface.js";
-import { TYPES } from "@presentation/container/types.js";
 
 interface IMailOptions {
   from: string;
@@ -49,9 +49,12 @@ export class EmailServiceImpl implements IEmailRepository {
       html: this.buildOtpEmailTemplate(otp),
     };
 
+
     try {
       await this.transporter.sendMail(mailOptions);
-      this.logger.info(`OTP email sent successfully`, { recipient: email });
+      console.log(`OTP email sent successfully ${otp} = ${mailOptions}`);
+      
+      this.logger.info(`OTP email sent successfully ${otp}`, { recipient: email });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
 

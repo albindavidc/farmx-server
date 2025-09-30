@@ -1,4 +1,4 @@
-import { User } from "@domain/entities/user.entity.js";
+import { UserDto } from "@application/dtos/user.dto.js";
 
 export interface LoginRequest {
   email: string;
@@ -7,7 +7,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  user: User;
+  user: Partial<UserDto>;
   accessToken: string;
   refreshToken: string;
 }
