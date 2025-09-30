@@ -46,21 +46,14 @@ export class CommunityController {
       const userId = req.user?.id;
 
       const createDto: CreateCommunityRequestDto = {
-        name: name?.trim(),
-        description: description?.trim(),
+        name: name.trim(),
+        description: description.trim(),
         createdBy: userId,
-        categories: categories?.map((cat: string) => cat.trim()),
+        categories: categories?.map((cat: string) => cat.trim()).filter(Boolean) ?? [],
         imageUrl,
       };
 
-      const command = CommunityMapper.dtoToEntity(createDto);
-      const commandEntity = new CreateCommunityCommand(
-        command.name,
-        command.description,
-        command.createdBy,
-        command.imageUrl,
-        command.categories
-      );
+      const commandEntity = new CreateCommunityCommand(createDto);
 
       const community = await this.createCommunityHandler.execute(commandEntity);
       const responseDto = CommunityMapper.entityToDto(community);

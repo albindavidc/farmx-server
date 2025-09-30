@@ -5,6 +5,7 @@ import { CreateCommunityCommand } from "@application/commands/community/create-c
 import { ICreateCommunity } from "@application/interfaces/command/community/create-community.interface.js";
 import { Community } from "@domain/entities/community/community.entity.js";
 import { ICommunityRepository } from "@domain/interfaces/community/community-repository.interface.js";
+import { CommunityMapper } from "@application/mappers/community/community.mapper.js";
 
 @injectable()
 export class CreateCommunityHandler implements ICreateCommunity {
@@ -12,17 +13,12 @@ export class CreateCommunityHandler implements ICreateCommunity {
     @inject(TYPES.CommunityRepository) private communityRepository: ICommunityRepository
   ) {}
   async execute(command: CreateCommunityCommand): Promise<Community> {
-    const community = new Community(
-      command.name,
-      command.description,
-      true,
-      command.createdBy,
-      new Date(),
-      1,
-      "",
-      command.imageUrl,
-      command.categories
-    );
-    return await this.communityRepository.create(community);
+    const { dto } = command;
+
+    const communityMapper = CommunityMapper.dtoToEntity(dto);
+
+    const result = await this.communityRepository.create(communityMapper);
+
+    return result;
   }
 }

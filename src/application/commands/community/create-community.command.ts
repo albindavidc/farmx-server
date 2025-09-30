@@ -1,9 +1,4 @@
+import { CreateCommunityRequestDto } from "@application/dtos/community/community-request.dto.js";
 export class CreateCommunityCommand {
-  constructor(
-    public readonly name: string,
-    public readonly description: string,
-    public readonly createdBy: string,
-    public readonly imageUrl?: string,
-    public readonly categories?: string[]
-  ) {}
+  constructor(public readonly dto: Partial<CreateCommunityRequestDto>) {}
 }

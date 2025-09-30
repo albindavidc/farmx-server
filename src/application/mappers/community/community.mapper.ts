@@ -6,8 +6,8 @@ import { Community } from "@domain/entities/community/community.entity.js";
 export class CommunityMapper {
   //* ========== To Entity ========== *//
 
-  static dtoToEntity(dto: CreateCommunityRequestDto): Community {
-    if (!dto) {
+  static dtoToEntity(dto: Partial<CreateCommunityRequestDto>): Community {
+    if (!dto.name || !dto.description || !dto.createdBy) {
       throw new Error("Invalid dto");
     }
 
