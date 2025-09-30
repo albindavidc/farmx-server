@@ -131,3 +131,6 @@
 ::1 - - [30/Sep/2025:08:39:35 +0000] "PUT /api/admin/undefined HTTP/1.1" 500 126 "http://localhost:4200/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
 ::1 - - [30/Sep/2025:08:53:31 +0000] "PUT /api/admin/block-user/undefined HTTP/1.1" 500 126 "http://localhost:4200/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
 ::1 - - [30/Sep/2025:08:53:37 +0000] "PUT /api/admin/undefined HTTP/1.1" 500 126 "http://localhost:4200/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [30/Sep/2025:09:26:29 +0000] "POST /community/upload-image HTTP/1.1" 400 76 "http://localhost:4200/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [30/Sep/2025:09:27:00 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:3000/community/upload-image" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+::1 - - [30/Sep/2025:09:27:24 +0000] "POST /community/upload-image HTTP/1.1" 400 76 "http://localhost:4200/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
