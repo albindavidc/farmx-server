@@ -2,7 +2,6 @@ import { UserPostRole } from "@domain/enums/user-role.enum.js";
 import mongoose, { Schema } from "mongoose";
 
 export interface IPostDocument extends Document {
-  _id: string;
   text: string;
   createdAt: Date;
   userId: string;
@@ -10,6 +9,7 @@ export interface IPostDocument extends Document {
   userRole: UserPostRole;
   communityId: string;
   communityName: string;
+  _id: string;
   imageUrl?: string;
   isEdited?: boolean;
   lastEditedAt?: Date;

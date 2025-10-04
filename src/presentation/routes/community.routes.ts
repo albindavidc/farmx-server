@@ -104,27 +104,27 @@ router.get(
 router.post(
   "/create-post",
   authMiddleware.authenticate,
-  authMiddleware.authorize(["user", "farmer", "admin"]),
+  authMiddleware.authorize(["farmer", "admin"]),
   postController.createPost.bind(postController)
 );
 router.delete(
   "/posts/:id",
   authMiddleware.authenticate,
-  authMiddleware.authorize(["user", "farmer", "admin"]),
+  authMiddleware.authorize(["farmer", "admin"]),
   postController.deletePost.bind(postController)
 );
 
 router.post(
   "/post-upload-image/:id",
   authMiddleware.authenticate,
-  authMiddleware.authorize(["user", "farmer", "admin"]),
+  authMiddleware.authorize(["farmer", "admin"]),
   communityImageUploadMiddleware.handle(),
   postController.uploadImage.bind(postController)
 );
 router.put(
   "/posts/:id",
   authMiddleware.authenticate,
-  authMiddleware.authorize(["user", "farmer", "admin"]),
+  authMiddleware.authorize(["farmer", "admin"]),
   postController.updatePost.bind(postController)
 );
 router.get(

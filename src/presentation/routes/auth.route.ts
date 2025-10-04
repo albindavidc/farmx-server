@@ -1,7 +1,7 @@
 import express from "express";
 
-import { TYPES } from "@presentation/container/types.js";
 import { container } from "@presentation/container/inversify.config.js";
+import { TYPES } from "@presentation/container/types.js";
 import AuthController from "@presentation/controllers/auth.controller.js";
 import OtpController from "@presentation/controllers/otp.controller.js";
 import { UserController } from "@presentation/controllers/user.controller.js";
@@ -22,7 +22,7 @@ router.post("/resend-otp", otpController.resendOtpHandler.bind(otpController));
 router.post("/verify-otp", otpController.verifyOtpHandler.bind(otpController));
 router.post(
   "/login",
-  authMiddleware.rateLimit.bind(authMiddleware),
+  // authMiddleware.rateLimit.bind(authMiddleware),
   authController.login.bind(authController)
 );
 router.post("/logout", authController.logout.bind(authController));

@@ -50,7 +50,6 @@ export class PostMapper {
     }
 
     return {
-      id: entity.id,
       text: entity.text,
       createdAt: entity.createdAt,
       userId: entity.userId,
@@ -58,6 +57,7 @@ export class PostMapper {
       userRole: entity.userRole,
       communityId: entity.communityId,
       communityName: entity.communityName,
+      id: entity.id,
       imageUrl: entity.imageUrl,
       isEdited: entity.isEdited,
       lastEditedAt: entity.lastEditedAt,
