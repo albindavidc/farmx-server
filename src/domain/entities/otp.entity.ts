@@ -5,3 +5,4 @@ export class Otp {
     public readonly expiresAt: Date
   ) {}
 }
+

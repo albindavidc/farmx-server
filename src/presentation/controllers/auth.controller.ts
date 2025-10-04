@@ -3,18 +3,18 @@ import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import jwt from "jsonwebtoken";
 
-import { TYPES } from "@presentation/container/types.js";
+import { LoginUserCommand } from "@application/commands/auth/login-user.command.js";
 import { SignupUserCommand } from "@application/commands/auth/signup-user.command.js";
 import { LoginRequest, LoginResponse } from "@application/dtos/login.dto.js";
 import { UserDto } from "@application/dtos/user.dto.js";
+import { LoginHandler } from "@application/handlers/command/auth/login.handler.js";
 import { SignupHandler } from "@application/handlers/command/auth/signup.handler.js";
 import { CreateUserHandler } from "@application/handlers/command/user/create-user.handler.js";
 import sendResponseJson from "@application/utils/message.js";
 import logger from "@infrastructure/config/logger.config.js";
 import { AuthService } from "@infrastructure/services/auth/auth.service.js";
 import { RedisAuthService } from "@infrastructure/services/auth/redis-auth.service.js";
-import { LoginHandler } from "@application/handlers/command/auth/login.handler.js";
-import { LoginUserCommand } from "@application/commands/auth/login-user.command.js";
+import { TYPES } from "@presentation/container/types.js";
 @injectable()
 export default class AuthController {
   constructor(
@@ -107,7 +107,10 @@ export default class AuthController {
 
       /* Store Refresh Token */
       if (response.refreshToken) {
-        const decoded = jwt.verify(response.refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as {
+        const decoded = jwt.verify(
+          response.refreshToken,
+          process.env.REFRESH_TOKEN_SECRET as string
+        ) as {
           tokenId: string;
         };
         const refreshTokenData = {
@@ -200,7 +203,22 @@ export default class AuthController {
 
   async logout(req: Request, res: Response): Promise<void> {
     try {
-      res.clearCookie("refreshToken");
+      // Clear refresh token
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
+      });
+
+      // Clear access token
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
+      });
+
       sendResponseJson(res, StatusCodes.OK, "Logout Successful", true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Server Error";

@@ -22,7 +22,6 @@ export class CommunityPersistenceMapper {
   }
 
   //* ========== To Persistence ========== *//
-
   static entityToPersistence(entity: Community): Partial<Community> {
     if (!entity) {
       throw new Error("Entity cannot be null or undefined");
